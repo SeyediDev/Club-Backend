@@ -1,0 +1,179 @@
+stages:
+  - build
+  - test
+  - deploy-develop
+  - deploy-stage
+  - deploy-production
+  - mirror
+
+variables:
+  DOTNET_VERSION: "8.0"
+  PROJECT_NAME: "Club.Channel.Api"
+  CUSTOMERPORTAL_PROJECT: "Club.CustomerPortal.Api"
+
+# ============================================
+# BUILD STAGE
+# ============================================
+
+build:
+  stage: build
+  image: mcr.microsoft.com/dotnet/sdk:8.0
+  script:
+    - echo "Restoring NuGet packages..."
+    - dotnet restore
+    - echo "Building solution..."
+    - dotnet build --configuration Release --no-restore
+  artifacts:
+    paths:
+      - "**/bin/Release/"
+    expire_in: 1 hour
+  tags:
+    - docker
+  only:
+    - develop
+    - stage
+    - master
+
+# ============================================
+# TEST STAGE
+# ============================================
+
+test:
+  stage: test
+  image: mcr.microsoft.com/dotnet/sdk:8.0
+  script:
+    - echo "Running tests..."
+    - dotnet test --configuration Release --no-build --logger "trx;LogFileName=test-results.trx" --collect:"XPlat Code Coverage"
+  dependencies:
+    - build
+  artifacts:
+    when: always
+    paths:
+      - "**/TestResults/**/*.trx"
+      - "**/TestResults/**/coverage.cobertura.xml"
+    reports:
+      junit:
+        - "**/TestResults/**/*.trx"
+      coverage_report:
+        coverage_format: cobertura
+        path: "**/TestResults/**/coverage.cobertura.xml"
+  coverage: '/TOTAL_COVERAGE=(\d+\.\d+)%/'
+  tags:
+    - docker
+  only:
+    - develop
+    - stage
+    - master
+
+# ============================================
+# DEPLOY TO DEVELOP
+# ============================================
+
+deploy:develop:
+  stage: deploy-develop
+  image: mcr.microsoft.com/dotnet/sdk:8.0
+  script:
+    - echo "Publishing Channel API..."
+    - dotnet publish src/$PROJECT_NAME/$PROJECT_NAME.csproj -c Release -o ./publish/channel-api
+    
+    - echo "Publishing CustomerPortal API..."
+    - dotnet publish src/$CUSTOMERPORTAL_PROJECT/$CUSTOMERPORTAL_PROJECT.csproj -c Release -o ./publish/portal-api
+    
+    - echo "Deploying to develop server..."
+    # TODO: Add deployment commands (Docker, SSH, etc.)
+    # Example: docker build -t club-channel-api:develop ./publish/channel-api
+    #          docker push registry.stts.dev/club-channel-api:develop
+  environment:
+    name: develop
+    url: https://develop.club.stts.dev
+  dependencies:
+    - build
+    - test
+  tags:
+    - docker
+  only:
+    - develop
+
+# ============================================
+# DEPLOY TO STAGE
+# ============================================
+
+deploy:stage:
+  stage: deploy-stage
+  image: mcr.microsoft.com/dotnet/sdk:8.0
+  script:
+    - echo "Publishing Channel API..."
+    - dotnet publish src/$PROJECT_NAME/$PROJECT_NAME.csproj -c Release -o ./publish/channel-api
+    
+    - echo "Publishing CustomerPortal API..."
+    - dotnet publish src/$CUSTOMERPORTAL_PROJECT/$CUSTOMERPORTAL_PROJECT.csproj -c Release -o ./publish/portal-api
+    
+    - echo "Deploying to stage server..."
+    # TODO: Add deployment commands
+  environment:
+    name: stage
+    url: https://stage.club.stts.dev
+  dependencies:
+    - build
+    - test
+  tags:
+    - docker
+  only:
+    - stage
+  when: manual  # Manual approval required
+
+# ============================================
+# DEPLOY TO PRODUCTION
+# ============================================
+
+deploy:production:
+  stage: deploy-production
+  image: mcr.microsoft.com/dotnet/sdk:8.0
+  script:
+    - echo "Publishing Channel API..."
+    - dotnet publish src/$PROJECT_NAME/$PROJECT_NAME.csproj -c Release -o ./publish/channel-api
+    
+    - echo "Publishing CustomerPortal API..."
+    - dotnet publish src/$CUSTOMERPORTAL_PROJECT/$CUSTOMERPORTAL_PROJECT.csproj -c Release -o ./publish/portal-api
+    
+    - echo "Deploying to production server..."
+    # TODO: Add deployment commands
+    # Example with health check:
+    # - Deploy new version
+    # - Wait for health check
+    # - Switch traffic (blue-green deployment)
+  environment:
+    name: production
+    url: https://club.stts.dev
+  dependencies:
+    - build
+    - test
+  tags:
+    - docker
+  only:
+    - master
+  when: manual  # Manual approval required
+
+# ============================================
+# MIRROR TO GITHUB
+# ============================================
+
+mirror:github:
+  stage: mirror
+  image: alpine/git
+  script:
+    - echo "Mirroring to GitHub..."
+    - git clone --mirror $CI_REPOSITORY_URL temp-repo
+    - cd temp-repo
+    - git push --mirror https://$GITHUB_TOKEN@github.com/Club-Apps/Club-Backend.git || true
+  only:
+    - master
+    - develop
+    - stage
+  when: on_success
+  allow_failure: true  # Don't fail pipeline if mirror fails
+  tags:
+    - docker
+  variables:
+    GITHUB_TOKEN: $GITHUB_MIRROR_TOKEN
+
