@@ -1,0 +1,16 @@
+﻿global using Neo.Application.Models;
+global using Neo.Domain.Dto;
+global using Neo.Domain.Features.Multilingual;
+global using Neo.Domain.Repository;
+global using Club.Domain.Entities.Customers;
+global using Club.Domain.Entities.Surveys;
+global using Club.Domain.Entities.Feedback;
+global using Club.Domain.Entities.Forum;
+global using Club.Domain.Features;
+global using Club.Domain.Repository;
+global using Club.Infrastructure.Data.Repository.Club;
+global using FluentValidation;
+global using Mapster;
+global using MediatR;
+global using Microsoft.EntityFrameworkCore;
+global using Microsoft.Extensions.Logging;
