@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -15,9 +15,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Cando\Neo.Application\Neo.Application.csproj" />
-    <ProjectReference Include="..\..\Club\src\Club.Domain\Club.Domain.csproj" />
-    <ProjectReference Include="..\..\Club\src\Club.Infrastructure\Club.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\..\..\Projects\Neo\src\Neo.Application\Neo.Application.csproj" />
+    <ProjectReference Include="..\..\Core\Club.Domain\Club.Domain.csproj" />
+    <ProjectReference Include="..\..\Core\Club.Infrastructure\Club.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,7 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
+	
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+	
 	<ItemGroup>
-		<ProjectReference Include="..\..\Neo.Bpms\src\Neo.Bpms.Domain.Modeling\Neo.Bpms.Domain.Modeling.csproj" />
-		<ProjectReference Include="..\..\Neo.Bpms\src\Neo.Bpms.Domain\Neo.Bpms.Domain.csproj" />
-		<ProjectReference Include="..\..\Club\src\Club.Application\Club.Application.csproj" />
+		<ProjectReference Include="..\..\Core\Club.Application\Club.Application.csproj" />
+		<ProjectReference Include="..\..\Core\Club.Domain\Club.Domain.csproj" />
 	</ItemGroup>
+	
+	<ItemGroup>
+		<!-- TODO: Replace with NuGet packages after Neo.Bpms is published -->
+		<!-- Temporary local project references -->
+		<ProjectReference Include="..\..\..\..\Neo.Bpms\src\Neo.Bpms.Domain\Neo.Bpms.Domain.csproj" />
+		<ProjectReference Include="..\..\..\..\Neo.Bpms\src\Neo.Bpms.Domain.Modeling\Neo.Bpms.Domain.Modeling.csproj" />
+	</ItemGroup>
+	
 </Project>

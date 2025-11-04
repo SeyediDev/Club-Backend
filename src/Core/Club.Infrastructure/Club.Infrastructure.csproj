@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <ImplicitUsings>enable</ImplicitUsings>
@@ -31,7 +31,7 @@
 	<PackageReference Include="Serilog.AspNetCore" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Cando\Neo.Infrastructure\Neo.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\..\..\Projects\Neo\src\Neo.Infrastructure\Neo.Infrastructure.csproj" />
     <ProjectReference Include="..\Club.Domain\Club.Domain.csproj" />
   </ItemGroup>
 

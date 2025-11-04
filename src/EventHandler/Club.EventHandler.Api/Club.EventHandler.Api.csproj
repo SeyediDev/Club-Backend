@@ -7,8 +7,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="8.0.21" />
-    <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+    <PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+    <PackageReference Include="Swashbuckle.AspNetCore" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <ProjectReference Include="..\..\Core\Club.Application\Club.Application.csproj" />
+    <ProjectReference Include="..\..\Core\Club.Infrastructure\Club.Infrastructure.csproj" />
+    <ProjectReference Include="..\Club.EventHandler.Application\Club.EventHandler.Application.csproj" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 
 	<PropertyGroup>
 		<ImplicitUsings>enable</ImplicitUsings>
@@ -7,13 +7,8 @@
 
 	<ItemGroup>
 		<ProjectReference Include="..\Club.CustomerPortal.Application\Club.CustomerPortal.Application.csproj" />
-		<ProjectReference Include="..\..\Club\src\Club.Domain\Club.Domain.csproj" />
-		<ProjectReference Include="..\..\Club\src\Club.Infrastructure\Club.Infrastructure.csproj" />
-		<ProjectReference Include="..\..\Cando\Neo.Application\Neo.Application.csproj" />
-		<ProjectReference Include="..\..\Cando\Neo.Common\Neo.Common.csproj" />
-		<ProjectReference Include="..\..\Cando\Neo.Domain\Neo.Domain.csproj" />
-		<ProjectReference Include="..\..\Cando\Neo.Endpoint\Neo.Endpoint.csproj" />
-		<ProjectReference Include="..\..\Cando\Neo.Infrastructure\Neo.Infrastructure.csproj" />
+		<ProjectReference Include="..\..\Core\Club.Infrastructure\Club.Infrastructure.csproj" />
+		<ProjectReference Include="..\..\..\..\Projects\Neo\src\Neo.Endpoint\Neo.Endpoint.csproj" />
 	</ItemGroup>
 
   <ItemGroup>

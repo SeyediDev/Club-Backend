@@ -19,9 +19,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\Neo.Bpms\src\Neo.Bpms.Domain\Neo.Bpms.Domain.csproj" />
-    <ProjectReference Include="..\..\..\Cando\Neo.Common\Neo.Common.csproj" />
-    <ProjectReference Include="..\..\..\Cando\Neo.Domain\Neo.Domain.csproj" />
+    <ProjectReference Include="..\..\..\..\..\Neo\src\Neo.Common\Neo.Common.csproj" />
+    <ProjectReference Include="..\..\..\..\..\Neo\src\Neo.Domain\Neo.Domain.csproj" />
+  </ItemGroup>
+  
+  <ItemGroup>
+    <!-- Neo.Bpms will be referenced as NuGet package from private Nexus -->
+    <!-- <ProjectReference Include="..\..\..\..\Neo.Bpms\src\Neo.Bpms.Domain\Neo.Bpms.Domain.csproj" /> -->
   </ItemGroup>
 
 </Project>

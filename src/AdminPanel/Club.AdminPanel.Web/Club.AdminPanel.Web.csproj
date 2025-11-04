@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk.Web">
 	<PropertyGroup>
 		<UserSecretsId>f470c652-f1d5-4866-87e9-1f050cd61397</UserSecretsId>
 		<ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
@@ -83,9 +83,20 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\..\Neo.Bpms\src\Neo.Bpms.UI.MVC\Neo.Bpms.UI.MVC.csproj" />
-	  <ProjectReference Include="..\..\Cando\Neo.Endpoint\Neo.Endpoint.csproj" />
-	  <ProjectReference Include="..\..\Club\src\Club.Application\Club.Application.csproj" />
+	  <ProjectReference Include="..\Club.AdminPanel.Domain\Club.AdminPanel.Domain.csproj" />
+	  <ProjectReference Include="..\..\Core\Club.Application\Club.Application.csproj" />
+	  <ProjectReference Include="..\..\Core\Club.Infrastructure\Club.Infrastructure.csproj" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <!-- TODO: Replace with NuGet packages after Neo.Bpms is published -->
+	  <ProjectReference Include="..\..\..\..\Projects\Neo.Bpms\src\Neo.Bpms.UI.MVC\Neo.Bpms.UI.MVC.csproj" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <!-- TODO: Replace with NuGet packages after Neo is published -->
+	  <!-- Temporary local project references -->
+	  <ProjectReference Include="..\..\..\..\Projects\Neo\src\Neo.Endpoint\Neo.Endpoint.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
