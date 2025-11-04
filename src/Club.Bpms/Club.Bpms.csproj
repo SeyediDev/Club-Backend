@@ -1,7 +1,0 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-	<ItemGroup>
-		<ProjectReference Include="..\..\Neo.Bpms\src\Neo.Bpms.Domain.Modeling\Neo.Bpms.Domain.Modeling.csproj" />
-		<ProjectReference Include="..\..\Neo.Bpms\src\Neo.Bpms.Domain\Neo.Bpms.Domain.csproj" />
-		<ProjectReference Include="..\..\Club\src\Club.Application\Club.Application.csproj" />
-	</ItemGroup>
-</Project>

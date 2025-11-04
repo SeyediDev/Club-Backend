@@ -1,0 +1,167 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
+	<PropertyGroup>
+		<UserSecretsId>f470c652-f1d5-4866-87e9-1f050cd61397</UserSecretsId>
+		<ErrorOnDuplicatePublishOutputFiles>false</ErrorOnDuplicatePublishOutputFiles>
+		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+		<DockerComposeProjectPath>..\..\..\docker-compose.dcproj</DockerComposeProjectPath>
+	</PropertyGroup>
+	<ItemGroup>
+	  <Compile Remove="Scripts\**" />
+	  <Content Remove="Scripts\**" />
+	  <EmbeddedResource Remove="Scripts\**" />
+	  <None Remove="Scripts\**" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="AutoMapper" />
+		<PackageReference Include="Ardalis.GuardClauses" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
+		<PackageReference Include="Microsoft.AspNetCore.OpenApi" />
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" />
+		<PackageReference Include="Serilog.AspNetCore.Plus" />
+		<PackageReference Include="Serilog.Sinks.Splunk" />
+
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
+		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" />
+		<PackageReference Include="Minio" />
+		<PackageReference Include="Otp.NET" />
+		
+		<PackageReference Include="DNTPersianUtils.Core" />
+		<PackageReference Include="Mapster" />
+		<PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
+		<!--<PackageReference Include="Microsoft.AspNetCore.Mvc.Core" />-->
+
+		<PackageReference Include="MassTransit" />
+		<PackageReference Include="MassTransit.RabbitMQ" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+
+		<PackageReference Include="System.Drawing.Common" />
+		<PackageReference Include="System.Formats.Asn1" />
+		<PackageReference Include="System.Security.Cryptography.Pkcs" />
+		<PackageReference Include="System.Data.OracleClient" />
+		<PackageReference Include="SharpZipLib" />
+		<PackageReference Include="Microsoft.SqlServer.SqlManagementObjects" />
+		<PackageReference Include="RestSharp" />
+		<PackageReference Include="System.Text.RegularExpressions" />
+
+		<PackageReference Include="MediatR" />
+		<PackageReference Include="Microsoft.Extensions.Caching.Abstractions" />
+		<PackageReference Include="Microsoft.Extensions.Caching.Memory" />
+		<PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Content Remove="libman.json" />
+		<Content Remove="web.config" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Update="Dockerfile">
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</None>
+		<None Update="docker-compose.yml">
+			<CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+		</None>
+	</ItemGroup>
+
+	<ItemGroup>
+		<_ContentIncludedByDefault Remove="web.config" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Include="appsettings.Production.json" />
+		<None Include="web.config" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Folder Include="wwwroot\EmbedFrame\" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\..\Neo.Bpms\src\Neo.Bpms.UI.MVC\Neo.Bpms.UI.MVC.csproj" />
+	  <ProjectReference Include="..\..\Cando\Neo.Endpoint\Neo.Endpoint.csproj" />
+	  <ProjectReference Include="..\..\Club\src\Club.Application\Club.Application.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <Compile Update="Resources\Texts.Designer.cs">
+	    <DependentUpon>Texts.resx</DependentUpon>
+	    <DesignTime>True</DesignTime>
+	    <AutoGen>True</AutoGen>
+	  </Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+	  <EmbeddedResource Update="Resources\Texts.en.resx">
+	    <SubType>Designer</SubType>
+	  </EmbeddedResource>
+	  <EmbeddedResource Update="Resources\Texts.resx">
+	    <SubType>Designer</SubType>
+	    <LastGenOutput>Texts.Designer.cs</LastGenOutput>
+	    <Generator>PublicResXFileCodeGenerator</Generator>
+	  </EmbeddedResource>
+	</ItemGroup>
+	<!--<Import Project="..\..\Neo.Bpms\src\Neo.Bpms.UI.MVC\CommonAssets\CommonContentLinks.targets.xml" />
+	<Target Name="CopyLinkedContentFiles" BeforeTargets="Build">
+    <Copy SourceFiles="%(Content.Identity)" DestinationFiles="%(Content.Link)" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" Condition="'%(Content.Link)' != ''" />
+  </Target>-->
+	<!--<Target Name="CopyBundles" BeforeTargets="Build">
+		<ItemGroup>
+			<_BundleItems Include="..\..\Neo.Bpms\src\Neo.Bpms.UI.MVC\CommonAssets\bundles\*.*" />
+		</ItemGroup>
+		<Copy SourceFiles="@(_BundleItems)" DestinationFolder="wwwroot\bundles\" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
+	</Target>-->
+	<Target Name="CopyIcons" BeforeTargets="Build">
+		<ItemGroup>
+			<_IconItems Include="..\..\Neo.Bpms\src\Neo.Bpms.UI.MVC\CommonAssets\Icons\*.*" />
+		</ItemGroup>
+		<Copy SourceFiles="@(_IconItems)" DestinationFolder="wwwroot\Content\common-assets-includes\icons\" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
+	</Target>
+	<Target Name="CopySBVRAssets" BeforeTargets="Build">
+		<ItemGroup>
+			<_SBVRItems Include="..\..\Neo.Bpms\src\Neo.Bpms.UI.MVC\wwwroot\Content\common-assets-includes\features\sbvr\*.*" />
+		</ItemGroup>
+		<Copy SourceFiles="@(_SBVRItems)" DestinationFolder="wwwroot\Content\common-assets-includes\features\sbvr\" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
+	</Target>
+	<Target Name="CopyComboAssets" BeforeTargets="Build">
+		<ItemGroup>
+			<_ComboItems Include="..\..\Neo.Bpms\src\Neo.Bpms.UI.MVC\wwwroot\Content\common-assets-includes\features\combo\*.*" />
+		</ItemGroup>
+		<Copy SourceFiles="@(_ComboItems)" DestinationFolder="wwwroot\Content\common-assets-includes\features\combo\" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
+	</Target>
+	<Target Name="CopyFilterAssets" BeforeTargets="Build">
+		<ItemGroup>
+			<_FilterItems Include="..\..\Neo.Bpms\src\Neo.Bpms.UI.MVC\wwwroot\Content\common-assets-includes\features\filter\*.*" />
+		</ItemGroup>
+		<Copy SourceFiles="@(_FilterItems)" DestinationFolder="wwwroot\Content\common-assets-includes\features\filter\" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
+	</Target>
+	<Target Name="CopyReportAssets" BeforeTargets="Build">
+		<ItemGroup>
+			<_ReportStyleItems Include="..\..\Neo.Bpms\src\Neo.Bpms.UI.MVC\CommonAssets\Styles\Features\Report\*.*" />
+			<_ReportTreeCleanupJs Include="..\..\Neo.Bpms\src\Neo.Bpms.UI.MVC\CommonAssets\bundles\report-tree-cleanup.js" />
+		</ItemGroup>
+		<Copy SourceFiles="@(_ReportStyleItems)" DestinationFolder="wwwroot\CommonAssets\Styles\Features\Report\" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
+		<Copy SourceFiles="@(_ReportTreeCleanupJs)" DestinationFolder="wwwroot\CommonAssets\bundles\" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
+	</Target>
+	<Target Name="CopyMmenuAssets" BeforeTargets="Build">
+		<ItemGroup>
+			<_MmenuRtlFixCss Include="..\..\Neo.Bpms\src\Neo.Bpms.UI.MVC\CommonAssets\Styles\Features\Global\mmenu-rtl-fix.css" />
+			<_ClubMenuIconsCss Include="..\..\Club.AdminPanel.Domain\Club.AdminPanel.Web\wwwroot\Content\club-icons\club-menu-icons.css" />
+			<_ClubSpriteSvg Include="..\..\Club.AdminPanel.Domain\Club.AdminPanel.Web\wwwroot\Content\club-icons\club-sprite.svg" />
+		</ItemGroup>
+		<Copy SourceFiles="@(_MmenuRtlFixCss)" DestinationFolder="wwwroot\bundles\mmenu\" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
+		<Copy SourceFiles="@(_ClubMenuIconsCss)" DestinationFolder="wwwroot\bundles\mmenu\" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
+		<Copy SourceFiles="@(_ClubSpriteSvg)" DestinationFolder="wwwroot\bundles\mmenu\" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
+	</Target>
+	<Target Name="CopyGlobalAssets" BeforeTargets="Build">
+		<ItemGroup>
+			<_GlobalCssItems Include="..\..\Neo.Bpms\src\Neo.Bpms.UI.MVC\CommonAssets\Styles\Features\Global\*.css" />
+		</ItemGroup>
+		<Copy SourceFiles="@(_GlobalCssItems)" DestinationFolder="wwwroot\CommonAssets\Styles\Features\Global\" SkipUnchangedFiles="true" OverwriteReadOnlyFiles="true" />
+	</Target>
+</Project>

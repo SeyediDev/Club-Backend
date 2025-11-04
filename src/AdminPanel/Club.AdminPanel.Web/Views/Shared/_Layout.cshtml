@@ -1,0 +1,102 @@
+﻿@using Neo.Bpms.UI.MVC.Helpers
+@using Club.AdminPanel.Web.Resources
+@using Microsoft.AspNetCore.Html
+@using Microsoft.AspNetCore.Mvc.Razor
+@using Neo.Bpms.UI.MVC.PartialModels.Layout
+
+@{
+    var title = ViewBag.Title ?? Texts.Title;
+    var containerClass = ViewBag.ContainerClass ?? "container-flud";
+    var user = ViewBag.user;
+
+    var titleAndMetaTagsModel = new TitleAndMetaTagsModel
+    {
+        title = title,
+        description = Texts.Title,
+        root = "/" //Context.Request.GetBaseUrl()
+    };
+    Func<dynamic, HelperResult> Logo =
+        @<svg width="67" height="30" viewBox="0 0 67 30" fill="none" xmlns="http://www.w3.org/2000/svg" >
+            <rect width="67" height="40" fill="white" />
+          <text x="65" y="25" font-family="Arial, sans-serif" font-size="28" font-weight="bold" fill="#D90006">
+            Club
+          </text>
+         </svg>
+        ;
+
+    var headerModel = new HeaderModel
+    {
+        user = user,
+        title = Texts.Title,
+        logo = Logo,
+        hasLanguageSelection = true
+    };
+    var bodyModel = new BodyModel
+    {
+        bodyRenderFunc = RenderBody,
+        containerClass = containerClass
+    };
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <partial name="Layout/TitleAndMetaTags" model="titleAndMetaTagsModel"/>
+    <partial name="Layout/CommonIncludes" model="true"/>
+    <link href="/Content/icons/flat-icon/flaticon.css?d=20201109" rel="stylesheet"/>
+    <link href="/Content/custom-theme.css" rel="stylesheet" />
+    @{
+        FaviconThings();
+    }
+
+    <style>
+
+    </style>
+</head>
+<body id="page-body" @(CultureHelper.IsRightToLeft() ? new HtmlString("style=\"direction: rtl; text-align: right;\" dir=\"rtl\"") : new HtmlString("dir=ltr"))>
+    @{
+        bool checkPage = true;
+        if( ViewBag.IsLoginPage==true )
+            checkPage = false;
+        if (ViewBag.IsVerifyPage == true)
+            checkPage = false;
+    }
+
+    <div class="d-flex" style="justify-content:stretch;overflow-x: hidden; @(checkPage == true ? "height:100vh;" : "")">
+        <div style="flex-grow: 1;">
+            @if (checkPage == true)
+            {
+                <partial name="Layout/Header" model="headerModel" />
+            }
+            <partial name="Layout/Body" model="bodyModel"/>
+        </div>
+    </div>
+
+    @if (checkPage == true)
+    {
+        <partial name="Layout/Mmenu" model="user" />
+    }
+    <partial name="Common/ScriptInject"/>
+@await RenderSectionAsync("scripts", required: false)
+
+
+</body>
+</html>
+
+@functions
+{
+
+    void FaviconThings()
+    {
+        <link rel="apple-touch-icon" sizes="180x180" href="/Content/icons/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/Content/icons/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/Content/icons/favicon-16x16.png">
+        <link rel="manifest" href="/Content/icons/manifest.json">
+        <link rel="mask-icon" href="/Content/icons/safari-pinned-tab.svg" color="#5bbad5">
+        <link rel="shortcut icon" href="/Content/icons/favicon.ico">
+        <meta name="msapplication-TileColor" content="#da532c">
+        <meta name="msapplication-config" content="/Content/icons/browserconfig.xml">
+        <meta name="theme-color" content="#ffffff">
+    }
+
+}
