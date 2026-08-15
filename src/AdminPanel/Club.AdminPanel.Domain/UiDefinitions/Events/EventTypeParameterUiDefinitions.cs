@@ -7,7 +7,8 @@ public class EventTypeParameterUiDefinitions : SubCRUDDefinition<EventTypeParame
     {
         form.AddColumns(nameof(EventTypeParameter.Title),
                         nameof(EventTypeParameter.Key),
-                        nameof(EventTypeParameter.IsOptional)
+                        nameof(EventTypeParameter.IsOptional),
+                        nameof(EventTypeParameter.CustomerParameter)
                         );
     }
 

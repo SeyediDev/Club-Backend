@@ -1,4 +1,6 @@
-﻿namespace Club.CustomerPortal.Application.Features.Rewards.Queries;
+using Club.CustomerPortal.Application.Interfaces;
+
+namespace Club.CustomerPortal.Application.Features.Rewards.Queries;
 
 public record GetPurchasedRewardsQuery : IRequest<GetPurchasedRewardsQueryResponse>
 {
@@ -12,24 +14,16 @@ public record GetPurchasedRewardsQueryResponse
     public PaginatedList<PurchasedRewardDto> PurchasedRewards { get; set; } = null!;
 }
 
-public class GetPurchasedRewardsQueryHandler : IRequestHandler<GetPurchasedRewardsQuery, GetPurchasedRewardsQueryResponse>
+public class GetPurchasedRewardsQueryHandler(
+    IRewardService rewardService,
+    ICustomerRequesterUser requesterUser)
+    : IRequestHandler<GetPurchasedRewardsQuery, GetPurchasedRewardsQueryResponse>
 {
-    private readonly IRewardService _rewardService;
-    private readonly IRequesterUser _requesterUser;
-
-    public GetPurchasedRewardsQueryHandler(
-        IRewardService rewardService,
-        IRequesterUser requesterUser)
-    {
-        _rewardService = rewardService;
-        _requesterUser = requesterUser;
-    }
-
     public async Task<GetPurchasedRewardsQueryResponse> Handle(GetPurchasedRewardsQuery request, CancellationToken cancellationToken)
     {
-        var customerId = _requesterUser.GetUserId();
+        var customerId = requesterUser.CustomerId;
         
-        var result = await _rewardService.GetPurchasedRewardsAsync(
+        var result = await rewardService.GetPurchasedRewardsAsync(
             customerId,
             request.PageNumber,
             request.PageSize,

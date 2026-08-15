@@ -1,3 +1,5 @@
+using Club.CustomerPortal.Application.Interfaces;
+
 namespace Club.CustomerPortal.Application.Features.Rewards.Queries;
 
 public record GetRewardCategoriesQuery : IRequest<GetRewardCategoriesQueryResponse>;
@@ -17,18 +19,11 @@ public record RewardCategoryDto
     public int RewardsCount { get; set; }
 }
 
-public class GetRewardCategoriesQueryHandler : IRequestHandler<GetRewardCategoriesQuery, GetRewardCategoriesQueryResponse>
+public class GetRewardCategoriesQueryHandler(IRewardService rewardService) : IRequestHandler<GetRewardCategoriesQuery, GetRewardCategoriesQueryResponse>
 {
-    private readonly IRewardService _rewardService;
-
-    public GetRewardCategoriesQueryHandler(IRewardService rewardService)
-    {
-        _rewardService = rewardService;
-    }
-
     public async Task<GetRewardCategoriesQueryResponse> Handle(GetRewardCategoriesQuery request, CancellationToken cancellationToken)
     {
-        var categories = await _rewardService.GetRewardCategoriesAsync(cancellationToken);
+        var categories = await rewardService.GetRewardCategoriesAsync(cancellationToken);
         
         var categoryDtos = categories.Select(c => new RewardCategoryDto
         {

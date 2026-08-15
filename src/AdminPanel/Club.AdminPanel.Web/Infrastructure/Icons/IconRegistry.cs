@@ -1,4 +1,4 @@
-﻿namespace Club.AdminPanel.Domain.Infrastructure.Icons;
+﻿namespace Club.AdminPanel.Web.Infrastructure.Icons;
 
 /// <summary>
 /// Central registry for all Club platform icons
@@ -9,7 +9,7 @@ public static class IconRegistry
     /// <summary>
     /// Base path to Club-specific SVG sprite
     /// </summary>
-    public const string SvgSpritePath = "/Content/club-icons/club-sprite.svg";
+    public const string SvgSpritePath = "/Content/custom-icons/custom-sprite.svg";
     
     /// <summary>
     /// Get icon ID for an entity or menu item
@@ -36,9 +36,13 @@ public static class IconRegistry
         ["CustomerSegment"] = "users-group",
         ["CustomerParameter"] = "user-settings",
         ["CustomerSegmentMembership"] = "user-badge",
+        ["CustomerSegmentKindCondition"] = "flag-trigger",
         ["CustomerParameterValue"] = "sliders-h",
         ["CustomerTransaction"] = "wallet-money",
+        ["CustomerProductMetrics"] = "chart-bar",
         ["CustomerPointLevel"] = "trophy-star",
+        ["CustomerPlan"] = "wallet-money",
+        ["Plan"] = "piggy-bank",
         ["users-icon"] = "users-group",
 
         // Awards & Assets
@@ -47,15 +51,15 @@ public static class IconRegistry
         ["Asset"] = "cube-3d",
         ["AwardCategory"] = "grid-layout",
         ["AwardMerchant"] = "store-shop",
+        ["LotteryReward"] = "box-package",
+        ["LotteryParticipant"] = "users-group",
         ["product-icon"] = "box-package",
         
         // Scoring System
         ["Point"] = "star-badge",
         ["PointLevel"] = "medal-award",
         ["PointBudget"] = "piggy-bank",
-        ["ScoringRule"] = "rule-checklist",
-        ["ScoringRuleTriggerCondition"] = "flag-trigger",
-        ["ScoringRuleAction"] = "bolt-lightning",
+        ["PointConversionRate"] = "coins-money",
         ["scoring-icon"] = "star-badge",
         
         // Events
@@ -64,6 +68,9 @@ public static class IconRegistry
         ["EventChannel"] = "rss-signal",
         ["EventLog"] = "list-checklist",
         ["event-icon"] = "calendar-event",
+        ["Promotion"] = "gift-present",
+        ["PromotionMessage"] = "gift-present",
+        ["PromotionRecipient"] = "users-group",
         
         // Promotions
         ["Promotion"] = "gift-present",
@@ -78,7 +85,14 @@ public static class IconRegistry
         ["settings-icon"] = "cog-wheel",
         
         // Reports
-        ["report-icon"] = "chart-bar"
+        ["report-icon"] = "chart-bar",
+
+        // Analytics & Research
+        ["CustomerAnalytics"] = "chart-bar",
+        ["MarketAnalysis"] = "chart-bar",
+        ["ProductFitAnalysis"] = "grid-layout",
+        ["Survey"] = "question-circle",
+        ["SurveyParticipation"] = "users-group"
     };
     
     /// <summary>
@@ -108,7 +122,7 @@ public static class IconRegistry
                 "HomePageEntity" or "dashboard-icon" => Dashboard,
                 
                 // Customer related
-                var name when name.StartsWith("Customer") || name == "Tenant" || name == "users-icon" => Customer,
+                var name when name.StartsWith("Customer") || name == "Tenant" || name == "users-icon" || name.StartsWith("Plan") => Customer,
                 
                 // Product related
                 var name when name.StartsWith("Product") || name == "Asset" || name == "product-icon" => Product,
@@ -118,12 +132,15 @@ public static class IconRegistry
                 
                 // Event related
                 var name when name.StartsWith("Event") || name == "event-icon" => Event,
-                
+
                 // Promotion related
-                var name when name.StartsWith("Promotion") || name == "Lottery" || name == "promotion-icon" => Promotion,
+                var name when name.StartsWith("Promotion") || name.StartsWith("Lottery") || name == "promotion-icon" => Promotion,
                 
                 // Settings related
                 var name when name == "User" || name == "Faq" || name == "Help" || name == "Document" || name == "settings-icon" => Settings,
+
+                // Survey & Analytics
+                var name when name.StartsWith("Survey") || name.Contains("Analysis") => Report,
                 
                 // Report
                 "report-icon" => Report,

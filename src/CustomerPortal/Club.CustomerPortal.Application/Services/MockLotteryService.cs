@@ -8,7 +8,7 @@ public class MockLotteryService : ILotteryService
     {
         var lotteries = new List<LotteryDto>
         {
-            new() { Id = 1, Title = "قرعه‌کشی ماهانه", Description = "برنده شوید!", DrawDate = DateTime.Now.AddDays(10), RequiredPoints = 1000, MaxParticipants = 100, CurrentParticipants = 45, IsActive = true, HasDrawn = false }
+            new() { Id = 1, Title = "قرعه‌کشی ماهانه", Description = "برنده شوید!", DrawDate = DateTime.UtcNow.AddDays(10), RequiredPoints = 1000, MaxParticipants = 100, CurrentParticipants = 45, IsActive = true, HasDrawn = false }
         };
 
         return Task.FromResult(new PaginatedList<LotteryDto>(lotteries, 1, pageNumber, pageSize));
@@ -21,7 +21,7 @@ public class MockLotteryService : ILotteryService
             Id = lotteryId,
             Title = "قرعه‌کشی ماهانه",
             Description = "برنده شوید!",
-            DrawDate = DateTime.Now.AddDays(10),
+            DrawDate = DateTime.UtcNow.AddDays(10),
             RequiredPoints = 1000,
             MaxParticipants = 100,
             CurrentParticipants = 45,

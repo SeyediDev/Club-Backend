@@ -1,14 +1,13 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.Entities;
-using Neo.Bpms.Domain.Features.Cmmn.ObjectStorage;
-using Neo.Bpms.Domain.Features.Cmmn.ObjectStorage.Dto;
+﻿using Neo.Bpms.Domain.Features.Cmmn.ObjectStorage.Dto;
 using Neo.Common.Utility;
 using Club.Application.Features.Common.Commands.Documents;
 using Club.Application.Features.Common.Queries.Documents;
 using MassTransit.Initializers;
 using MediatR;
 using System.Text;
+using Neo.Bpms.Domain.Models.Cmmn.Entities;
 
-namespace Club.AdminPanel.Domain.Infrastructure.Cmmn;
+namespace Club.AdminPanel.Web.Infrastructure.Cmmn;
 public class CmmnDocument(ISender sender) : ICmmnDocument
 {
     public async Task DeleteFileData(Entity entity, string subjectField, string recordId,
@@ -29,7 +28,7 @@ public class CmmnDocument(ISender sender) : ICmmnDocument
         AddDocumentCommand doc = GetAddDocumentCommandDto(entity, subjectField, documentTypeId, fileData, subjectId);
 
         int? documentId = await sender.Send(doc, cancellationToken);
-        return documentId?.ToString();
+        return documentId?.ToString()!;
     }
 
     public async Task<string> SaveFileData(Entity entity, string subjectField, int? documentTypeId,
@@ -38,7 +37,7 @@ public class CmmnDocument(ISender sender) : ICmmnDocument
         _ = long.TryParse(recordId, out long subjectId);
         AddDocumentCommand doc = GetAddDocumentCommandDto(entity, subjectField, documentTypeId, fileData, subjectId);
         int? documentId = await sender.Send(doc, cancellationToken);
-        return documentId?.ToString();
+        return documentId?.ToString()!;
     }
 
     public async Task<List<DocumentView>> GetDocuments(Entity entity, string? subjectField,
@@ -62,24 +61,24 @@ public class CmmnDocument(ISender sender) : ICmmnDocument
         {
             DocumentId = id
         };
-        DocumentQueryResponse doc = await sender.Send(query, cancellationToken);
-        DocumentView result = GetDocumentView(doc);
+        DocumentQueryResponse? doc = await sender.Send(query, cancellationToken);
+        DocumentView result = GetDocumentView(doc!);
         return result;
     }
 
     private DocumentView GetDocumentView(DocumentQueryResponse doc)
     {
-        string base64 = Encoding.UTF8.GetString(doc?.Dto?.Content);
-        string mimeType = doc?.Dto?.Content is not null ? CandoMimeTypes.GetMimeType(doc.Dto.Content, base64) : "application/octet-stream";
+        string base64 = Encoding.UTF8.GetString(doc?.Dto?.Content!);
+        string mimeType = doc?.Dto?.Content is not null ? NeoMimeTypes.GetMimeType(doc.Dto.Content, base64) : "application/octet-stream";
         return new DocumentView(
-            doc.DocumentId,
-            doc.SubjectField,
-            doc.DocumentType ?? doc.Dto?.Type,
-            doc.Dto,
+            doc?.DocumentId??0,
+            doc?.SubjectField,
+            doc?.DocumentType ?? doc?.Dto?.Type,
+            doc?.Dto,
             base64,
             mimeType,
-            CandoMimeTypes.GetExtension(mimeType),
-            doc.CreateDate);
+            NeoMimeTypes.GetExtension(mimeType),
+            doc?.CreateDate);
     }
 
     public string UploadedFilesPath()
@@ -108,7 +107,7 @@ public class CmmnDocument(ISender sender) : ICmmnDocument
         }
         else
         {
-            doc.Content = Encoding.UTF8.GetBytes(fileData?.ToString());
+            doc.Content = Encoding.UTF8.GetBytes(fileData?.ToString()!);
         }
 
         return doc;

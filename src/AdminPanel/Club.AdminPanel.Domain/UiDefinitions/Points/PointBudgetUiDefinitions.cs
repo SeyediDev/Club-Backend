@@ -1,75 +1,45 @@
-﻿using Club.Domain.Entities.Points.Enums;
-
 namespace Club.AdminPanel.Domain.UiDefinitions.Points;
 
-public class PointBudgetUiDefinitions : SubCRUDDefinition<PointBudget>
+public class PromotionBudgetUiDefinitions : CRUDDefinition<PromotionBudget>
 {
-    protected override void IndexFormViewModel(FormDefinition form)
+    protected override void IndexFormViewModel()
     {
-        form.AddColumns(
-            nameof(PointBudget.Point),
-            nameof(PointBudget.Scope),
-            nameof(PointBudget.CustomerSegment),
-            nameof(PointBudget.Amount),
-            nameof(PointBudget.Kind)
+        AddColumns(
+              nameof(PromotionBudget.Promotion)
+            , nameof(PromotionBudget.Kind)
+            , nameof(PromotionBudget.Amount)
+            , nameof(PromotionBudget.ResetType)
             );
-        form.AddOrderBy(nameof(PointBudget.Point));
+        AddOrderBy(nameof(PromotionBudget.Promotion));
+        AddOrderBy(nameof(PromotionBudget.Kind));
     }
-    
-    protected override void CUDFormsViewModel(CUDForm form)
+
+    protected override void CUDFormsViewModel()
     {
-        form.AddFields(
-            nameof(PointBudget.Point),
-            nameof(PointBudget.Scope),
-            nameof(PointBudget.CustomerSegment),
-            nameof(PointBudget.FromDate),
-            nameof(PointBudget.ToDate),
-            nameof(PointBudget.Amount),
-            nameof(PointBudget.Kind),
-            nameof(PointBudget.EventChannel),
-            nameof(PointBudget.EventType),
-            nameof(PointBudget.PointLevel)
+        AddFields(
+              nameof(PromotionBudget.Promotion)
+            , nameof(PromotionBudget.Kind)
+            , nameof(PromotionBudget.Point)
+            , nameof(PromotionBudget.Reward)
+            , nameof(PromotionBudget.Lottery)
+            , nameof(PromotionBudget.CustomerSegment)
+            , nameof(PromotionBudget.ExternalApi)
+            , nameof(PromotionBudget.NotificationSubType)
+
+            , nameof(PromotionBudget.Amount)
+
+            , nameof(PromotionBudget.ResetType)
+            , nameof(PromotionBudget.ResetDayOfWeek)
+            , nameof(PromotionBudget.ResetDayOfMonth)
+            , nameof(PromotionBudget.ResetMonth)
+            , nameof(PromotionBudget.ResetDayOfYear)
+            , nameof(PromotionBudget.ResetHour)
+            , nameof(PromotionBudget.ResetMinute)
             );
     }
     
     protected override void UIRules(FormDefinition form)
     {
-        form.ShowHide(nameof(PointBudget.Scope), 
-            $"q[{nameof(PointBudget.Scope)}]=={(int)PointBudgetScope.PerCustomerSegment}", 
-            nameof(PointBudget.CustomerSegment));
-        form.FilterFormula(nameof(PointBudget.Point), 
-            nameof(PointBudget.CustomerSegment), 
-            $"({nameof(PointBudget.CustomerSegment)}.{nameof(CustomerSegment.TenantId)})==q[{nameof(PointBudget.Point)}.{nameof(Point.TenantId)}]");
-        form.FilterFormula(nameof(PointBudget.Point), 
-            nameof(PointBudget.PointLevel), 
-            $"{nameof(PointLevel.PointId)}==q[{nameof(PointBudget.Point)}]");
-    }
-
-    public override string SubjectId => "Sub";
-    public override void SubIndexViewModel(FormDefinition form)
-    {
-        form.AddColumns(
-            nameof(PointBudget.Scope),
-            nameof(PointBudget.CustomerSegment),
-            nameof(PointBudget.Amount),
-            nameof(PointBudget.Kind),
-            nameof(PointBudget.FromDate),
-            nameof(PointBudget.ToDate));
-        form.AddOrderBy(nameof(PointBudget.Point));
-    }
-
-    public override void SubViewModel(FormDefinition form)
-    {
-        form.AddFields(
-            nameof(PointBudget.Scope),
-            nameof(PointBudget.CustomerSegment),
-            nameof(PointBudget.Amount),
-            nameof(PointBudget.Kind),
-            nameof(PointBudget.FromDate),
-            nameof(PointBudget.ToDate),
-            nameof(PointBudget.EventChannel),
-            nameof(PointBudget.EventType),
-            nameof(PointBudget.PointLevel)
-            );
+        base.UIRules(form);
     }
 }

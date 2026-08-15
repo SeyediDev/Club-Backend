@@ -8,7 +8,7 @@ public class MockSurveyService : ISurveyService
     {
         var surveys = new List<SurveyDto>
         {
-            new() { Id = 1, Title = "نظرسنجی رضایت مشتری", Description = "نظر شما برای ما مهم است", StartDate = DateTime.Now.AddDays(-5), EndDate = DateTime.Now.AddDays(25), RewardPoints = 500, IsActive = true, HasResponded = false }
+            new() { Id = 1, Title = "نظرسنجی رضایت مشتری", Description = "نظر شما برای ما مهم است", StartDate = DateTime.UtcNow.AddDays(-5), EndDate = DateTime.UtcNow.AddDays(25), RewardPoints = 500, IsActive = true, HasResponded = false }
         };
 
         return Task.FromResult(new PaginatedList<SurveyDto>(surveys, 1, pageNumber, pageSize));
@@ -21,8 +21,8 @@ public class MockSurveyService : ISurveyService
             Id = surveyId,
             Title = "نظرسنجی رضایت مشتری",
             Description = "نظر شما برای ما مهم است",
-            StartDate = DateTime.Now.AddDays(-5),
-            EndDate = DateTime.Now.AddDays(25),
+            StartDate = DateTime.UtcNow.AddDays(-5),
+            EndDate = DateTime.UtcNow.AddDays(25),
             RewardPoints = 500,
             IsActive = true,
             HasResponded = false

@@ -1,0 +1,76 @@
+# ===============================================
+# Multi-stage Dockerfile for Club.CustomerPortal.Api
+# Build Context: D:\Projects (parent of all three repos)
+# Command: docker build -f Club/Backend/src/CustomerPortal/Club.CustomerPortal.Api/Dockerfile.new -t club-customer-api .
+# ===============================================
+
+# Stage 1: Build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+
+# Copy solution and project files for restore
+COPY ["Club/Backend/Club.Backend.sln", "Club/Backend/"]
+COPY ["Club/Backend/Directory.Build.props", "Club/Backend/"]
+COPY ["Club/Backend/Directory.Packages.props", "Club/Backend/"]
+COPY ["Club/Backend/global.json", "Club/Backend/"]
+COPY ["Club/Backend/NuGet.config", "Club/Backend/"]
+
+# Copy all csproj files
+COPY ["Club/Backend/src/CustomerPortal/Club.CustomerPortal.Api/Club.CustomerPortal.Api.csproj", "Club/Backend/src/CustomerPortal/Club.CustomerPortal.Api/"]
+COPY ["Club/Backend/src/CustomerPortal/Club.CustomerPortal.Application/Club.CustomerPortal.Application.csproj", "Club/Backend/src/CustomerPortal/Club.CustomerPortal.Application/"]
+COPY ["Club/Backend/src/Core/Club.Domain/Club.Domain.csproj", "Club/Backend/src/Core/Club.Domain/"]
+COPY ["Club/Backend/src/Core/Club.Application/Club.Application.csproj", "Club/Backend/src/Core/Club.Application/"]
+COPY ["Club/Backend/src/Core/Club.Infrastructure/Club.Infrastructure.csproj", "Club/Backend/src/Core/Club.Infrastructure/"]
+
+# Copy Neo projects
+COPY ["Neo/src/Neo.Common/Neo.Common.csproj", "Neo/src/Neo.Common/"]
+COPY ["Neo/src/Neo.Domain/Neo.Domain.csproj", "Neo/src/Neo.Domain/"]
+COPY ["Neo/src/Neo.Application/Neo.Application.csproj", "Neo/src/Neo.Application/"]
+COPY ["Neo/src/Neo.Infrastructure/Neo.Infrastructure.csproj", "Neo/src/Neo.Infrastructure/"]
+COPY ["Neo/src/Neo.Infrastructure.Hangfire/Neo.Infrastructure.Hangfire.csproj", "Neo/src/Neo.Infrastructure.Hangfire/"]
+COPY ["Neo/src/Neo.Endpoint/Neo.Endpoint.csproj", "Neo/src/Neo.Endpoint/"]
+
+# Copy Neo.Bpms projects
+COPY ["Neo.Bpms/src/Neo.Bpms.Domain/Neo.Bpms.Domain.csproj", "Neo.Bpms/src/Neo.Bpms.Domain/"]
+COPY ["Neo.Bpms/src/Neo.Bpms.Application/Neo.Bpms.Application.csproj", "Neo.Bpms/src/Neo.Bpms.Application/"]
+
+# Restore dependencies
+WORKDIR /src/Club/Backend
+RUN dotnet restore "src/CustomerPortal/Club.CustomerPortal.Api/Club.CustomerPortal.Api.csproj"
+
+# Copy all source code
+COPY ["Club/", "Club/"]
+COPY ["Neo/", "Neo/"]
+COPY ["Neo.Bpms/", "Neo.Bpms/"]
+
+# Build the project
+WORKDIR /src/Club/Backend/src/CustomerPortal/Club.CustomerPortal.Api
+RUN dotnet build "Club.CustomerPortal.Api.csproj" -c Release -o /app/build --no-restore
+
+# Stage 2: Publish
+FROM build AS publish
+RUN dotnet publish "Club.CustomerPortal.Api.csproj" -c Release -o /app/publish --no-restore --no-build /p:UseAppHost=false
+
+# Stage 3: Final Runtime
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
+WORKDIR /app
+
+# Create non-root user
+RUN groupadd -r clubapp && useradd -r -g clubapp clubapp
+RUN chown -R clubapp:clubapp /app
+
+# Copy published files
+COPY --from=publish --chown=clubapp:clubapp /app/publish .
+
+# Switch to non-root user
+USER clubapp
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:80/health || exit 1
+
+EXPOSE 80
+EXPOSE 443
+
+ENTRYPOINT ["dotnet", "Club.CustomerPortal.Api.dll"]
+

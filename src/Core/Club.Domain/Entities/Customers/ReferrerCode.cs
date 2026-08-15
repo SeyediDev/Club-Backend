@@ -11,9 +11,10 @@ public class ReferrerCode : ClubBaseCoreAuditableEntity<int>
 
     public Tenant Tenant { get; set; } = null!;
 
-    public int CustomerId { get; set; }
+    [DisplayName("شناسه مشتری")]
+    public int CustomerTenantId { get; set; }
 
-    public Customer Customer { get; set; } = null!;
+    public CustomerTenant CustomerTenant { get; set; } = null!;
 
 
     [InDisplayString]

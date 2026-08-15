@@ -1,4 +1,6 @@
-﻿namespace Club.CustomerPortal.Application.Features.Referrals.Queries;
+using Club.CustomerPortal.Application.Interfaces;
+
+namespace Club.CustomerPortal.Application.Features.Referrals.Queries;
 
 public record GetReferralStatsQuery : IRequest<GetReferralStatsQueryResponse>;
 
@@ -11,21 +13,13 @@ public record GetReferralStatsQueryResponse
     public string ReferralLink { get; set; } = null!;
 }
 
-public class GetReferralStatsQueryHandler : IRequestHandler<GetReferralStatsQuery, GetReferralStatsQueryResponse>
+public class GetReferralStatsQueryHandler(IReferralService referralService, ICustomerRequesterUser requesterUser)
+    : IRequestHandler<GetReferralStatsQuery, GetReferralStatsQueryResponse>
 {
-    private readonly IReferralService _referralService;
-    private readonly IRequesterUser _requesterUser;
-
-    public GetReferralStatsQueryHandler(IReferralService referralService, IRequesterUser requesterUser)
-    {
-        _referralService = referralService;
-        _requesterUser = requesterUser;
-    }
-
     public async Task<GetReferralStatsQueryResponse> Handle(GetReferralStatsQuery request, CancellationToken cancellationToken)
     {
-        var customerId = _requesterUser.GetUserId();
-        var stats = await _referralService.GetReferralStatsAsync(customerId, cancellationToken);
+        var customerId = requesterUser.CustomerId;
+        var stats = await referralService.GetReferralStatsAsync(customerId, cancellationToken);
         
         return new GetReferralStatsQueryResponse
         {

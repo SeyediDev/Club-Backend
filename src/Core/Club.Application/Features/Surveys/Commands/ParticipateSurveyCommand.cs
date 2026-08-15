@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace Club.Application.Features.Surveys.Commands;
 
 /// <summary>
@@ -11,7 +9,7 @@ public record ParticipateSurveyCommand : IRequest<ParticipateSurveyResponse>
     public int SurveyId { get; set; }
 
     [Required]
-    public int CustomerId { get; set; }
+    public int CustomerTenantId { get; set; }
 
     [Required]
     public int SelectedItemId { get; set; }
@@ -35,8 +33,8 @@ public class ParticipateSurveyCommandValidator : AbstractValidator<ParticipateSu
         RuleFor(x => x.SurveyId)
             .NotEmpty().WithMessage(multiLingual.GetMessage("SurveyIdIsRequired"));
 
-        RuleFor(x => x.CustomerId)
-            .NotEmpty().WithMessage(multiLingual.GetMessage("CustomerIdIsRequired"));
+        RuleFor(x => x.CustomerTenantId)
+            .NotEmpty().WithMessage("رابطه مشتری-اکوسیستم الزامی است");
 
         RuleFor(x => x.SelectedItemId)
             .NotEmpty().WithMessage("گزینه انتخابی الزامی است");
@@ -80,8 +78,16 @@ public class ParticipateSurveyCommandHandler(
 
         // 5. بررسی شرکت قبلی
         var participationRepo = unitOfWork.Repository<SurveyParticipation, int>();
+        var customerTenantRepo = unitOfWork.Repository<CustomerTenant, int>();
+        CustomerTenant? customerTenant = await customerTenantRepo.FirstOrDefaultAsync(
+            ct => ct.Id == request.CustomerTenantId,
+            cancellationToken) ?? throw new FluentValidation.ValidationException("رابطه مشتری-اکوسیستم یافت نشد");
+
+        if (customerTenant.TenantId != surveyEntity.Promotion.TenantId)
+            throw new FluentValidation.ValidationException("این مشتری به اکوسیستم نظرسنجی تعلق ندارد");
+
         var previousParticipation = await participationRepo.FirstOrDefaultAsync(
-            p => p.SurveyId == request.SurveyId && p.CustomerId == request.CustomerId,
+            p => p.SurveyId == request.SurveyId && p.CustomerTenantId == customerTenant.Id,
             cancellationToken);
 
         if (previousParticipation != null)
@@ -113,7 +119,8 @@ public class ParticipateSurveyCommandHandler(
         var participation = new SurveyParticipation
         {
             SurveyId = request.SurveyId,
-            CustomerId = request.CustomerId,
+            CustomerTenantId = customerTenant.Id,
+            CustomerTenant = customerTenant,
             SelectedItemId = request.SelectedItemId,
             ParticipationDate = DateTime.UtcNow,
             IsCorrect = isCorrect,

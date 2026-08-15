@@ -1,5 +1,4 @@
 ﻿using Neo.Domain.Features.Sms;
-using Microsoft.Extensions.Logging;
 
 namespace Club.Application.Features.Sms.Commands.SendOtpSms;
 

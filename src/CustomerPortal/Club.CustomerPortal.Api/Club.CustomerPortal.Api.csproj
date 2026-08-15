@@ -2,13 +2,14 @@
 
 	<PropertyGroup>
 		<ImplicitUsings>enable</ImplicitUsings>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFramework>net10.0</TargetFramework>
 	</PropertyGroup>
 
 	<ItemGroup>
 		<ProjectReference Include="..\Club.CustomerPortal.Application\Club.CustomerPortal.Application.csproj" />
+		<ProjectReference Include="..\..\Core\Club.Application\Club.Application.csproj" />
 		<ProjectReference Include="..\..\Core\Club.Infrastructure\Club.Infrastructure.csproj" />
-		<ProjectReference Include="..\..\..\..\Projects\Neo\src\Neo.Endpoint\Neo.Endpoint.csproj" />
+		<ProjectReference Include="..\..\..\..\..\Neo\src\Neo.Endpoint\Neo.Endpoint.csproj" />
 	</ItemGroup>
 
   <ItemGroup>
@@ -22,6 +23,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
+    <PackageReference Include="Swashbuckle.AspNetCore" />
     <PackageReference Include="FluentValidation.AspNetCore" />
     <PackageReference Include="Serilog.AspNetCore" />
     <PackageReference Include="Serilog.Sinks.Seq" />
@@ -29,6 +31,18 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\api\" />
+  </ItemGroup>
+
+  <!-- Copy Views from Neo.Endpoint to output directory for Monitoring -->
+  <ItemGroup>
+    <None Include="..\..\..\..\..\Neo\src\Neo.Endpoint\Views\**\*.cshtml">
+      <Link>Views\%(RecursiveDir)%(Filename)%(Extension)</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <!-- همچنین View های موجود در source directory این پروژه را هم کپی کن -->
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="..\..\..\..\..\Neo\src\Neo.Endpoint\Views\Monitoring\**" />
   </ItemGroup>
 
 	<PropertyGroup>

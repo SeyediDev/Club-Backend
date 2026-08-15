@@ -4,12 +4,12 @@
 /// می خواهیم مقدار پارامتر به ازای هر مشتری ذخیره کنیم
 /// </summary>
 [DisplayName("مقدار پارامتر مشتری")]
-[Entity_Index($"{nameof(CustomerId)},{nameof(ParameterId)},{nameof(IsDeleted)}")]
+[EntityIndex($"{nameof(CustomerTenantId)},{nameof(ParameterId)},{nameof(IsDeleted)}")]
 public class CustomerParameterValue : ClubBaseCoreAuditableEntity<int>
 {
-    public int CustomerId { get; set; }
+    public int CustomerTenantId { get; set; }
     [DisplayName("مشتری")]
-    public Customer Customer { get; set; } = null!;
+    public CustomerTenant CustomerTenant { get; set; } = null!;
 
     public int ParameterId { get; set; }
     [DisplayName("پارامتر")]

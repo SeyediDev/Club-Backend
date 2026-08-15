@@ -1,4 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Service.Internal;
+﻿using Neo.Bpms.Domain.Models.Service.Internal;
 
 namespace Club.AdminPanel.Domain.Domain.Bpmn;
 

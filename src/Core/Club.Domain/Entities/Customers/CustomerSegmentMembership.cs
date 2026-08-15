@@ -1,14 +1,14 @@
 ﻿namespace Club.Domain.Entities.Customers;
 
-[DisplayName("عضویت جامعه مشتریان")]
+[DisplayName("عضویت جامعه/بازار مشتریان")]
 public class CustomerSegmentMembership : ClubBaseCoreAuditableEntity<int>
 {
-    public int CustomerId { get; set; }
+    public int CustomerTenantId { get; set; }
     [DisplayName("مشتری")]
-    public Customer Customer { get; set; } = null!;
+    public CustomerTenant CustomerTenant { get; set; } = null!;
 
     public int SegmentId { get; set; }
-    [DisplayName("جامعه")]
+    [DisplayName("جامعه/بازار")]
     public CustomerSegment Segment { get; set; } = null!;
 
     public long EventLogId { get; set; }

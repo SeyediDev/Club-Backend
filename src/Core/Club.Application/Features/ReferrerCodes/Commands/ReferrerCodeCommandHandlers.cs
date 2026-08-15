@@ -47,7 +47,7 @@
 
 //    private string GenerateUniqueCode(int customerId, int tenantId)
 //    {
-//        var timestamp = DateTime.Now.ToString("MMddHHmm");
+//        var timestamp = DateTime.UtcNow.ToString("MMddHHmm");
 //        return $"REF{customerId:D6}{tenantId:D3}{timestamp}";
 //    }
 //}

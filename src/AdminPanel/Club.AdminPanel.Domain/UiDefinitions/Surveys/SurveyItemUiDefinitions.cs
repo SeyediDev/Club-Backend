@@ -1,14 +1,12 @@
-﻿using Club.Domain.Entities.Surveys;
-
 namespace Club.AdminPanel.Domain.UiDefinitions.Surveys;
 
 public class SurveyItemUiDefinitions : SubCRUDDefinition<SurveyItem>
 {
     public override string SubjectId => "Sub";
 
-    public override void SubIndexViewModel(FormDefinition form)
+    public override void SubIndexViewModel()
     {
-        form.AddColumns(
+        AddColumns(
             nameof(SurveyItem.OptionText),
             nameof(SurveyItem.DisplayOrder),
             nameof(SurveyItem.IsCorrectAnswer),
@@ -17,9 +15,9 @@ public class SurveyItemUiDefinitions : SubCRUDDefinition<SurveyItem>
         );
     }
 
-    public override void SubViewModel(FormDefinition form)
+    public override void SubViewModel()
     {
-        form.AddFields(
+        AddFields(
             nameof(SurveyItem.OptionText),
             nameof(SurveyItem.DisplayOrder),
             nameof(SurveyItem.IsCorrectAnswer),

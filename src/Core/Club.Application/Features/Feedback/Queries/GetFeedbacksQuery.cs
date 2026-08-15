@@ -13,7 +13,7 @@ public record GetFeedbacksQuery : IRequest<List<FeedbackDto>>
     
     public FeedbackType? FeedbackType { get; set; }
     public FeedbackStatus? Status { get; set; }
-    public int? CustomerId { get; set; }
+    public int? CustomerTenantId { get; set; }
     public int PageNumber { get; set; } = 1;
     public int PageSize { get; set; } = 20;
 }
@@ -21,7 +21,7 @@ public record GetFeedbacksQuery : IRequest<List<FeedbackDto>>
 public record FeedbackDto
 {
     public int Id { get; set; }
-    public int CustomerId { get; set; }
+    public int CustomerTenantId { get; set; }
     public string CustomerName { get; set; } = null!;
     public FeedbackType FeedbackType { get; set; }
     public string Title { get; set; } = null!;
@@ -41,18 +41,18 @@ public class GetFeedbacksQueryHandler(
     {
         var feedbackRepo = unitOfWork.Repository<CustomerFeedback, int>();
         
-        List<Expression<Func<CustomerFeedback, object?>>> includes = new() 
-        { 
-            f => f.Customer!,
+        List<Expression<Func<CustomerFeedback, object?>>> includes =
+        [
+            f => f.CustomerTenant.Customer!,
             f => f.Product!
-        };
+        ];
         var feedbacks = await feedbackRepo.GetAllWithIncludeAsync(
             includes: includes,
             cancellationToken: cancellationToken,
             predicate: f => f.TenantId == request.TenantId &&
                 (!request.FeedbackType.HasValue || f.FeedbackType == request.FeedbackType.Value) &&
                 (!request.Status.HasValue || f.Status == request.Status.Value) &&
-                (!request.CustomerId.HasValue || f.CustomerId == request.CustomerId.Value),
+                (!request.CustomerTenantId.HasValue || f.CustomerTenantId == request.CustomerTenantId.Value),
             orderBy: q => q.OrderByDescending(f => f.CreateDate),
             skip: (request.PageNumber - 1) * request.PageSize,
             take: request.PageSize
@@ -61,8 +61,8 @@ public class GetFeedbacksQueryHandler(
         var result = feedbacks.Select(f => new FeedbackDto
         {
             Id = f.Id,
-            CustomerId = f.CustomerId,
-            CustomerName = $"{f.Customer?.FirstName} {f.Customer?.LastName}",
+            CustomerTenantId = f.CustomerTenantId,
+            CustomerName = $"{f.CustomerTenant?.Customer?.FirstName} {f.CustomerTenant?.Customer?.LastName}",
             FeedbackType = f.FeedbackType,
             Title = f.Title,
             Content = f.Content,
@@ -73,7 +73,7 @@ public class GetFeedbacksQueryHandler(
             CreatedOnUtc = f.CreateDate
         }).ToList();
 
-        return result ?? new List<FeedbackDto>();
+        return result ?? [];
     }
 }
 

@@ -1,3 +1,5 @@
+using Club.CustomerPortal.Application.Interfaces;
+
 namespace Club.CustomerPortal.Application.Features.Auth.Commands;
 
 public record ResetPasswordCommand : IRequest
@@ -15,24 +17,15 @@ public class ResetPasswordCommandValidator : AbstractValidator<ResetPasswordComm
     }
 }
 
-public class ResetPasswordCommandHandler : IRequestHandler<ResetPasswordCommand>
+public class ResetPasswordCommandHandler(
+    ICustomerService customerService,
+    ILogger<ResetPasswordCommandHandler> logger) : IRequestHandler<ResetPasswordCommand>
 {
-    private readonly ICustomerService _customerService;
-    private readonly ILogger<ResetPasswordCommandHandler> _logger;
-
-    public ResetPasswordCommandHandler(
-        ICustomerService customerService,
-        ILogger<ResetPasswordCommandHandler> logger)
-    {
-        _customerService = customerService;
-        _logger = logger;
-    }
-
     public async Task Handle(ResetPasswordCommand request, CancellationToken cancellationToken)
     {
-        await _customerService.ResetPasswordAsync(request.Token, request.NewPassword, cancellationToken);
+        await customerService.ResetPasswordAsync(request.Token, request.NewPassword, cancellationToken);
         
-        _logger.LogInformation("Password reset successfully");
+        logger.LogInformation("Password reset successfully");
     }
 }
 

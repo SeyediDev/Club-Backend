@@ -1,4 +1,6 @@
-﻿namespace Club.CustomerPortal.Application.Features.Lotteries.Commands;
+using Club.CustomerPortal.Application.Interfaces;
+
+namespace Club.CustomerPortal.Application.Features.Lotteries.Commands;
 
 public record ParticipateInLotteryCommand : IRequest<ParticipateInLotteryCommandResponse>
 {
@@ -21,33 +23,22 @@ public class ParticipateInLotteryCommandValidator : AbstractValidator<Participat
     }
 }
 
-public class ParticipateInLotteryCommandHandler : IRequestHandler<ParticipateInLotteryCommand, ParticipateInLotteryCommandResponse>
+public class ParticipateInLotteryCommandHandler(
+    ILotteryService lotteryService,
+    ICustomerRequesterUser requesterUser,
+    ILogger<ParticipateInLotteryCommandHandler> logger) : IRequestHandler<ParticipateInLotteryCommand, ParticipateInLotteryCommandResponse>
 {
-    private readonly ILotteryService _lotteryService;
-    private readonly IRequesterUser _requesterUser;
-    private readonly ILogger<ParticipateInLotteryCommandHandler> _logger;
-
-    public ParticipateInLotteryCommandHandler(
-        ILotteryService lotteryService,
-        IRequesterUser requesterUser,
-        ILogger<ParticipateInLotteryCommandHandler> logger)
-    {
-        _lotteryService = lotteryService;
-        _requesterUser = requesterUser;
-        _logger = logger;
-    }
-
     public async Task<ParticipateInLotteryCommandResponse> Handle(ParticipateInLotteryCommand request, CancellationToken cancellationToken)
     {
-        var customerId = _requesterUser.GetUserId();
-        var result = await _lotteryService.ParticipateInLotteryAsync(customerId, int.Parse(request.LotteryId), cancellationToken);
+        var customerId = requesterUser.CustomerId;
+        var result = await lotteryService.ParticipateInLotteryAsync(customerId, int.Parse(request.LotteryId), cancellationToken);
         
         if (!result.Success)
         {
             throw new InvalidOperationException(result.Message);
         }
         
-        _logger.LogInformation("Customer {CustomerId} participated in lottery {LotteryId}", customerId, request.LotteryId);
+        logger.LogInformation("Customer {CustomerId} participated in lottery {LotteryId}", customerId, request.LotteryId);
         
         return new ParticipateInLotteryCommandResponse
         {

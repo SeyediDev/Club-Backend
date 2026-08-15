@@ -1,5 +1,4 @@
-﻿using Neo.Domain.Features.Multilingual;
-using Club.Application.Features.Common.Commands.Documents;
+﻿using Club.Application.Features.Common.Commands.Documents;
 using System.Text;
 
 namespace Club.Application.Features.Admin.File.Commands;

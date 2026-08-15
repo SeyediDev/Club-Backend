@@ -1,14 +1,14 @@
 namespace Club.Domain.Entities.Customers;
 
 /// <summary>
-/// می خواهیم برای هر مشتری سطح‌امتیازاش را در سازمان بهره‌بردار ذخیره کنیم
+/// می خواهیم برای هر مشتری سطح‌امتیازاش را در اکوسیستم ذخیره کنیم
 /// </summary>
 [DisplayName("سطح‌امتیاز مشتری")]
 public class CustomerPointLevel : ClubBaseCoreConfigAuditableEntity<int>
 {
-    public int CustomerId { get; set; }
+    public int CustomerTenantId { get; set; }
     [DisplayName("مشتری")]
-    public Customer Customer { get; set; } = null!;
+    public CustomerTenant CustomerTenant { get; set; } = null!;
 
     public int PointLevelId { get; set; }
     [DisplayName("سطح‌امتیاز")]

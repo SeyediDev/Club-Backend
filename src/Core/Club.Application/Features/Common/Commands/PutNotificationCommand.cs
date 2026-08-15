@@ -1,7 +1,4 @@
-﻿using Neo.Domain.Features.Client;
-using Neo.Domain.Repository;
-
-namespace Club.Application.Features.Common.Commands;
+﻿namespace Club.Application.Features.Common.Commands;
 
 public record PutNotificationCommand : IRequest<Unit>
 {

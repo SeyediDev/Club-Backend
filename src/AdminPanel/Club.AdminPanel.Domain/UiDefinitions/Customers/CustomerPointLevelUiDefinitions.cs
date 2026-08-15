@@ -5,14 +5,14 @@ public class CustomerPointLevelUiDefinitions : SubCRUDDefinition<CustomerPointLe
     protected override void IndexFormViewModel(FormDefinition form)
     {
         form.AddColumns(
-            nameof(CustomerPointLevel.Customer),
+            nameof(CustomerPointLevel.CustomerTenant),
             nameof(CustomerPointLevel.PointLevel));
     }
 
     protected override void CUDFormsViewModel(CUDForm form)
     {
         form.AddFields(
-            nameof(CustomerPointLevel.Customer),
+            nameof(CustomerPointLevel.CustomerTenant),
             nameof(CustomerPointLevel.PointLevel),
             nameof(CustomerPointLevel.EventLog)
             );

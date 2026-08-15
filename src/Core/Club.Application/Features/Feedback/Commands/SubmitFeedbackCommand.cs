@@ -8,10 +8,7 @@ namespace Club.Application.Features.Feedback.Commands;
 public record SubmitFeedbackCommand : IRequest<int>
 {
     [Required]
-    public int TenantId { get; set; }
-    
-    [Required]
-    public int CustomerId { get; set; }
+    public int CustomerTenantId { get; set; }
     
     public FeedbackType FeedbackType { get; set; }
     
@@ -40,8 +37,7 @@ public class SubmitFeedbackCommandValidator : AbstractValidator<SubmitFeedbackCo
 {
     public SubmitFeedbackCommandValidator(IMultiLingualService multiLingual)
     {
-        RuleFor(x => x.TenantId).NotEmpty().WithMessage("شناسه سازمان الزامی است");
-        RuleFor(x => x.CustomerId).NotEmpty().WithMessage("شناسه مشتری الزامی است");
+        RuleFor(x => x.CustomerTenantId).NotEmpty().WithMessage("رابطه مشتری-اکوسیستم الزامی است");
         RuleFor(x => x.Title).NotEmpty().WithMessage("عنوان الزامی است")
             .MaximumLength(200);
         RuleFor(x => x.Content).NotEmpty().WithMessage("متن بازخورد الزامی است")
@@ -60,10 +56,16 @@ public class SubmitFeedbackCommandHandler(
     {
         const long participationPoints = 10;
 
+        var customerTenantRepo = unitOfWork.Repository<CustomerTenant, int>();
+        CustomerTenant? customerTenant = await customerTenantRepo.FirstOrDefaultAsync(
+            ct => ct.Id == request.CustomerTenantId,
+            cancellationToken) ?? throw new System.ComponentModel.DataAnnotations.ValidationException("رابطه مشتری-اکوسیستم یافت نشد");
+
         var feedback = new CustomerFeedback
         {
-            TenantId = request.TenantId,
-            CustomerId = request.CustomerId,
+            TenantId = customerTenant.TenantId,
+            CustomerTenantId = customerTenant.Id,
+            CustomerTenant = customerTenant,
             FeedbackType = request.FeedbackType,
             Title = request.Title,
             Content = request.Content,
@@ -81,14 +83,11 @@ public class SubmitFeedbackCommandHandler(
 
         unitOfWork.Repository<CustomerFeedback, int>().Add(feedback);
 
-        // اعطای امتیاز به مشتری
-        var customerRepo = unitOfWork.Repository<Customer, int>();
-        var customer = await customerRepo.GetAsync(request.CustomerId, cancellationToken);
-        if (customer != null && participationPoints > 0)
+        if (participationPoints > 0)
         {
-            customer.CurrentPointsBalance = (customer.CurrentPointsBalance ?? 0) + participationPoints;
-            customer.TotalPointsEarned = (customer.TotalPointsEarned ?? 0) + participationPoints;
-            customerRepo.Update(customer);
+            customerTenant.CurrentPointsBalance = (customerTenant.CurrentPointsBalance ?? 0) + participationPoints;
+            customerTenant.TotalPointsEarned = (customerTenant.TotalPointsEarned ?? 0) + participationPoints;
+            customerTenantRepo.Update(customerTenant);
         }
 
         await unitOfWork.SaveChangesAsync(cancellationToken);

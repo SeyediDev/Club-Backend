@@ -8,7 +8,7 @@ public static class RequesterUserExtensions
     /// <summary>
     /// دریافت UserId با exception اگر User login نکرده باشد
     /// </summary>
-    public static int GetUserId(this IRequesterUser requesterUser)
+    public static UserId GetUserId(this IRequesterUser requesterUser)
     {
         if (!requesterUser.Id.HasValue)
         {
@@ -16,13 +16,5 @@ public static class RequesterUserExtensions
         }
         
         return requesterUser.Id.Value;
-    }
-    
-    /// <summary>
-    /// دریافت UserId با null اگر User login نکرده باشد
-    /// </summary>
-    public static int? GetUserIdOrNull(this IRequesterUser requesterUser)
-    {
-        return requesterUser.Id;
     }
 }

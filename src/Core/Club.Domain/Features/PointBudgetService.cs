@@ -1,5 +1,3 @@
-using Club.Domain.Entities.Points.Enums;
-
 namespace Club.Domain.Features;
 
 public interface IPointBudgetService
@@ -55,11 +53,11 @@ public class PointBudgetService(
 
     private long CalculateUsedBudget(PointBudget budget, Customer customer)
     {
-        var query = customerTransactionRepo.GetEntityAsQueryable()
+        var query = customerTransactionRepo.Query()
                     .Where(x => x.TenantId == budget.Point.TenantId && x.PointId == budget.PointId);
         if (budget.Scope == PointBudgetScope.PerCustomer)
         {
-            query = query.Where(x => x.CustomerId == customer.Id);
+            query = query.Where(x => x.CustomerTenant.CustomerId == customer.Id);
         }
         if (budget.FromDate!=null)
         {

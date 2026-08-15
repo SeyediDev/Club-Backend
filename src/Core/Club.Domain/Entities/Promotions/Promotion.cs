@@ -1,276 +1,190 @@
-﻿namespace Club.Domain.Entities.Promotions;
+using Neo.Bpms.Domain.Models.Attributes.RelationshipAttributes;
 
-[DisplayName("پویش")]
-[SBVR(SBVRModality.Obligatory, "کمپین‌های بازاریابی", "هر پویش باید برای تشویق رفتارهای مطلوب مشتریان و افزایش فروش قابل اجرا باشد")]
-[SBVR(SBVRModality.Recommended, "کمپین‌های بازاریابی", "پویش‌ها باید برای تحلیل اثربخشی، محاسبه ROI و بهینه‌سازی استراتژی‌های بازاریابی طراحی شوند")]
-public class Promotion : ClubBaseCoreConfigAuditableEntity<int>
+namespace Club.Domain.Entities.Promotions;
+
+[DisplayName("پویش/کمپین")]
+[SBVR(SBVRModality.Obligatory, "پویش‌های بازاریابی", "هر پویش باید برای تشویق رفتارهای مطلوب مشتریان و افزایش فروش قابل اجرا باشد")]
+[SBVR(SBVRModality.Recommended, "پویش‌های بازاریابی", "پویش‌ها باید برای تحلیل اثربخشی، محاسبه ROI و بهینه‌سازی استراتژی‌های بازاریابی طراحی شوند")]
+public class Promotion : ClubBaseCoreConfigAuditableEntity<int>, ISubOfTenant
 {
     public int TenantId { get; set; }
-
-    [DisplayName("سازمان بهره‌بردار")]
+    [DisplayName("اکوسیستم")]
     public Tenant Tenant { get; set; } = null!;
 
     /// <summary>
     /// عنوان پویش
     /// </summary>
-    [DisplayName("عنوان پویش")]
+    [DisplayName("عنوان")]
     [InDisplayString]
     [MaxLength(41)]
-    [SBVR(SBVRModality.Obligatory, "شناسایی کمپین", "عنوان پویش باید برای مدیریت کمپین‌ها و گزارش‌گیری واضح و قابل فهم باشد")]
     public string Title { get; set; } = null!;
 
     /// <summary>
-    /// دسته‌بندی پویش
+    /// دسته‌بندی پویش بر اساس محتوا/موضوع
     /// </summary>
-    [DisplayName("دسته‌بندی پویش")]
-    [SBVR(SBVRModality.Obligatory, "دسته‌بندی کمپین‌ها", "دسته‌بندی پویش باید برای تحلیل اثربخشی و بهینه‌سازی استراتژی‌ها مشخص باشد")]
+    [DisplayName("دسته‌بندی")]
+    [SBVR(SBVRModality.Obligatory, "دسته‌بندی پویش", "هر پویش باید برای دسته‌بندی و گزارش‌گیری بر اساس محتوا/موضوع دسته‌بندی شود")]
+    [SBVR(SBVRModality.Recommended, "دسته‌بندی پویش", "دسته‌بندی پویش باید برای تحلیل اثربخشی و بهینه‌سازی استراتژی‌های بازاریابی استفاده شود")]
+    [SBVR(SBVRModality.Permitted, "دسته‌بندی پویش", "دسته‌بندی پویش می‌تواند برای فیلتر کردن و جستجوی پویش‌ها استفاده شود")]
+    [SBVR(SBVRModality.Obligatory, "استفاده از دسته‌بندی", "دسته‌بندی پویش فقط برای دسته‌بندی و گزارش‌گیری استفاده می‌شود و نباید در منطق بیزینس استفاده شود")]
     public PromotionCategory Category { get; set; }
 
-    public int CustomerSegmentId { get; set; }
-
     /// <summary>
-    /// جامعه مشتریان هدف
+    /// تاریخ شروع پویش (بازه زمانی کلی پویش)
+    /// این بازه تعریف کننده بازه اصلی پویش است و رویدادهای دریافتی فقط در این بازه بررسی می‌شوند
+    /// برای تعریف هزینه‌ها در بازه‌های زمانی مختلف، باید از جدول تسهیم هزینه‌ها (PromotionCostAllocation) استفاده شود
     /// </summary>
-    [DisplayName("جامعه مشتریان هدف")]
-    [SBVR(SBVRModality.Obligatory, "هدف‌گذاری مشتریان", "هر پویش باید به یک جامعه مشتریان مشخص تعلق داشته باشد تا اثربخشی افزایش یابد")]
-    public CustomerSegment CustomerSegment { get; set; } = null!;
-
-    /// <summary>
-    /// تاریخ شروع پویش
-    /// </summary>
-    [DisplayName("تاریخ شروع پویش")]
-    [SBVR(SBVRModality.Recommended, "مدیریت زمان‌بندی", "تاریخ شروع پویش باید برای برنامه‌ریزی و هماهنگی با سایر کمپین‌ها مشخص باشد")]
+    [DisplayName("تاریخ شروع")]
+    [SBVR(SBVRModality.Recommended, "مدیریت زمان‌بندی", "تاریخ شروع پویش باید برای برنامه‌ریزی و هماهنگی با سایر پویش‌ها مشخص باشد")]
+    [SBVR(SBVRModality.Obligatory, "بازه زمانی پویش", "بازه زمانی پویش تعریف کننده بازه اصلی پویش است")]
+    [SBVR(SBVRModality.Obligatory, "بررسی رویدادها", "رویدادهای دریافتی فقط در بازه زمانی پویش بررسی می‌شوند")]
+    [SBVR(SBVRModality.Obligatory, "تسهیم هزینه", "برای تعریف هزینه‌ها در بازه‌های زمانی مختلف، باید از جدول تسهیم هزینه‌ها استفاده شود")]
     public DateTime? FromDate { get; set; }
 
     /// <summary>
-    /// تاریخ پایان پویش
+    /// تاریخ پایان پویش (بازه زمانی کلی پویش)
+    /// این بازه تعریف کننده بازه اصلی پویش است و رویدادهای دریافتی فقط در این بازه بررسی می‌شوند
+    /// برای تعریف هزینه‌ها در بازه‌های زمانی مختلف، باید از جدول تسهیم هزینه‌ها (PromotionCostAllocation) استفاده شود
     /// </summary>
-    [DisplayName("تاریخ پایان پویش")]
-    [SBVR(SBVRModality.Recommended, "مدیریت زمان‌بندی", "تاریخ پایان پویش باید برای تحلیل دوره‌ای و برنامه‌ریزی کمپین‌های آینده مشخص باشد")]
+    [DisplayName("تاریخ پایان")]
+    [SBVR(SBVRModality.Recommended, "مدیریت زمان‌بندی", "تاریخ پایان پویش باید برای تحلیل دوره‌ای و برنامه‌ریزی پویش‌های آینده مشخص باشد")]
+    [SBVR(SBVRModality.Obligatory, "بازه زمانی پویش", "بازه زمانی پویش تعریف کننده بازه اصلی پویش است")]
+    [SBVR(SBVRModality.Obligatory, "بررسی رویدادها", "رویدادهای دریافتی فقط در بازه زمانی پویش بررسی می‌شوند")]
+    [SBVR(SBVRModality.Obligatory, "تسهیم هزینه", "برای تعریف هزینه‌ها در بازه‌های زمانی مختلف، باید از جدول تسهیم هزینه‌ها استفاده شود")]
     public DateTime? ToDate { get; set; }
 
-    /// <summary>
-    /// نحوه شمارش پنجره زمانی پویش
-    /// </summary>
-    [DisplayName("نحوه شمارش پنجره زمانی")]
-    [SBVR(SBVRModality.Recommended, "کنترل محدودیت‌ها", "نحوه شمارش تعیین می‌کند که چگونه تعداد دفعات استفاده محاسبه شود تا از سوءاستفاده جلوگیری شود")]
-    public PromotionCounterWindowMode CounterWindowMode { get; set; }
+    [DisplayName("ساعت شروع")]
+    public int? FromHour { get; set; }
+
+    [DisplayName("ساعت پایان")]
+    public int? ToHour { get; set; }
 
     /// <summary>
-    /// آستانه تعداد دفعات استفاده از پویش
+    /// وضعیت پویش - Active, Paused, Completed, Cancelled
     /// </summary>
-    [DisplayName("آستانه تعداد دفعات")]
-    [SBVR(SBVRModality.Recommended, "کنترل محدودیت‌ها", "آستانه تعداد دفعات تعیین می‌کند که مشتری چند بار می‌تواند از پویش استفاده کند")]
-    public int? Threshold { get; set; }
+    [DisplayName("وضعیت پویش")]
+    [SBVR(SBVRModality.Recommended, "مدیریت چرخه حیات", "وضعیت پویش برای مدیریت و گزارش‌گیری استفاده می‌شود")]
+    public PromotionStatus? Status { get; set; }
 
     /// <summary>
-    /// نوع فعال‌سازی پویش
+    /// آیا این کمپین در پرتال مشتریان قابل نمایش است؟
     /// </summary>
-    [DisplayName("نوع فعال‌سازی پویش")]
-    [SBVR(SBVRModality.Recommended, "اتوماسیون کمپین", "نوع فعال‌سازی تعیین می‌کند که پویش چگونه فعال می‌شود تا مدیریت خودکار امکان‌پذیر باشد")]
-    public PromotionTriggerKind? TriggerKind { get; set; }
+    [DisplayName("قابل نمایش برای مشتری")]
+    [SBVR(SBVRModality.Permitted, "نمایش کمپین در پرتال", "این فیلد تعیین می‌کند که آیا این کمپین در پرتال باشگاه مشتریان برای مشتریان قابل نمایش است یا خیر. مشتریان می‌توانند از کمپین‌های قابل نمایش مطلع شوند و از نحوه امتیازگیری و اقدامات لازم آگاه شوند.")]
+    public bool IsVisibleToCustomer { get; set; } = false;
 
     /// <summary>
-    /// زمان بررسی پویش
+    /// توضیح کوتاه کمپین برای نمایش در پرتال مشتریان
     /// </summary>
-    [DisplayName("زمان بررسی پویش")]
-    [SBVR(SBVRModality.Permitted, "برنامه‌ریزی زمانی", "زمان بررسی تعیین می‌کند که پویش در چه زمانی بررسی شود تا بهینه‌سازی عملکرد امکان‌پذیر باشد")]
-    public PromotionCheckTime? CheckTime { get; set; }
+    [DisplayName("توضیح کوتاه")]
+    [MaxLength(500)]
+    [SBVR(SBVRModality.Permitted, "اطلاع‌رسانی به مشتری", "توضیح کوتاه برای آگاهی سریع مشتری از هدف و مزایای کمپین")]
+    public string? ShortDescription { get; set; }
 
     /// <summary>
-    /// روز هفته برای بررسی
+    /// متنی که مزایای شرکت در کمپین را توضیح می‌دهد
     /// </summary>
-    [DisplayName("روز هفته")]
-    [SBVR(SBVRModality.Permitted, "برنامه‌ریزی زمانی", "روز هفته برای برنامه‌ریزی زمانی پویش و هماهنگی با الگوهای رفتاری مشتریان استفاده می‌شود")]
-    public DayOfWeek? WeekDay { get; set; }
+    [DisplayName("مزایای کمپین")]
+    [MaxLength(1000)]
+    [SBVR(SBVRModality.Permitted, "اطلاع‌رسانی به مشتری", "بیان مزایایی که مشتری با شرکت در این کمپین برای خود به دست می‌آورد")]
+    public string? Benefits { get; set; }
 
     /// <summary>
-    /// روز ماه برای بررسی
+    /// نحوه شرکت و رفتار موردعلاقه برای کسب امتیاز/جوایز
     /// </summary>
-    [DisplayName("روز ماه")]
-    [SBVR(SBVRModality.Permitted, "برنامه‌ریزی زمانی", "روز ماه برای برنامه‌ریزی زمانی پویش و هماهنگی با چرخه‌های کسب‌وکار استفاده می‌شود")]
-    public int? MonthDay { get; set; }
-
-    // ===== SCHEDULING FIELDS =====
-
-    /// <summary>
-    /// آیا پویش زمان‌بندی شده است
-    /// </summary>
-    [DisplayName("فعال‌سازی زمان‌بندی")]
-    [SBVR(SBVRModality.Permitted, "پویش زمان‌بندی شده", "برای پویش‌هایی که می‌خواهند به صورت دوره‌ای به صورت خودکار اجرا شوند")]
-    public bool IsScheduled { get; set; }
+    [DisplayName("نحوه شرکت")]
+    [MaxLength(1000)]
+    [SBVR(SBVRModality.Permitted, "اطلاع‌رسانی به مشتری", "توضیح در خصوص اقداماتی که مشتری باید انجام دهد تا در کمپین شرکت کند و امتیاز/جایزه کسب کند")]
+    public string? ParticipationGuide { get; set; }
 
     /// <summary>
-    /// نوع برنامه‌ریزی برای اجرای خودکار
+    /// آدرس تصویر از پیش تعریف شده (1:1) برای کارت کمپین
     /// </summary>
-    [DisplayName("نوع برنامه‌ریزی")]
-    [SBVR(SBVRModality.Necessary, "نوع برنامه‌ریزی", "باید تعیین شود", "وقتی زمان‌بندی فعال باشد")]
-    public SchedulingKind? PromotionSchedulingKind { get; set; }
+    [DisplayName("تصویر کارت کمپین")]
+    [MaxLength(500)]
+    [SBVR(SBVRModality.Permitted, "نمایش تصویری", "تصویری با نسبت 1:1 برای نمایش در کارت کمپین در پرتال مشتری")]
+    public string? CardImageUrl { get; set; }
 
     /// <summary>
-    /// ماه برای برنامه‌ریزی (1-12)
+    /// آدرس تصویر بنر کمپین برای نمایش در بخش تفاصیل کمپین (16:9 یا 2:1)
     /// </summary>
-    [DisplayName("ماه")]
-    [SBVR(SBVRModality.Necessary, "ماه", "باید تعیین شود", "وقتی نوع برنامه‌ریزی 'ماهانه' یا 'سالانه' باشد")]
-    public int? ScheduledMonth { get; set; }
+    [DisplayName("تصویر بنر کمپین")]
+    [MaxLength(500)]
+    [SBVR(SBVRModality.Permitted, "نمایش تصویری", "تصویر بنر با نسبت‌های استاندارد (16:9 یا 2:1) برای نمایش در صفحه جزئیات کمپین")]
+    public string? BannerImageUrl { get; set; }
 
     /// <summary>
-    /// ساعت انجام پویش (0-23)
+    /// رنگ اصلی کمپین برای تطابق بصری (Hex Color)
     /// </summary>
-    [DisplayName("ساعت")]
-    [SBVR(SBVRModality.Recommended, "ساعت", "ساعت برای زمان‌بندی دقیق اجرای پویش استفاده می‌شود")]
-    public int? ScheduledHour { get; set; }
+    [DisplayName("رنگ اصلی")]
+    [MaxLength(9)]
+    [SBVR(SBVRModality.Permitted, "طراحی رابط", "کد رنگ HEX برای تطابق طراحی کمپین در رابط کاربری")]
+    public string? PrimaryColor { get; set; }
 
     /// <summary>
-    /// دقیقه انجام پویش (0-59)
+    /// نوع مزایا/جوایز این کمپین (مثلا: امتیاز، تخفیف، جایزه فیزیکی)
     /// </summary>
-    [DisplayName("دقیقه")]
-    [SBVR(SBVRModality.Recommended, "دقیقه", "دقیقه برای زمان‌بندی دقیق اجرای پویش استفاده می‌شود")]
-    public int? ScheduledMinute { get; set; }
+    [DisplayName("نوع جایزه")]
+    [SBVR(SBVRModality.Permitted, "توضیح جوایز", "نوع جایزه یا مزایایی که کمپین ارائه می‌دهد")]
+    public PromotionRewardType? RewardType { get; set; }
+
+    /// <summary>
+    /// آدرس آیکن نمادین برای نمایش در لیست کمپین‌ها
+    /// </summary>
+    [DisplayName("آیکن کمپین")]
+    [MaxLength(500)]
+    [SBVR(SBVRModality.Permitted, "نمایش تصویری", "آیکن یا نماد کوچک برای شناخت سریع کمپین در لیست‌ها")]
+    public string? IconUrl { get; set; }
 
     // =====================================================
-    // Campaign Performance Metrics
-    // =====================================================
-
-    /// <summary>
-    /// تعداد کل دریافت‌کنندگان هدف
-    /// </summary>
-    [DisplayName("تعداد هدف")]
-    [SBVR(SBVRModality.Calculated, "تحلیل عملکرد", "تعداد هدف برای محاسبه نرخ دستیابی و بودجه‌بندی استفاده می‌شود")]
-    public int? TargetAudienceCount { get; set; }
-
-    /// <summary>
-    /// تعداد پیام‌های ارسال شده
-    /// </summary>
-    [DisplayName("تعداد پیام‌های ارسال شده")]
-    [SBVR(SBVRModality.Calculated, "تحلیل ارسال", "تعداد پیام‌های ارسال شده برای محاسبه نرخ تحویل استفاده می‌شود")]
-    public int? MessagesSent { get; set; }
-
-    /// <summary>
-    /// تعداد پیام‌های تحویل شده
-    /// </summary>
-    [DisplayName("تعداد پیام‌های تحویل شده")]
-    [SBVR(SBVRModality.Calculated, "تحلیل ارسال", "تعداد پیام‌های تحویل شده برای محاسبه نرخ تحویل استفاده می‌شود")]
-    public int? MessagesDelivered { get; set; }
-
-    /// <summary>
-    /// نرخ تحویل - Delivery Rate (%)
-    /// </summary>
-    [DisplayName("نرخ تحویل")]
-    [SBVR(SBVRModality.Calculated, "تحلیل عملکرد", "نرخ تحویل = (تحویل شده / ارسال شده) × 100")]
-    public decimal? DeliveryRate { get; set; }
-
-    /// <summary>
-    /// تعداد باز شدن پیام - Open Count
-    /// </summary>
-    [DisplayName("تعداد باز شدن")]
-    [SBVR(SBVRModality.Calculated, "تحلیل تعامل", "تعداد باز شدن برای محاسبه نرخ باز شدن استفاده می‌شود")]
-    public int? OpenCount { get; set; }
-
-    /// <summary>
-    /// نرخ باز شدن - Open Rate (%)
-    /// </summary>
-    [DisplayName("نرخ باز شدن")]
-    [SBVR(SBVRModality.Calculated, "تحلیل تعامل", "نرخ باز شدن = (باز شده / تحویل شده) × 100")]
-    public decimal? OpenRate { get; set; }
-
-    /// <summary>
-    /// تعداد کلیک - Click Count
-    /// </summary>
-    [DisplayName("تعداد کلیک")]
-    [SBVR(SBVRModality.Calculated, "تحلیل تعامل", "تعداد کلیک برای محاسبه نرخ کلیک استفاده می‌شود")]
-    public int? ClickCount { get; set; }
-
-    /// <summary>
-    /// نرخ کلیک - Click-Through Rate (%)
-    /// </summary>
-    [DisplayName("نرخ کلیک")]
-    [SBVR(SBVRModality.Calculated, "تحلیل تعامل", "نرخ کلیک = (کلیک شده / باز شده) × 100")]
-    public decimal? ClickThroughRate { get; set; }
-
-    /// <summary>
-    /// تعداد تبدیل‌ها - Conversion Count
-    /// </summary>
-    [DisplayName("تعداد تبدیل")]
-    [SBVR(SBVRModality.Calculated, "تحلیل نتایج", "تعداد تبدیل برای محاسبه نرخ تبدیل و ROI استفاده می‌شود")]
-    public int? ConversionCount { get; set; }
-
-    /// <summary>
-    /// نرخ تبدیل - Conversion Rate (%)
-    /// </summary>
-    [DisplayName("نرخ تبدیل")]
-    [SBVR(SBVRModality.Calculated, "تحلیل نتایج", "نرخ تبدیل = (تبدیل شده / هدف) × 100")]
-    public decimal? ConversionRate { get; set; }
-
-    // =====================================================
-    // Financial Metrics
+    // Navigation Properties
     // =====================================================
 
     /// <summary>
-    /// هزینه کمپین - Campaign Cost
+    /// محرک‌های عملیات پویش - لیست محرک‌هایی که باید دریافت شوند
     /// </summary>
-    [DisplayName("هزینه کمپین")]
-    [SBVR(SBVRModality.Recommended, "تحلیل مالی", "هزینه کمپین برای محاسبه ROI و CAC استفاده می‌شود")]
-    public decimal? CampaignCost { get; set; }
+    [DisplayName("محرک‌های عملیات پویش")]
+    [SBVR(SBVRModality.Permitted, "محرک‌های عملیات پویش", "محرک‌های عملیات پویش برای تعریف رویدادهای فعال‌سازی پویش")]
+    [OldDbMap("Conditions")]
+    public ICollection<PromotionTrigger> Triggers { get; set; } = [];
 
     /// <summary>
-    /// درآمد حاصل از کمپین - Campaign Revenue
+    /// عملیات پویش - لیست عملیاتی که انجام می‌شوند
     /// </summary>
-    [DisplayName("درآمد کمپین")]
-    [SBVR(SBVRModality.Calculated, "تحلیل مالی", "درآمد کمپین برای محاسبه ROI و سودآوری استفاده می‌شود")]
-    public decimal? CampaignRevenue { get; set; }
+    [DisplayName("عملیات پویش")]
+    [SBVR(SBVRModality.Permitted, "عملیات پویش", "عملیات پویش برای تعریف اقداماتی که در پویش انجام می‌شود")]
+    public ICollection<PromotionAction> Actions { get; set; } = [];
 
     /// <summary>
-    /// بازگشت سرمایه - ROI (%)
+    /// جوامع/بازارهای مشتریان هدف - لیست جوامعی که پویش برای آن‌ها قابل دسترسی است
+    /// اگر لیست خالی باشد، پویش برای همه مشتریان قابل دسترسی است
     /// </summary>
-    [DisplayName("بازگشت سرمایه (ROI)")]
-    [SBVR(SBVRModality.Calculated, "تحلیل سودآوری", "ROI = ((درآمد - هزینه) / هزینه) × 100")]
-    public decimal? ReturnOnInvestment { get; set; }
+    [DisplayName("جوامع/بازارهای مشتریان هدف")]
+    [SBVR(SBVRModality.Permitted, "هدف‌گذاری مشتریان", "لیست جوامع برای تعریف چند جامعه/بازار مشتریان برای یک پویش")]
+    [SBVR(SBVRModality.Obligatory, "هدف‌گذاری مشتریان", "اگر هیچ جامعه‌ای تعریف نشده باشد، پویش برای همه مشتریان قابل دسترسی است")]
+    [SBVR(SBVRModality.Obligatory, "شرکت در پویش", "مشتری می‌تواند در پویش شرکت کند", "اگر حداقل در یک جامعه از جامعه‌های تعریف شده برای پویش عضو باشد")]
+    public ICollection<PromotionCustomerSegment> CustomerSegments { get; set; } = [];
 
     /// <summary>
-    /// هزینه جذب مشتری - Customer Acquisition Cost
+    /// تسهیم‌های هزینه پویش - توزیع هزینه در بازه‌های زمانی مختلف
     /// </summary>
-    [DisplayName("هزینه جذب مشتری (CAC)")]
-    [SBVR(SBVRModality.Calculated, "تحلیل بهره‌وری", "CAC = هزینه کمپین / تعداد مشتریان جذب شده")]
-    public decimal? CustomerAcquisitionCost { get; set; }
+    [DisplayName("تسهیم‌های هزینه")]
+    [SBVR(SBVRModality.Permitted, "تسهیم هزینه", "تسهیم‌های هزینه برای توزیع هزینه در بازه‌های زمانی")]
+    public ICollection<PromotionCostAllocation> CostAllocations { get; set; } = [];
 
     /// <summary>
-    /// هزینه هر تبدیل - Cost Per Conversion
+    /// عضویت مشتریان در این پویش
     /// </summary>
-    [DisplayName("هزینه هر تبدیل")]
-    [SBVR(SBVRModality.Calculated, "تحلیل بهره‌وری", "هزینه هر تبدیل = هزینه کمپین / تعداد تبدیل‌ها")]
-    public decimal? CostPerConversion { get; set; }
-
-    // =====================================================
-    // Engagement Metrics
-    // =====================================================
+    [DisplayName("عضویت مشتریان")]
+    [SBVR(SBVRModality.Permitted, "شرکت‌های پویش", "عضویت مشتریان برای ردیابی وضعیت شرکت در پویش")]
+    public ICollection<PromotionParticipation> Participations { get; set; } = [];
 
     /// <summary>
-    /// تعداد مشتریان جدید جذب شده
+    /// معیارهای عملکرد پویش - فیلدهای محاسبه شده (Calculated)
+    /// رابطه یک به یک - FK در PromotionMetrics.PromotionId
     /// </summary>
-    [DisplayName("تعداد مشتریان جدید")]
-    [SBVR(SBVRModality.Calculated, "تحلیل جذب", "تعداد مشتریان جدید برای محاسبه CAC و تحلیل اثربخشی استفاده می‌شود")]
-    public int? NewCustomersAcquired { get; set; }
-
-    /// <summary>
-    /// نمره اثربخشی - Effectiveness Score (0-100)
-    /// </summary>
-    [DisplayName("نمره اثربخشی")]
-    [SBVR(SBVRModality.Calculated, "تحلیل کلی", "نمره اثربخشی برای مقایسه کمپین‌ها و اولویت‌بندی استفاده می‌شود")]
-    public decimal? EffectivenessScore { get; set; }
-
-    /// <summary>
-    /// تاریخ آخرین محاسبه معیارها
-    /// </summary>
-    [DisplayName("تاریخ آخرین محاسبه")]
-    [SBVR(SBVRModality.Calculated, "مدیریت داده", "تاریخ آخرین محاسبه برای اطمینان از به‌روز بودن معیارها استفاده می‌شود")]
-    public DateTime? LastMetricsCalculationDate { get; set; }
-
-    /// <summary>
-    /// وضعیت کمپین - Active, Paused, Completed, Cancelled
-    /// </summary>
-    [DisplayName("وضعیت کمپین")]
-    [MaxLength(20)]
-    [SBVR(SBVRModality.Recommended, "مدیریت چرخه حیات", "وضعیت کمپین برای مدیریت و گزارش‌گیری استفاده می‌شود")]
-    public string? CampaignStatus { get; set; }
+    [DisplayName("معیارهای عملکرد")]
+    [SBVR(SBVRModality.Calculated, "معیارهای عملکرد", "معیارهای عملکرد برای تحلیل اثربخشی و بهینه‌سازی")]
+    [OAttr_AssociationMap("Id", "PromotionId")]
+    public PromotionMetrics? Metrics { get; set; }
 }

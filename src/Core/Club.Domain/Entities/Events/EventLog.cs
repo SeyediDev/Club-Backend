@@ -11,11 +11,33 @@ namespace Club.Domain.Entities.Events;
 [SBVR(SBVRModality.Recommended, "ردیابی رفتار مشتریان", "لاگ‌ها باید برای تحلیل RFM، پیش‌بینی رفتار و بهینه‌سازی کمپین‌های بازاریابی استفاده شوند")]
 public class EventLog : ClubBaseCoreLogAuditableEntity<long>
 {
-    public int CustomerId { get; set; }
+    /// <summary>
+    /// شناسه اکوسیستم
+    /// </summary>
+    [DisplayName("شناسه اکوسیستم")]
+    [SBVR(SBVRModality.Obligatory, "چندین اکوسیستم", "هر لاگ رویداد باید به اکوسیستم مشخصی تعلق داشته باشد تا تفکیک داده‌ها و گزارش‌گیری دقیق امکان‌پذیر شود")]
+    public int TenantId { get; set; }
 
-    [DisplayName("مشتری رویداد")]
-    [SBVR(SBVRModality.Obligatory, "تحلیل رفتار مشتری", "هر رویداد باید به یک مشتری مشخص تعلق داشته باشد تا تحلیل RFM و محاسبه امتیازات امکان‌پذیر باشد")]
-    public Customer Customer { get; set; } = null!;
+    /// <summary>
+    /// اکوسیستم
+    /// </summary>
+    [DisplayName("اکوسیستم")]
+    [SBVR(SBVRModality.Obligatory, "چندین اکوسیستم", "اکوسیستم مشخص می‌کند رویداد در کدام اکوسیستم ثبت شده است تا کنترل دسترسی و تحلیل‌های اکوسیستمی فراهم شود")]
+    public Tenant Tenant { get; set; } = null!;
+
+    /// <summary>
+    /// شناسه مشتری 
+    /// </summary>
+    [DisplayName("شناسه")]
+    [SBVR(SBVRModality.Obligatory, "چندین اکوسیستم", "هر رویداد باید به رابطه مشتری-اکوسیستم مرتبط شود تا تحلیل رفتار مشتری در هر اکوسیستم امکان‌پذیر شود")]
+    public int CustomerTenantId { get; set; }
+
+    /// <summary>
+    /// مشتری
+    /// </summary>
+    [DisplayName("مشتری")]
+    [SBVR(SBVRModality.Obligatory, "چندین اکوسیستم", "مشتری برای تحلیل دقیق فعالیت‌های مشتری در محدوده هر اکوسیستم استفاده می‌شود")]
+    public CustomerTenant CustomerTenant { get; set; } = null!;
 
     /// <summary>
     /// نوع فعال‌سازی رویداد
@@ -38,7 +60,7 @@ public class EventLog : ClubBaseCoreLogAuditableEntity<long>
 
     public int? PromotionId { get; set; }
 
-    [DisplayName("پویش رویداد")]
+    [DisplayName("پویش/کمپین")]
     [SBVR(SBVRModality.Permitted, "تحلیل اثربخشی کمپین", "پویش رویداد برای ردیابی اثربخشی کمپین‌های بازاریابی و محاسبه ROI استفاده می‌شود")]
     public Promotion? Promotion { get; set; }
 
@@ -54,11 +76,21 @@ public class EventLog : ClubBaseCoreLogAuditableEntity<long>
     [SBVR(SBVRModality.Permitted, "تحلیل علایق مشتریان", "پاداش رویداد برای تحلیل علایق مشتریان در دریافت پاداش‌ها و بهینه‌سازی کاتالوگ استفاده می‌شود")]
     public Reward? Award { get; set; }
 
-    public int? TenantProductOrServiceId { get; set; }
+    public int? ProductId { get; set; }
 
-    [DisplayName("محصول سازمان")]
-    [SBVR(SBVRModality.Permitted, "تحلیل محصولات سازمان", "محصول سازمان برای ثبت رویدادهای خرید یا استفاده از محصولات سازمان و کسب امتیاز استفاده می‌شود")]
-    public Product? TenantProductOrService { get; set; }
+    [DisplayName("محصول")]
+    [SBVR(SBVRModality.Permitted, "تحلیل محصولات", "محصول برای ثبت رویدادهای خرید یا استفاده از محصولات و کسب امتیاز استفاده می‌شود")]
+    public Product? Product { get; set; }
+
+    [MaxLength(128)]
+    [DisplayName("کلید طبقه‌بندی محصول")]
+    [SBVR(SBVRModality.Permitted, "تحلیل محصولات", "کلید طبقه‌بندی محصول برای ردیابی دسته‌بندی محصولات استفاده می‌شود")]
+    public string? ProductCategoryKey { get; set; }
+
+    [MaxLength(128)]
+    [DisplayName("کلید محصول")]
+    [SBVR(SBVRModality.Permitted, "تحلیل محصولات", "کلید محصول برای ردیابی محصولات از طریق کد خارجی استفاده می‌شود")]
+    public string? ProductKey { get; set; }
 
     public int? AssetId { get; set; }
 

@@ -5,12 +5,14 @@ public class CustomerParameterValueUiDefinitions : SubCRUDDefinition<CustomerPar
     public override string SubjectId => "Sub";
     public override void SubIndexViewModel(FormDefinition form)
     {
+        form.AddColumn(nameof(CustomerParameterValue.CustomerTenant));
         form.AddColumn(nameof(CustomerParameterValue.Parameter));
         form.AddColumn(nameof(CustomerParameterValue.Value));
     }
 
     public override void SubViewModel(FormDefinition form)
     {
+        form.AddField(nameof(CustomerParameterValue.CustomerTenant));
         form.AddField(nameof(CustomerParameterValue.Parameter));
         form.AddField(nameof(CustomerParameterValue.Value));
         form.AddField(nameof(CustomerParameterValue.EventLog));

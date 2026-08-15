@@ -1,6 +1,5 @@
 ﻿using Neo.Domain.Features.Sms;
 using Neo.Domain.Features.Sms.Dto;
-using Microsoft.Extensions.Logging;
 
 namespace Club.Application.Features.Sms.Notifications;
 

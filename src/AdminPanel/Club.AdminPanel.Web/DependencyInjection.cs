@@ -1,35 +1,77 @@
-﻿using Neo.Bpms.Domain;
-using Neo.Bpms.Domain.Features.Security;
-using Neo.Bpms.Infrastructure;
-using Neo.Bpms.UI.MVC;
-using Neo.Bpms.UI.MVC.Helpers;
-using Neo.Domain.Features.Client;
-using Neo.Infrastructure;
-using Neo.Infrastructure.Features.Client;
-using Neo.Infrastructure.Features.Telementry;
-using Club.Application;
-using Club.AdminPanel.Domain.Infrastructure;
-using Club.AdminPanel.Web.Infrastructure;
-using Club.Infrastructure;
+using Club.AdminPanel.Web.Infrastructure.Icons;
+using Club.AdminPanel.Web.Infrastructure.Jobs;
+using Neo.Bpms.Api;
+using Neo.Bpms.UI.MVC.Controls;
+using Neo.Bpms.UI.MVC.Features;
+using Neo.Endpoint;
 
 namespace Club.AdminPanel.Web;
 
 public static class DependencyInjection
 {
-    public static void AddClubBpmsServices(this IServiceCollection services, IConfiguration configuration, IHostEnvironment environment)
+    public static void AddClubAdminPanelServices(this IServiceCollection services, IConfiguration configuration, IHostEnvironment environment)
     {
+        // Core Domain Services
+        services.AddClubDomainServices(configuration);
+
         services.AddClubApplicationServices(configuration);
 
-        services.AddCandoInfrastructureServices(configuration);
-        services.AddCandoAuthorization(configuration);
-        services.AddCandoOpenTelementry(configuration);
-        services.AddCandoBpmsInfrastructure(configuration);
+        services.AddNeoInfrastructureServices(configuration, environment);
+        services.AddNeoAuthorization(configuration);
+        services.AddNeoOpenTelementry(configuration);
+        services.AddNeoBpmsInfrastructure(configuration);
 
-        services.AddClubInfrastructureServices(configuration, environment);
+        // Cache Services (Memory for Dev, Redis for Production)
+        if (environment.IsDevelopment())
+        {
+            services.AddNeoMemoryCacheServices(configuration);
+            services.AddNeoOutboxWithCatch(configuration);
+        }
+        else
+        {
+            services.AddNeoRedisCacheServices(configuration);
+            services.AddNeoOutboxWithMongo(configuration);
+        }
 
-        services.AddClubBpmsInfrastructures(configuration);
+        // Object Storage (MinIO)
+        services.AddNeoMinIo(configuration);
+
+        // Background Jobs (Hangfire)
+        services.AddNeoHangfire(configuration);
+
+        // CORS Policy
+        AddCorsPolicy(services, configuration);
+
+        // Database & Repositories
+        services.AddClubRepositories(configuration);
+
+        // Feature Services (SMS, Jobs, etc.)
+        AddFeatureServices(services, configuration);
 
         services.AddBpmsMVC(configuration);
+        
+        // Add Neo.Bpms.Api services (Monitoring, Dashboard, etc.)
+        services.AddNeoBpmsApi(configuration, options =>
+        {
+            options.EnableMonitoring = true;
+            options.EnableDashboard = true;
+        });
+        
+        // اضافه کردن پشتیبانی از Views برای Monitoring از Neo.Endpoint
+        var mvcBuilder = services.AddNeoMonitoringViews(environment as Microsoft.AspNetCore.Hosting.IWebHostEnvironment);
+        
+        // اضافه کردن MonitoringController از Neo.Endpoint برای API endpoints
+        // این لازم است تا API endpoints (/api/monitoring/*) در دسترس باشند
+        services.AddNeoControllerServices(configuration, "Club Admin Panel", includeViews: true, existingMvcBuilder: mvcBuilder);
+        
+        // Custom Icon Provider for Club platform
+        services.AddSingleton<ICustomIconProvider, CustomIconProvider>();
+        
+        // Register MenuHelper for dependency injection
+        services.AddScoped<IMenuHelper, MenuHelper>();
+        
+        // HttpClientFactory for Channel API calls
+        services.AddHttpClient();
         
         // Performance Optimizations: Compression & Caching
         services.AddPerformanceOptimizations();
@@ -39,21 +81,69 @@ public static class DependencyInjection
         
         SpecificCommonlyNeededAssets.SetNeededResources("~/Content/images/login-logo.svg",
             "~/Content/common-assets-includes/icons/svgSprite.svg#club-svg-icon-header");
-        
-        _ = services.AddScoped<IRequesterUser, RequesterUser>();
-        _ = services.AddScoped<IIdentityUserService, IdentityUserService>();
     }
 
-    public static void UseClubBpms(this IApplicationBuilder app, 
-        IConfiguration configuration, IHostEnvironment environment, BpmsMVCConfigurationOptions options = null)
+    public static void UseClubBpms(this IApplicationBuilder app,
+        IConfiguration configuration, IHostEnvironment environment, BpmsMVCConfigurationOptions options = null!)
     {
         app.UseClub(configuration, environment);
-        
+
         // Performance Optimizations: must be called BEFORE UseBpmsMVC
         // This ensures UseResponseCompression and UseStaticFiles (with caching) are registered first
         app.UsePerformanceOptimizations(environment);
-        
+
+        // Configure MenuHelper static HttpContextAccessor before UseBpmsMVC
+        var httpContextAccessor = app.ApplicationServices.GetRequiredService<IHttpContextAccessor>();
+        MenuHelper.SetHttpContextAccessor(httpContextAccessor);
+
         app.UseBpmsMVC(configuration, options);
+        
+        // Map Neo.Bpms.Api endpoints (SignalR hubs, etc.)
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapNeoBpmsApiEndpoints();
+            endpoints.MapNeoEndpoints();
+        });
+        
         DependencyInjectionHolder.Instance.SsoIntegrator = null;//Inject<SsoIntegrator>(app);//FOR SSO
+    }
+
+    private static void AddCorsPolicy(IServiceCollection services, IConfiguration configuration)
+    {
+        var origins = configuration["AllowedOrigins"];
+        if (origins is not null)
+        {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowFrontend", policy =>
+                {
+                    policy
+                        .WithOrigins(origins.Split(','))
+                        .AllowAnyHeader()
+                        .AllowAnyMethod()
+                        .AllowCredentials();
+                });
+            });
+        }
+    }
+
+    private static IServiceCollection AddFeatureServices(IServiceCollection services, IConfiguration configuration)
+    {
+        services.Configure<AppSettings>(options => configuration.Bind(options));
+
+        // SMS Services (AdminPanel needs SMS for sending OTP to users)
+        services.AddSmsDummyServices(configuration);
+
+        // Recurring Jobs (AdminPanel manages background jobs)
+        services.AddScoped<IRegisterRecurringJobs, RegisterClubRecurringJobs>();
+
+        services.AddScoped<INeoPublisher, MediatRNeoPublisher>();
+        _ = services.AddScoped<ICmmnDocument, CmmnDocument>();
+        _ = services.AddSingleton<IProjectMetaLoader, ProjectMetaLoader<ClubProjectDefinition, ClubServiceDefinitions, ClubMenuDefinitions>>();
+        _ = services.AddSingleton<IDataProviderContainer, DataProviderContainer>();
+
+        _ = services.AddScoped<IRequesterUser, RequesterUser>();
+        _ = services.AddScoped<IIdentityUserService, IdentityUserService>();
+        return services;
     }
 }

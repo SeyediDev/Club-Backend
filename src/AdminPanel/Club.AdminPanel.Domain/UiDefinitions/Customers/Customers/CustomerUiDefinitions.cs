@@ -1,46 +1,38 @@
-﻿using Club.Domain.Entities.Rewards;
-
 namespace Club.AdminPanel.Domain.UiDefinitions.Customers.Customers;
 
 public partial class CustomerUiDefinitions : CRUDDefinition<Customer>
 {
-    protected override void IndexFormViewModel(FormDefinition form)
+    private static readonly List<string> DefaultRoles =
+    [
+        Neo.Domain.Constants.Roles.Admin,
+        ClubRoles.Manager,
+        ClubRoles.Analyst,
+        ClubRoles.MarketingManager,
+        ClubRoles.CallCenterManager,
+        ClubRoles.CallCenterSupport
+    ];
+
+    public override List<string>? Roles => DefaultRoles;
+    public override string? Icon => "fa fa-user";
+
+    protected override void IndexFormViewModel()
     {
-        form.AddColumns(nameof(Customer.FirstName),
+        AddColumns(nameof(Customer.FirstName),
                         nameof(Customer.LastName),
-                        nameof(Customer.NationalCode),
-                        nameof(Customer.MobileNo),
-                        nameof(Customer.BirthDate)
+                        nameof(Customer.MobileNo)
                         );
+        AddSubjectColumn<Subs>();
     }
-    protected override void CUDFormsViewModel(CUDForm form)
+    protected override void CUDFormsViewModel()
     {
-        form.AddFields(nameof(Customer.FirstName),
+        AddFields(nameof(Customer.FirstName),
                        nameof(Customer.LastName),
                        nameof(Customer.NationalCode),
                        nameof(Customer.MobileNo),
                        nameof(Customer.BirthDate)
                        );
     }
-    protected override void EditFormSubTables(CUDForm form)
-    {
-        var groupControl = eControlTypeId.None;
-        var editable = true;
-        form.AddSubTable(nameof(CustomerParameterValue), nameof(CustomerParameterValue.Customer), "Sub",
-            "مقادیر", null, editable, groupControl);
-        form.AddSubTable(nameof(CustomerPointLevel), nameof(CustomerPointLevel.Customer), "Sub",
-            "سطوح امتیازی", null, editable, groupControl);
-        form.AddSubTable(nameof(CustomerSegmentMembership), nameof(CustomerSegmentMembership.Customer), "Sub",
-            "عضویت جامعه مشتریان", null, editable, groupControl);
-        form.AddSubTable(nameof(CustomerTransaction), nameof(CustomerTransaction.Customer), "Sub",
-            "امتیازات", null, editable, groupControl);
-        form.AddSubTable(nameof(RewardAsset), nameof(RewardAsset.Customer), "SubCustomer",
-            "دارایی ها", null, editable, groupControl);
-        form.AddSubTable(nameof(CustomerReferrer), nameof(CustomerReferrer.ReferredCustomer), null,
-            "معرف ها", null, editable, groupControl);
-        form.AddSubTable(nameof(CustomerReferrer), nameof(CustomerReferrer.ReferrerCustomer), null,
-            "معرفی ها", null, editable, groupControl);
-    }
+    
     // =====================================================
     // Customer Reports
     // =====================================================
@@ -50,5 +42,14 @@ public partial class CustomerUiDefinitions : CRUDDefinition<Customer>
     /// </summary>
     public new partial class PublicReport: CRUDDefinition.PublicReport
     {
+        public override List<string>? Roles => [Neo.Domain.Constants.Roles.Admin, ClubRoles.Manager, ClubRoles.Analyst, ClubRoles.MarketingManager, ClubRoles.CallCenterManager];
+    }
+
+    public class Subs() : SubjectEditForm<Subs>("جداول مرتبط")
+    {
+        protected override void ViewModel()
+        {
+            AddSubTable<CustomerTenant>(nameof(CustomerTenant.Customer), "اکوسیستم‌ها", ContainerControl.None, null, null, nameof(CustomerTenant.Tenant));
+        }
     }
 }

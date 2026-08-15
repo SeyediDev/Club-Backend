@@ -18,7 +18,7 @@ public record GetTopicsQuery : IRequest<List<ForumTopicDto>>
 public record ForumTopicDto
 {
     public int Id { get; set; }
-    public int CustomerId { get; set; }
+    public int CustomerTenantId { get; set; }
     public string CustomerName { get; set; } = null!;
     public string Title { get; set; } = null!;
     public string? Category { get; set; }
@@ -39,7 +39,7 @@ public class GetTopicsQueryHandler(
         var topicRepo = unitOfWork.Repository<ForumTopic, int>();
         
         var topics = await topicRepo.GetAllWithIncludeAsync(
-            include: t => t.Customer!,
+            include: t => t.CreatorCustomerTenant.Customer!,
             cancellationToken: cancellationToken,
             predicate: t => t.TenantId == request.TenantId &&
                 (string.IsNullOrEmpty(request.Category) || t.Category == request.Category),
@@ -51,8 +51,8 @@ public class GetTopicsQueryHandler(
         var result = topics.Select(t => new ForumTopicDto
         {
             Id = t.Id,
-            CustomerId = t.CustomerId,
-            CustomerName = $"{t.Customer?.FirstName} {t.Customer?.LastName}",
+            CustomerTenantId = t.CreatorCustomerTenantId,
+            CustomerName = $"{t.CreatorCustomerTenant?.Customer?.FirstName} {t.CreatorCustomerTenant?.Customer?.LastName}",
             Title = t.Title,
             Category = t.Category,
             IsPinned = t.IsPinned,
@@ -61,7 +61,7 @@ public class GetTopicsQueryHandler(
             PostsCount = t.PostsCount,
             LikesCount = t.LikesCount,
             CreatedOnUtc = DateTime.UtcNow // TODO: Map from base entity
-        }).ToList() ?? new List<ForumTopicDto>();
+        }).ToList() ?? [];
 
         return result;
     }

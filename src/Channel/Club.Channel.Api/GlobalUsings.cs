@@ -1,11 +1,7 @@
-﻿global using Neo.Application.Features.GenericEntity.Commands;
-global using Neo.Application.Features.GenericEntity.Queries;
-global using Neo.Domain.Dto;
+﻿global using System.ComponentModel.DataAnnotations;
+global using Microsoft.AspNetCore.Http.HttpResults;
+global using Microsoft.AspNetCore.Mvc;
 global using Neo.Domain.Entities.Common;
 global using Neo.Domain.Repository;
 global using Neo.Endpoint.Controller;
-global using Club.Application.Features.Common.Commands;
-global using Mapster;
-global using Microsoft.AspNetCore.Http.HttpResults;
-global using Microsoft.AspNetCore.Mvc;
-global using System.ComponentModel.DataAnnotations;
+global using Neo.Endpoint.Controller.Base;

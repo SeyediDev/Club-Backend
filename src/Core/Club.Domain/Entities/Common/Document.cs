@@ -3,7 +3,7 @@
 [DisplayName("سند")]
 [SBVR(SBVRModality.Obligatory, "مدیریت اسناد", "هر سند باید برای ذخیره‌سازی، بازیابی و مدیریت محتوا قابل شناسایی باشد")]
 [SBVR(SBVRModality.Recommended, "مدیریت اسناد", "اسناد باید برای مستندسازی فرآیندها و حفظ تاریخچه تغییرات طراحی شوند")]
-public partial class Document : ClubBaseCoreCommonAuditableEntity<int>, IDocument
+public partial class Document : ClubBaseCoreConfigAuditableEntity<int>, IDocument
 {
     public int? DocumentTypeId { get; set; }
 

@@ -1,4 +1,4 @@
-using Club.Domain.Entities.Surveys;
+using Club.Domain.Entities.Promotions.Surveys.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -31,9 +31,9 @@ public class SurveyParticipationConfiguration : IEntityTypeConfiguration<SurveyP
             .OnDelete(DeleteBehavior.Cascade)
             .IsRequired();
 
-        entity.HasOne(d => d.Customer)
+        entity.HasOne(d => d.CustomerTenant)
             .WithMany()
-            .HasForeignKey(d => d.CustomerId)
+            .HasForeignKey(d => d.CustomerTenantId)
             .OnDelete(DeleteBehavior.Cascade)
             .IsRequired();
 
@@ -45,8 +45,8 @@ public class SurveyParticipationConfiguration : IEntityTypeConfiguration<SurveyP
 
         // Indexes
         entity.HasIndex(e => e.SurveyId);
-        entity.HasIndex(e => e.CustomerId);
-        entity.HasIndex(e => new { e.SurveyId, e.CustomerId })
+        entity.HasIndex(e => e.CustomerTenantId);
+        entity.HasIndex(e => new { e.SurveyId, e.CustomerTenantId })
             .IsUnique(); // هر مشتری فقط یکبار در هر نظرسنجی شرکت کند
         entity.HasIndex(e => e.ParticipationDate);
     }

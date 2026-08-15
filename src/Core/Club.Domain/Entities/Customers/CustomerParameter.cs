@@ -19,6 +19,6 @@ public class CustomerParameter : ClubBaseCoreAuditableEntity<int>
     [DisplayName("نوع پارامتر")]
     public ParameterType ParameterType { get; set; }
     public int TenantId { get; set; }
-    [DisplayName("سازمان بهره‌بردار")]
+    [DisplayName("اکوسیستم")]
     public Tenant Tenant { get; set; } = null!;
 }

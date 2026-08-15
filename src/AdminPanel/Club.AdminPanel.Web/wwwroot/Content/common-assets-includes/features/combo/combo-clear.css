@@ -8,7 +8,7 @@
     position: relative !important;
 }
 
-/* دکمه Clear - مخفی به صورت پیش‌فرض */
+/* دکمه Clear - مخفی به صورت پیش‌فرض، نمایش فقط در هاور/فوکس */
 .combo-clear-btn {
     position: absolute !important;
     left: 12px !important;
@@ -23,8 +23,8 @@
     width: 24px !important;
     height: 24px !important;
     
-    /* Icon */
-    display: none !important; /* مخفی به صورت پیش‌فرض */
+    /* Icon - display flex but opacity handled by controls-modern.css */
+    display: flex !important;
     align-items: center !important;
     justify-content: center !important;
     
@@ -50,12 +50,6 @@
     /* فونت سایز آیکن */
     font-size: 14px !important;
     line-height: 1 !important;
-}
-
-/* نمایش دکمه فقط وقتی کمبو مقدار دارد - فقط در فرم‌ها */
-.modern-form .dWrapper:has(select.cBox:not([value=""]):not([value="null"])) .combo-clear-btn,
-.modern-form .dWrapper.has-value .combo-clear-btn {
-    display: flex !important;
 }
 
 /* Hover effect - برجسته‌تر شدن */

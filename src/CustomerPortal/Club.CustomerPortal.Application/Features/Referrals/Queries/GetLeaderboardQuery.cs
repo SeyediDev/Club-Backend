@@ -1,4 +1,6 @@
-﻿namespace Club.CustomerPortal.Application.Features.Referrals.Queries;
+using Club.CustomerPortal.Application.Interfaces;
+
+namespace Club.CustomerPortal.Application.Features.Referrals.Queries;
 
 public record GetLeaderboardQuery : IRequest<GetLeaderboardQueryResponse>
 {
@@ -24,21 +26,12 @@ public record LeaderboardEntryDto
     public string? Trend { get; set; }
 }
 
-public class GetLeaderboardQueryHandler : IRequestHandler<GetLeaderboardQuery, GetLeaderboardQueryResponse>
+public class GetLeaderboardQueryHandler(IReferralService referralService, IRequesterUser requesterUser) : IRequestHandler<GetLeaderboardQuery, GetLeaderboardQueryResponse>
 {
-    private readonly IReferralService _referralService;
-    private readonly IRequesterUser _requesterUser;
-
-    public GetLeaderboardQueryHandler(IReferralService referralService, IRequesterUser requesterUser)
-    {
-        _referralService = referralService;
-        _requesterUser = requesterUser;
-    }
-
     public async Task<GetLeaderboardQueryResponse> Handle(GetLeaderboardQuery request, CancellationToken cancellationToken)
     {
-        var currentUserId = _requesterUser.GetUserId();
-        var result = await _referralService.GetLeaderboardAsync(request.PageNumber, request.PageSize, cancellationToken);
+        var currentUserId = requesterUser.GetUserId();
+        var result = await referralService.GetLeaderboardAsync(request.PageNumber, request.PageSize, cancellationToken);
         
         var entries = result.Items.Select(e => new LeaderboardEntryDto
         {

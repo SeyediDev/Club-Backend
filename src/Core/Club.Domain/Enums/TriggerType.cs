@@ -4,7 +4,7 @@ public enum TriggerType
 {
     [Description("رویداد")]
     Event = 1,
-    [Description("پویش")]
+    [Description("پویش/کمپین")]
     Promotion = 2,
     [Description("ارتقاء سطح‌امتیاز")]
     UpgradePointLevel = 3,
@@ -12,7 +12,7 @@ public enum TriggerType
     PurchaseAward = 4,
     [Description("مصرف پاداش")]
     ConsumeAward = 5,
-    [Description("خرید محصول سازمان")]
+    [Description("خرید محصول")]
     PurchaseProductOrService = 6,
     [Description("انتقال امتیاز")]
     PointTransfer = 7,

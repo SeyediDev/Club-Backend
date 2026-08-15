@@ -1,4 +1,6 @@
-﻿namespace Club.CustomerPortal.Application.Features.Points.Queries;
+using Club.CustomerPortal.Application.Interfaces;
+
+namespace Club.CustomerPortal.Application.Features.Points.Queries;
 
 public record GetPointsSummaryQuery : IRequest<GetPointsSummaryQueryResponse>;
 
@@ -21,24 +23,15 @@ public record CustomerPointDto
     public DateTime? ExpirationDate { get; set; }
 }
 
-public class GetPointsSummaryQueryHandler : IRequestHandler<GetPointsSummaryQuery, GetPointsSummaryQueryResponse>
+public class GetPointsSummaryQueryHandler(
+    IPointService pointService,
+    ICustomerRequesterUser requesterUser) : IRequestHandler<GetPointsSummaryQuery, GetPointsSummaryQueryResponse>
 {
-    private readonly IPointService _pointService;
-    private readonly IRequesterUser _requesterUser;
-
-    public GetPointsSummaryQueryHandler(
-        IPointService pointService,
-        IRequesterUser requesterUser)
-    {
-        _pointService = pointService;
-        _requesterUser = requesterUser;
-    }
-
     public async Task<GetPointsSummaryQueryResponse> Handle(GetPointsSummaryQuery request, CancellationToken cancellationToken)
     {
-        var customerId = _requesterUser.GetUserId();
+        var customerId = requesterUser.CustomerId;
         
-        var summary = await _pointService.GetPointsSummaryAsync(customerId, cancellationToken);
+        var summary = await pointService.GetPointsSummaryAsync(customerId, cancellationToken);
         
         // TODO: باید از دیتابیس لیست تمام نوع‌های امتیاز مشتری را بگیریم
         // فعلاً یک پاسخ sample برمی‌گردانیم

@@ -225,7 +225,7 @@ var tableOp = (function() {
 
 
 function addReturnUrlIfNeeded(type) {
-	if (type.indexOf('AndReturn') !== -1 && !$('#returnUrl').val())
+	if (type && typeof type === 'string' && type.indexOf('AndReturn') !== -1 && !$('#returnUrl').val())
 		$('#returnUrl').val(HistoryManager.getBackUrl());
 }
 

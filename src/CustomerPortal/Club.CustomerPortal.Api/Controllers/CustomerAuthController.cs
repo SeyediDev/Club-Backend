@@ -1,14 +1,11 @@
-﻿using Neo.Endpoint.Controller;
-using Club.CustomerPortal.Application.Features.Auth.Commands;
+﻿using Club.CustomerPortal.Application.Features.Auth.Commands;
 using Club.CustomerPortal.Application.Features.Auth.Queries;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
 
 namespace Club.CustomerPortal.Api.Controllers;
 
-[Route("api/customer/auth")]
+[AppRoute("club", "customer/auth")]
 [Tags("customer/auth")]
-[ApiController]
 [Authorize]
 public class CustomerAuthController : AppControllerBase
 {

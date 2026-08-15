@@ -31,8 +31,8 @@ internal class AwardAssetInternalService(
                 {
                     asset.CustomerId = customer.Id;
                     asset.EventLogId = eventLogId;
-                    asset.ScoringRuleId = ruleId;
-                    asset.ScoringRuleActionId = actionId;
+                    asset.PromotionId = ruleId;
+                    asset.PromotionActionId = actionId;
                     asset.Quantity = award.Quantity;
                     assetCmdRepo.Update(asset);
                     assets.Add(asset);
@@ -49,8 +49,8 @@ internal class AwardAssetInternalService(
                     RewardId = award.Id,
                     CustomerId = customer.Id,
                     EventLogId = eventLogId,
-                    ScoringRuleId = ruleId,
-                    ScoringRuleActionId = actionId,
+                    PromotionId = ruleId,
+                    PromotionActionId = actionId,
                     Serial = serials?[i - 1],
                     Quantity = award.Quantity,
                 };
@@ -58,7 +58,7 @@ internal class AwardAssetInternalService(
                 assets.Add(asset);
             }
         }
-        _ = await assetCmdRepo.UnitOfWork.SaveChangesAsync();
+        _ = await assetCmdRepo.UnitOfWork.SaveChangesAsync(cancellationToken);
         return assets;
     }
 }

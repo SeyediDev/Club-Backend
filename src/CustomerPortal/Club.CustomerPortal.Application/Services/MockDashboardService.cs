@@ -2,27 +2,29 @@ using Club.CustomerPortal.Application.Interfaces;
 
 namespace Club.CustomerPortal.Application.Services;
 
-public class MockDashboardService : IDashboardService
+public class MockDashboardService(ICustomerService customerService, ICustomerRequesterUser requesterUser) : IDashboardService
 {
-    public Task<DashboardStatsDto> GetDashboardStatsAsync(int customerId, CancellationToken cancellationToken = default)
+    public async Task<DashboardStatsDto> GetDashboardStatsAsync(int customerId, CancellationToken cancellationToken = default)
     {
+        var tenantId = requesterUser.TenantId;
+        var customerTenant = await customerService.GetCustomerTenantAsync(customerId, tenantId, cancellationToken);
+
+        var totalPoints = customerTenant?.TotalPointsEarned ?? 0;
+        var availablePoints = customerTenant?.CurrentPointsBalance ?? 0;
+
         var stats = new DashboardStatsDto
         {
-            TotalPoints = 15000,
-            AvailablePoints = 12500,
-            CurrentLevel = "طلایی",
-            TotalReferrals = 5,
-            LeaderboardPosition = 2,
-            TotalRewardsPurchased = 3,
-            PointsEarnedThisMonth = 2500,
-            RecentActivities = new List<RecentActivityDto>
-            {
-                new() { Title = "خرید محصول", Description = "دریافت 500 امتیاز", OccurredAt = DateTime.Now.AddHours(-2), Type = "Points" },
-                new() { Title = "معرفی دوست", Description = "دریافت 1000 امتیاز", OccurredAt = DateTime.Now.AddDays(-1), Type = "Referral" }
-            }
+            TotalPoints = totalPoints,
+            AvailablePoints = availablePoints,
+            CurrentLevel = customerTenant?.RfmSegment?.ToString(),
+            TotalReferrals = 0,
+            LeaderboardPosition = 0,
+            TotalRewardsPurchased = 0,
+            PointsEarnedThisMonth = totalPoints,
+            RecentActivities = new List<RecentActivityDto>()
         };
 
-        return Task.FromResult(stats);
+        return stats;
     }
 }
 

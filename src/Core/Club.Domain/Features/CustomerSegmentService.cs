@@ -1,18 +1,18 @@
-using Club.Domain.Entities.Customers.Enums;
+using System.Globalization;
 
 namespace Club.Domain.Features;
 
 /// <summary>
-/// سرویس مدیریت جامعه مشتریان
+/// سرویس مدیریت جامعه/بازار مشتریان
 /// شامل ارزیابی شرایط عضویت و مدیریت عضویت‌ها
 /// </summary>
 public interface ICustomerSegmentService
 {
     /// <summary>
-    /// بررسی واجد شرایط بودن مشتری برای عضویت در جامعه
+    /// بررسی واجد شرایط بودن مشتری برای عضویت در جامعه/بازار
     /// </summary>
     /// <param name="customerId">شناسه مشتری</param>
-    /// <param name="segmentId">شناسه جامعه</param>
+    /// <param name="segmentId">شناسه جامعه/بازار</param>
     /// <param name="cancellationToken">توکن لغو</param>
     /// <returns>آیا مشتری واجد شرایط است</returns>
     [Telemetry]
@@ -22,10 +22,10 @@ public interface ICustomerSegmentService
         CancellationToken cancellationToken);
 
     /// <summary>
-    /// عضو کردن مشتری در جامعه
+    /// عضو کردن مشتری در جامعه/بازار
     /// </summary>
     /// <param name="customerId">شناسه مشتری</param>
-    /// <param name="segmentId">شناسه جامعه</param>
+    /// <param name="segmentId">شناسه جامعه/بازار</param>
     /// <param name="eventLogId">شناسه لاگ رویداد (اختیاری)</param>
     /// <param name="cancellationToken">توکن لغو</param>
     /// <returns>شناسه عضویت ایجاد شده</returns>
@@ -37,12 +37,12 @@ public interface ICustomerSegmentService
         CancellationToken cancellationToken);
 
     /// <summary>
-    /// دریافت جامعه‌هایی که مشتری واجد شرایط عضویت در آن‌ها است
+    /// دریافت جامعه‌ها/بازارهایی که مشتری واجد شرایط عضویت در آن‌ها است
     /// </summary>
     /// <param name="customerId">شناسه مشتری</param>
-    /// <param name="onlyVisibleInPortal">فقط جامعه‌های قابل نمایش در پرتال</param>
+    /// <param name="onlyVisibleInPortal">فقط جامعه‌ها/بازارهای قابل نمایش در پرتال</param>
     /// <param name="cancellationToken">توکن لغو</param>
-    /// <returns>لیست جامعه‌های واجد شرایط</returns>
+    /// <returns>لیست جامعه‌ها/بازارهای واجد شرایط</returns>
     [Telemetry]
     Task<List<CustomerSegmentEligibilityInfo>> GetEligibleSegmentsForCustomerAsync(
         int customerId, 
@@ -50,12 +50,12 @@ public interface ICustomerSegmentService
         CancellationToken cancellationToken);
 
     /// <summary>
-    /// بررسی خودکار و عضویت مشتری در جامعه‌های مناسب پس از رویداد
+    /// بررسی خودکار و عضویت مشتری در جامعه‌ها/بازارهای مناسب پس از رویداد
     /// </summary>
     /// <param name="customerId">شناسه مشتری</param>
     /// <param name="eventLogId">شناسه لاگ رویداد</param>
     /// <param name="cancellationToken">توکن لغو</param>
-    /// <returns>تعداد جامعه‌هایی که مشتری به آن‌ها اضافه شد</returns>
+    /// <returns>تعداد جامعه‌ها/بازارهایی که مشتری به آن‌ها اضافه شد</returns>
     [Telemetry]
     Task<int> AutoJoinCustomerToEligibleSegmentsAsync(
         int customerId, 
@@ -64,7 +64,7 @@ public interface ICustomerSegmentService
 }
 
 /// <summary>
-/// نتیجه بررسی واجد شرایط بودن برای عضویت در جامعه
+/// نتیجه بررسی واجد شرایط بودن برای عضویت در جامعه/بازار
 /// </summary>
 public record CustomerSegmentEligibilityResult
 {
@@ -90,7 +90,7 @@ public record CustomerSegmentEligibilityResult
 }
 
 /// <summary>
-/// نتیجه عملیات عضویت در جامعه
+/// نتیجه عملیات عضویت در جامعه/بازار
 /// </summary>
 public record CustomerSegmentMembershipResult
 {
@@ -111,22 +111,22 @@ public record CustomerSegmentMembershipResult
 }
 
 /// <summary>
-/// اطلاعات جامعه واجد شرایط
+/// اطلاعات جامعه/بازار واجد شرایط
 /// </summary>
 public record CustomerSegmentEligibilityInfo
 {
     /// <summary>
-    /// شناسه جامعه
+    /// شناسه جامعه/بازار
     /// </summary>
     public int SegmentId { get; init; }
 
     /// <summary>
-    /// عنوان جامعه
+    /// عنوان جامعه/بازار
     /// </summary>
     public string Title { get; init; } = null!;
 
     /// <summary>
-    /// توضیحات جامعه
+    /// توضیحات جامعه/بازار
     /// </summary>
     public string? Description { get; init; }
 
@@ -157,13 +157,16 @@ public record CustomerSegmentEligibilityInfo
 }
 
 /// <summary>
-/// پیاده‌سازی سرویس مدیریت جامعه مشتریان
+/// پیاده‌سازی سرویس مدیریت جامعه/بازار مشتریان
 /// </summary>
 internal class CustomerSegmentService(
     IQueryRepository<CustomerSegment, int> segmentRepo,
     IQueryRepository<CustomerSegmentKindCondition, int> conditionRepo,
     IQueryRepository<CustomerSegmentMembership, int> membershipQueryRepo,
     ICommandRepository<CustomerSegmentMembership, int> membershipCmdRepo,
+    IQueryRepository<CustomerTenant, int> customerTenantQueryRepo,
+    IQueryRepository<CustomerParameter, int> customerParameterQueryRepo,
+    IQueryRepository<CustomerParameterValue, int> customerParameterValueQueryRepo,
     IQueryRepository<Customer, int> customerRepo,
     ICustomerService customerService
     // IEvaluateFormulaService evaluateFormulaService - REMOVED to break circular dependency
@@ -174,9 +177,35 @@ internal class CustomerSegmentService(
         int segmentId,
         CancellationToken cancellationToken)
     {
+        // دریافت جامعه/بازار
+        var segment = await segmentRepo.GetByIdAsync(segmentId, cancellationToken);
+        if (segment == null)
+        {
+            return new CustomerSegmentEligibilityResult
+            {
+                IsEligible = false,
+                IsAlreadyMember = false,
+                Message = "جامعه/بازار مورد نظر یافت نشد"
+            };
+        }
+
+		// دریافت رابطه مشتری-اکوسیستم
+		CustomerTenant? customerTenant = await customerTenantQueryRepo.FirstOrDefaultAsync(
+            x => x.CustomerId == customerId && x.TenantId == segment.TenantId, cancellationToken);
+
+        if (customerTenant == null)
+        {
+            return new CustomerSegmentEligibilityResult
+            {
+                IsEligible = false,
+                IsAlreadyMember = false,
+                Message = "مشتری در این اکوسیستم عضو نیست"
+			};
+        }
+
         // بررسی عضویت فعلی
         var existingMembership = await membershipQueryRepo.FirstOrDefaultAsync(
-            m => m.CustomerId == customerId && m.SegmentId == segmentId,
+            m => m.CustomerTenantId == customerTenant.Id && m.SegmentId == segmentId,
             cancellationToken);
 
         if (existingMembership != null)
@@ -185,30 +214,18 @@ internal class CustomerSegmentService(
             {
                 IsEligible = false,
                 IsAlreadyMember = true,
-                Message = "مشتری از قبل عضو این جامعه است"
+                Message = "مشتری از قبل عضو این جامعه/بازار است"
             };
         }
 
-        // دریافت جامعه
-        var segment = await segmentRepo.GetByIdAsync(segmentId, cancellationToken);
-        if (segment == null)
-        {
-            return new CustomerSegmentEligibilityResult
-            {
-                IsEligible = false,
-                IsAlreadyMember = false,
-                Message = "جامعه مورد نظر یافت نشد"
-            };
-        }
-
-        // بررسی فعال بودن جامعه
+        // بررسی فعال بودن جامعه/بازار
         if (!segment.IsActive)
         {
             return new CustomerSegmentEligibilityResult
             {
                 IsEligible = false,
                 IsAlreadyMember = false,
-                Message = "جامعه غیرفعال است"
+                Message = "جامعه/بازار غیرفعال است"
             };
         }
 
@@ -225,7 +242,7 @@ internal class CustomerSegmentService(
             };
         }
 
-        // دریافت شرایط جامعه
+        // دریافت شرایط جامعه/بازار
         var conditions = await conditionRepo.GetAllAsync(cancellationToken);
         var segmentConditions = conditions
             .Where(c => c.CustomerSegmentId == segmentId)
@@ -245,6 +262,7 @@ internal class CustomerSegmentService(
 
         // بررسی شرایط با منطق AND/OR
         var evaluationResult = await EvaluateConditionsAsync(
+            customerTenant,
             customer, 
             segmentConditions, 
             cancellationToken);
@@ -266,9 +284,33 @@ internal class CustomerSegmentService(
         long? eventLogId,
         CancellationToken cancellationToken)
     {
+        // دریافت جامعه/بازار
+        var segment = await segmentRepo.GetByIdAsync(segmentId, cancellationToken);
+        if (segment == null)
+        {
+            return new CustomerSegmentMembershipResult
+            {
+                Success = false,
+                Message = "جامعه/بازار مورد نظر یافت نشد"
+            };
+        }
+
+		// دریافت رابطه مشتری-اکوسیستم
+		CustomerTenant? customerTenant = await customerTenantQueryRepo.FirstOrDefaultAsync(
+            x => x.CustomerId == customerId && x.TenantId == segment.TenantId, cancellationToken);
+
+        if (customerTenant == null)
+        {
+            return new CustomerSegmentMembershipResult
+            {
+                Success = false,
+                Message = "مشتری در این اکوسیستم عضو نیست"
+			};
+        }
+
         // بررسی عضویت قبلی
         var existingMembership = await membershipQueryRepo.FirstOrDefaultAsync(
-            m => m.CustomerId == customerId && m.SegmentId == segmentId,
+            m => m.CustomerTenantId == customerTenant.Id && m.SegmentId == segmentId,
             cancellationToken);
 
         if (existingMembership != null)
@@ -276,25 +318,15 @@ internal class CustomerSegmentService(
             return new CustomerSegmentMembershipResult
             {
                 Success = false,
-                Message = "مشتری از قبل عضو این جامعه است"
-            };
-        }
-
-        // دریافت جامعه
-        var segment = await segmentRepo.GetByIdAsync(segmentId, cancellationToken);
-        if (segment == null)
-        {
-            return new CustomerSegmentMembershipResult
-            {
-                Success = false,
-                Message = "جامعه مورد نظر یافت نشد"
+                Message = "مشتری از قبل عضو این جامعه/بازار است"
             };
         }
 
         // ایجاد عضویت جدید
         var membership = new CustomerSegmentMembership
         {
-            CustomerId = customerId,
+            CustomerTenantId = customerTenant.Id,
+            CustomerTenant = customerTenant,
             SegmentId = segmentId,
             EventLogId = eventLogId ?? 0 // اگر eventLogId null بود، 0 قرار می‌دهیم (برای عضویت‌های دستی)
         };
@@ -306,7 +338,7 @@ internal class CustomerSegmentService(
         {
             Success = true,
             MembershipId = membership.Id,
-            Message = $"عضویت در جامعه {segment.Title} با موفقیت انجام شد"
+            Message = $"عضویت در جامعه/بازار {segment.Title} با موفقیت انجام شد"
         };
     }
 
@@ -325,18 +357,33 @@ internal class CustomerSegmentService(
             return result;
         }
 
-        // دریافت جامعه‌های فعال
-        // TODO: باید TenantId از CustomerTenant گرفته شود
-        var segments = await segmentRepo.GetAllAsync(cancellationToken);
+		// دریافت اکوسیستم‌های فعال مشتری
+		var customerTenants = (await customerTenantQueryRepo.GetAllAsync(
+            cancellationToken,
+            ct => ct.CustomerId == customerId)).ToList();
+
+        if (!customerTenants.Any())
+        {
+            return result;
+        }
+
+        var tenantIds = customerTenants.Select(ct => ct.TenantId).ToHashSet();
+
+        // دریافت جامعه‌ها/بازارهای فعال در سازمان‌های مشتری
+        var segments = await segmentRepo.GetAllAsync(
+            cancellationToken,
+            s => tenantIds.Contains(s.TenantId));
         var activeSegments = segments
             .Where(s => s.IsActive)
             .Where(s => !onlyVisibleInPortal || s.IsVisibleInPortal)
             .ToList();
 
         // دریافت عضویت‌های فعلی مشتری
-        var memberships = await membershipQueryRepo.GetAllAsync(cancellationToken);
+        var customerTenantIds = customerTenants.Select(ct => ct.Id).ToList();
+        var memberships = await membershipQueryRepo.GetAllAsync(
+            cancellationToken,
+            m => customerTenantIds.Contains(m.CustomerTenantId));
         var customerMembershipIds = memberships
-            .Where(m => m.CustomerId == customerId)
             .Select(m => m.SegmentId)
             .ToHashSet();
 
@@ -344,7 +391,7 @@ internal class CustomerSegmentService(
         {
             var isMember = customerMembershipIds.Contains(segment.Id);
             
-            // برای جامعه‌های SystemOnly که کاربر عضو نیست، نمایش نمی‌دهیم
+            // برای جامعه‌ها/بازارهای SystemOnly که کاربر عضو نیست، نمایش نمی‌دهیم
             if (segment.JoinMode == CustomerSegmentJoinMode.SystemOnly && !isMember)
             {
                 continue;
@@ -383,7 +430,7 @@ internal class CustomerSegmentService(
             return joinedCount;
         }
 
-        // دریافت جامعه‌های فعال با JoinMode = SystemOnly یا WithConditionCheck
+        // دریافت جامعه‌ها/بازارهای فعال با JoinMode = SystemOnly یا WithConditionCheck
         // TODO: باید TenantId از CustomerTenant گرفته شود
         var segments = await segmentRepo.GetAllAsync(cancellationToken);
         var autoJoinSegments = segments
@@ -412,10 +459,11 @@ internal class CustomerSegmentService(
     }
 
     /// <summary>
-    /// ارزیابی شرایط جامعه با منطق AND/OR
+    /// ارزیابی شرایط جامعه/بازار با منطق AND/OR
     /// شرایط یک گروه با AND و گروه‌های مختلف با OR بررسی می‌شوند
     /// </summary>
     private async Task<(bool isEligible, List<string>? failedConditions)> EvaluateConditionsAsync(
+        CustomerTenant customerTenant,
         Customer customer,
         List<CustomerSegmentKindCondition> conditions,
         CancellationToken cancellationToken)
@@ -433,7 +481,7 @@ internal class CustomerSegmentService(
             // بررسی همه شرایط یک گروه (AND)
             foreach (var condition in group)
             {
-                var conditionResult = await EvaluateSingleConditionAsync(customer, condition, cancellationToken);
+                var conditionResult = await EvaluateSingleConditionAsync(customerTenant, customer, condition, cancellationToken);
                 if (!conditionResult)
                 {
                     passGroup = false;
@@ -458,6 +506,7 @@ internal class CustomerSegmentService(
     /// ارزیابی یک شرط منفرد
     /// </summary>
     private async Task<bool> EvaluateSingleConditionAsync(
+        CustomerTenant customerTenant,
         Customer customer,
         CustomerSegmentKindCondition condition,
         CancellationToken cancellationToken)
@@ -475,7 +524,7 @@ internal class CustomerSegmentService(
         }
 
         // محاسبه مقدار مقایسه
-        var compareValue = await CalculateCompareValueAsync(customer, condition, cancellationToken);
+        var compareValue = await CalculateCompareValueAsync(customerTenant, customer, condition, cancellationToken);
         
         // مقایسه بر اساس نوع شرط
         return CompareValues(compareValue, condition);
@@ -498,6 +547,7 @@ internal class CustomerSegmentService(
     /// محاسبه مقدار برای مقایسه
     /// </summary>
     private async Task<object?> CalculateCompareValueAsync(
+        CustomerTenant customerTenant,
         Customer customer,
         CustomerSegmentKindCondition condition,
         CancellationToken cancellationToken)
@@ -510,14 +560,26 @@ internal class CustomerSegmentService(
         return condition.CompareWith switch
         {
             CustomerSegmentCompareWith.ConstantValue => condition.Value,
-            CustomerSegmentCompareWith.CustomerPoint => await customerService.GetPointBalanceAsync(
-                1, // Default TenantId
-                1, // TODO: باید PointId از شرط یا جای دیگر بیاید
-                customer.Id, 
+            CustomerSegmentCompareWith.CustomerParameter => await GetCustomerParameterValueAsync(
+                customerTenant,
+                condition,
                 cancellationToken),
+            CustomerSegmentCompareWith.CustomerPoint => await customerService.GetPointBalanceAsync(
+                customerTenant.TenantId,
+                1, // TODO: باید PointId از شرط یا جای دیگر بیاید
+                customer.Id,
+                cancellationToken),
+            CustomerSegmentCompareWith.CustomerPointLevel => (await customerService
+                .GetCustomerPointLevels(customer.Id, customerTenant.TenantId, cancellationToken))
+                .Select(x => x.PointLevelId)
+                .FirstOrDefault(),
+            CustomerSegmentCompareWith.CustomerJoinDate => customerTenant.JoinDate,
+            CustomerSegmentCompareWith.CustomerLastActivity => customerTenant.LastInteractionDate,
+            CustomerSegmentCompareWith.CustomerPurchaseCount => customerTenant.TotalInteractions,
+            CustomerSegmentCompareWith.CustomerTotalPurchase => customerTenant.TotalTransactionValue,
+            CustomerSegmentCompareWith.CustomerAveragePurchase => customerTenant.AverageOrderValue,
             CustomerSegmentCompareWith.CustomerAge => CalculateAge(customer),
             CustomerSegmentCompareWith.CustomerGender => null, // Gender field removed from Customer entity
-            // سایر موارد را در صورت نیاز اضافه کنید
             _ => condition.Value
         };
     }
@@ -547,6 +609,10 @@ internal class CustomerSegmentService(
             CustomerSegmentConditionKind.Contains => actualValue.ToString()?.Contains(expectedValue ?? "", StringComparison.OrdinalIgnoreCase) ?? false,
             CustomerSegmentConditionKind.StartsWith => actualValue.ToString()?.StartsWith(expectedValue ?? "", StringComparison.OrdinalIgnoreCase) ?? false,
             CustomerSegmentConditionKind.EndsWith => actualValue.ToString()?.EndsWith(expectedValue ?? "", StringComparison.OrdinalIgnoreCase) ?? false,
+            CustomerSegmentConditionKind.InList => CompareList(actualValue, expectedValue, true),
+            CustomerSegmentConditionKind.NotInList => CompareList(actualValue, expectedValue, false),
+            CustomerSegmentConditionKind.InRange => CompareRange(actualValue, expectedValue, true),
+            CustomerSegmentConditionKind.OutOfRange => CompareRange(actualValue, expectedValue, false),
             _ => false
         };
     }
@@ -568,6 +634,103 @@ internal class CustomerSegmentService(
         }
 
         return false;
+    }
+
+    private bool CompareList(object? actualValue, string? expectedValue, bool shouldContain)
+    {
+        if (actualValue == null || string.IsNullOrWhiteSpace(expectedValue))
+        {
+            return false;
+        }
+
+        var tokens = expectedValue
+            .Split([',', ';', '|'], StringSplitOptions.RemoveEmptyEntries)
+            .Select(token => token.Trim())
+            .Where(token => token.Length > 0)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        if (tokens.Count == 0)
+        {
+            return false;
+        }
+
+        var actualText = actualValue.ToString()?.Trim();
+        if (string.IsNullOrEmpty(actualText))
+        {
+            return false;
+        }
+
+        var contains = tokens.Contains(actualText);
+        return shouldContain ? contains : !contains;
+    }
+
+    private bool CompareRange(object? actualValue, string? expectedValue, bool shouldBeInside)
+    {
+        if (actualValue == null || string.IsNullOrWhiteSpace(expectedValue))
+        {
+            return false;
+        }
+
+        var parts = expectedValue
+            .Split([',', ';', '|'], StringSplitOptions.RemoveEmptyEntries)
+            .Select(p => p.Trim())
+            .ToArray();
+
+        if (parts.Length < 2)
+        {
+            return false;
+        }
+
+        if (!decimal.TryParse(parts[0], NumberStyles.Any, CultureInfo.InvariantCulture, out var min))
+        {
+            return false;
+        }
+
+        if (!decimal.TryParse(parts[1], NumberStyles.Any, CultureInfo.InvariantCulture, out var max))
+        {
+            return false;
+        }
+
+        if (!decimal.TryParse(actualValue.ToString(), NumberStyles.Any, CultureInfo.InvariantCulture, out var actual))
+        {
+            return false;
+        }
+
+        var lowerBound = Math.Min(min, max);
+        var upperBound = Math.Max(min, max);
+        var inside = actual >= lowerBound && actual <= upperBound;
+
+        return shouldBeInside ? inside : !inside;
+    }
+
+    private async Task<string?> GetCustomerParameterValueAsync(
+        CustomerTenant customerTenant,
+        CustomerSegmentKindCondition condition,
+        CancellationToken cancellationToken)
+    {
+        int? parameterId = condition.CustomerParameterId;
+
+        if (parameterId == null && !string.IsNullOrWhiteSpace(condition.CustomerParameterKey))
+        {
+            var parameter = await customerParameterQueryRepo.FirstOrDefaultAsync(
+                x => x.TenantId == customerTenant.TenantId &&
+                     x.Key == condition.CustomerParameterKey,
+                cancellationToken);
+
+            parameterId = parameter?.Id;
+        }
+
+        if (parameterId == null)
+        {
+            return null;
+        }
+
+        var value = await customerParameterValueQueryRepo.FirstOrDefaultAsync(
+            x => x.CustomerTenantId == customerTenant.Id &&
+                 x.ParameterId == parameterId.Value,
+            cancellationToken);
+
+        return value?.Value;
     }
 
     /// <summary>

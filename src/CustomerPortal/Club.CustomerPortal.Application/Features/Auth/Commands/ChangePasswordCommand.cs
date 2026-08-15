@@ -1,4 +1,6 @@
-﻿namespace Club.CustomerPortal.Application.Features.Auth.Commands;
+using Club.CustomerPortal.Application.Interfaces;
+
+namespace Club.CustomerPortal.Application.Features.Auth.Commands;
 
 public record ChangePasswordCommand : IRequest
 {
@@ -16,32 +18,21 @@ public class ChangePasswordCommandValidator : AbstractValidator<ChangePasswordCo
 }
 
 
-public class ChangePasswordCommandHandler : IRequestHandler<ChangePasswordCommand>
+public class ChangePasswordCommandHandler(
+    ICustomerService customerService,
+    ICustomerRequesterUser requesterUser,
+    ILogger<ChangePasswordCommandHandler> logger) : IRequestHandler<ChangePasswordCommand>
 {
-    private readonly ICustomerService _customerService;
-    private readonly IRequesterUser _requesterUser;
-    private readonly ILogger<ChangePasswordCommandHandler> _logger;
-
-    public ChangePasswordCommandHandler(
-        ICustomerService customerService,
-        IRequesterUser requesterUser,
-        ILogger<ChangePasswordCommandHandler> logger)
-    {
-        _customerService = customerService;
-        _requesterUser = requesterUser;
-        _logger = logger;
-    }
-
     public async Task Handle(ChangePasswordCommand request, CancellationToken cancellationToken)
     {
-        var customerId = _requesterUser.GetUserId();
+        var customerId = requesterUser.CustomerId;
 
-        await _customerService.ChangePasswordAsync(
+        await customerService.ChangePasswordAsync(
             customerId,
             request.CurrentPassword,
             request.NewPassword,
             cancellationToken);
 
-        _logger.LogInformation("Password changed successfully for customer {CustomerId}", customerId);
+        logger.LogInformation("Password changed successfully for customer {CustomerId}", customerId);
     }
 }

@@ -1,6 +1,4 @@
-﻿using Neo.Domain.Features.Client;
-using Neo.Domain.Repository;
-using MassTransit.Initializers;
+﻿using MassTransit.Initializers;
 using System.Linq.Expressions;
 
 namespace Club.Application.Features.Common.Queries;

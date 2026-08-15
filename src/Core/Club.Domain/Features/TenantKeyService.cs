@@ -13,7 +13,7 @@ public interface ITenantKeyService
 /// پیاده‌سازی سرویس مدیریت کلیدهای مستاجر
 /// </summary>
 public class TenantKeyService(
-    IQueryRepository<Tenant, int> tenantQueryRepo,
+    IQueryRepository<Club.Domain.Entities.Customers.Tenant, int> tenantQueryRepo,
     ILogger<TenantKeyService> logger) : ITenantKeyService
 {
 

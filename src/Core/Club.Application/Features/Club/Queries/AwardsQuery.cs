@@ -1,4 +1,6 @@
-﻿namespace Club.Application.Features.Club.Queries;
+﻿using Club.Domain.Features;
+
+namespace Club.Application.Features.Club.Queries;
 
 public record AwardsQuery() : IRequest<AwardsQueryResponse?>
 {

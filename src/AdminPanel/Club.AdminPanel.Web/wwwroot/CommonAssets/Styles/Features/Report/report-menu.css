@@ -15,7 +15,8 @@
   background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%) !important;
   border-radius: 12px !important;
   box-shadow: 0 4px 12px rgba(15, 23, 42, 0.4) !important;
-  margin: 16px !important;
+  /* همسان‌سازی margin چپ و راست با هدر فرم ایندکس (1.5rem = 24px) */
+  margin: 0 1.5rem 1rem 1.5rem !important;
   padding: 20px 24px !important;
   border: none !important;
   position: relative !important;
@@ -209,14 +210,55 @@
 
 /* ===== Config Tree in Side Nav ===== */
 #configs-tree,
-#scheduledReport-tree {
-    font-size: 13px !important;
+#scheduledReport-tree,
+#configs-tree-modal {
+    font-size: 14px !important;
 }
 
 #configs-tree .jstree-anchor,
-#scheduledReport-tree .jstree-anchor {
-    padding: 4px 8px !important;
-    font-size: 13px !important;
+#scheduledReport-tree .jstree-anchor,
+#configs-tree-modal .jstree-anchor {
+    padding: 8px 12px !important;
+    font-size: 14px !important;
+    color: #1f2937 !important;
+    border-radius: 6px !important;
+    transition: all 0.15s ease !important;
+}
+
+#configs-tree .jstree-anchor:hover,
+#scheduledReport-tree .jstree-anchor:hover,
+#configs-tree-modal .jstree-anchor:hover {
+    background-color: #e0f2fe !important;
+    color: #0369a1 !important;
+}
+
+#configs-tree .jstree-clicked,
+#scheduledReport-tree .jstree-clicked,
+#configs-tree-modal .jstree-clicked {
+    background-color: #0ea5e9 !important;
+    color: #ffffff !important;
+    font-weight: 500 !important;
+}
+
+/* آیکن پوشه‌ها - رنگ زرد/نارنجی */
+#configs-tree .jstree-icon.jstree-themeicon,
+#scheduledReport-tree .jstree-icon.jstree-themeicon,
+#configs-tree-modal .jstree-icon.jstree-themeicon {
+    color: #f59e0b !important;
+}
+
+/* آیکن گزارش‌ها/چارت‌ها - رنگ سبز */
+#configs-tree .jstree-leaf > .jstree-anchor > .jstree-icon,
+#scheduledReport-tree .jstree-leaf > .jstree-anchor > .jstree-icon,
+#configs-tree-modal .jstree-leaf > .jstree-anchor > .jstree-icon {
+    color: #10b981 !important;
+}
+
+/* آیکن در حالت انتخاب شده - سفید */
+#configs-tree .jstree-clicked > .jstree-icon,
+#scheduledReport-tree .jstree-clicked > .jstree-icon,
+#configs-tree-modal .jstree-clicked > .jstree-icon {
+    color: #ffffff !important;
 }
 
 /* ===== Mouse Pointer Class ===== */
@@ -314,6 +356,56 @@
 #scheduledReport-tree .jstree-anchor {
     /* این قسمت با JavaScript کامل میشه */
 }
+
+/* ===== Report Header Wrapper ===== */
+.reportHeader {
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.reportHeader .top-page {
+    /* استفاده از استایل‌های .top-page */
+}
+
+.reportHeader .icons {
+    margin: 0 !important;
+}
+
+.reportHeader .icons a,
+.reportHeader .icons .top-bar-anchor-icon {
+    position: relative !important;
+    z-index: 10 !important;
+    pointer-events: auto !important;
+    cursor: pointer !important;
+}
+
+/* ===== Responsive Design for Report Header ===== */
+@media (max-width: 768px) {
+    .top-page {
+        margin: 0 0.75rem 0.75rem 0.75rem !important;
+        padding: 16px 18px !important;
+    }
+    
+    .top-page h5 {
+        font-size: 16px !important;
+    }
+}
+
+/* ===== Active Config Visual Difference ===== */
+/* کانفیگ فعال تفاوت دیداری دارد */
+#configs-tree .jstree-node.jstree-active-config > .jstree-anchor,
+#configs-tree .jstree-node.jstree-active-config.jstree-selected > .jstree-anchor,
+#configs-tree-modal .jstree-node.jstree-active-config > .jstree-anchor {
+    background-color: #0ea5e9 !important;
+    color: #ffffff !important;
+    font-weight: 600 !important;
+}
+
+#configs-tree .jstree-node.jstree-active-config > .jstree-anchor:hover,
+#configs-tree-modal .jstree-node.jstree-active-config > .jstree-anchor:hover {
+    background-color: #38bdf8 !important;
+}
+
 
 /* ===== Prevent Conflicts ===== */
 /* این CSS ها فقط برای Report هستند و با .modern-form تداخلی ندارند */

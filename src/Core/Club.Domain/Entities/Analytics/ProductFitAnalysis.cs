@@ -9,20 +9,20 @@ namespace Club.Domain.Entities.Analytics;
 public class ProductFitAnalysis : ClubBaseCoreConfigAuditableEntity<int>
 {
     /// <summary>
-    /// شناسه سازمان بهره‌بردار - سازمانی که تحلیل در آن انجام شده است
+    /// شناسه اکوسیستم - اکوسیستمی که تحلیل در آن انجام شده است
     /// </summary>
     public int TenantId { get; set; }
 
     public Tenant Tenant { get; set; } = null!;
 
     /// <summary>
-    /// شناسه محصول - محصول یا خدمت سازمان که این تحلیل برای آن انجام شده است
+    /// شناسه محصول - محصول یا خدمت که این تحلیل برای آن انجام شده است
     /// </summary>
-    public int TenantProductOrServiceId { get; set; }
+    public int ProductId { get; set; }
 
     [DisplayName("محصول")]
     [SBVR(SBVRModality.Obligatory, "تحلیل محصول-بازار", "هر تحلیل تناسب محصول باید به یک محصول مشخص تعلق داشته باشد")]
-    public Product TenantProductOrService { get; set; } = null!;
+    public Product Product { get; set; } = null!;
 
     /// <summary>
     /// عنوان تحلیل - عنوان مشخص کننده تحلیل

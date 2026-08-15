@@ -1,21 +1,19 @@
-﻿using Neo.Bpms.Domain.Entities.Security.Authentication;
-using Neo.Bpms.Domain.Entities.Security.Authorization;
-using Neo.Bpms.Domain.Features.Security;
+using Club.Domain.Entities.Common;
+using Neo.Bpms.Domain.Models.Security.Authentication;
+using Neo.Bpms.Domain.Models.Security.Authorization;
 using Neo.Common.Extensions;
 using Neo.Domain.Constants;
-using Neo.Domain.Features.Client;
-using Neo.Domain.Repository;
-using Club.Domain.Entities.Common;
+using Neo.Domain.Entities.Common;
 
 namespace Club.AdminPanel.Web.Infrastructure;
 
-internal class IdentityUserService(IQueryRepository<User, int> userOfficeRepository, IRequesterUser requesterUser)
+internal class IdentityUserService(IQueryRepository<User, UserId> userRepository, IRequesterUser requesterUser)
     : IIdentityUserService
 {
     public async Task<IdentityUser> GetIdentityUserAsync(string userName, CancellationToken cancellationToken = default)
     {
         long mobile = userName.ToInt64OrDefault();
-        User userRecord = await userOfficeRepository.FirstOrDefaultAsync(x => x.Mobile == mobile, cancellationToken);
+        User? userRecord = await userRepository.FirstOrDefaultAsync(x => x.Mobile == mobile, cancellationToken);
         if (userRecord != null)
         {
             var user = userRecord.ExpireDate is null ?
@@ -34,10 +32,10 @@ internal class IdentityUserService(IQueryRepository<User, int> userOfficeReposit
                     EndDate = userRecord.ExpireDate,
                     IsAdmin = true
                 } : null;
-            user.SetRoles(requesterUser.Claims());
-            return user;
+            user?.SetRoles(requesterUser.Claims());
+            return user!;
         }
-        return null;
+        return null!;
     }
 
     public async Task<List<IdentityRole>> GetIdentityRoles()

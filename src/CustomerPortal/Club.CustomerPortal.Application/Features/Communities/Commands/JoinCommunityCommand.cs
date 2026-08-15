@@ -1,6 +1,7 @@
-using Club.Domain.Entities.Customers.Enums;
-using Club.Domain.Features;
-using FluentValidation;
+using Club.CustomerPortal.Application.Interfaces;
+using Club.Domain.Entities.CustomerSegments;
+using Club.Domain.Entities.CustomerSegments.Enums;
+using Club.Domain.Features.Customers;
 
 namespace Club.CustomerPortal.Application.Features.Communities.Commands;
 
@@ -32,7 +33,7 @@ public class JoinCommunityCommandValidator : AbstractValidator<JoinCommunityComm
 public class JoinCommunityCommandHandler(
     ICustomerSegmentService customerSegmentService,
     ICustomerRequesterUser requesterUser,
-    IQueryRepository<CustomerSegment, int> segmentRepo
+    IQueryRepository<Club.Domain.Entities.CustomerSegments.CustomerSegment, int> segmentRepo
 ) : IRequestHandler<JoinCommunityCommand, JoinCommunityCommandResponse>
 {
     public async Task<JoinCommunityCommandResponse> Handle(
@@ -77,19 +78,15 @@ public class JoinCommunityCommandHandler(
         {
             var eligibility = await customerSegmentService.CheckCustomerEligibilityAsync(
                 customerId, 
-                request.CommunityId, 
+                request.CommunityId, null!/*TODO*/,
                 cancellationToken);
 
             if (!eligibility.IsEligible)
             {
-                var failedConditionsMsg = eligibility.FailedConditions != null && eligibility.FailedConditions.Any()
-                    ? $" شرایط برقرار نشده: {string.Join("، ", eligibility.FailedConditions)}"
-                    : "";
-
                 return new JoinCommunityCommandResponse
                 {
                     Success = false,
-                    Message = $"شما واجد شرایط عضویت در این جامعه نیستید.{failedConditionsMsg}"
+                    Message = $"شما واجد شرایط عضویت در این جامعه نیستید.{eligibility.Message}"
                 };
             }
 

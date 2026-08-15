@@ -9,16 +9,16 @@ namespace Club.Domain.Entities.Feedback;
 public class CustomerFeedback : ClubBaseCoreAuditableEntity<int>
 {
     /// <summary>
-    /// شناسه سازمان بهره‌بردار
+    /// شناسه اکوسیستم
     /// </summary>
-    [DisplayName("شناسه سازمان بهره‌بردار")]
-    [SBVR(SBVRModality.Obligatory, "چندین سازمان", "هر بازخورد باید به یک سازمان مشخص تعلق داشته باشد")]
+    [DisplayName("شناسه اکوسیستم")]
+    [SBVR(SBVRModality.Obligatory, "چندین اکوسیستم", "هر بازخورد باید به یک اکوسیستم مشخص تعلق داشته باشد")]
     public int TenantId { get; set; }
 
     /// <summary>
-    /// سازمان بهره‌بردار
+    /// اکوسیستم
     /// </summary>
-    [DisplayName("سازمان بهره‌بردار")]
+    [DisplayName("اکوسیستم")]
     public Tenant Tenant { get; set; } = null!;
 
     /// <summary>
@@ -26,13 +26,13 @@ public class CustomerFeedback : ClubBaseCoreAuditableEntity<int>
     /// </summary>
     [DisplayName("شناسه مشتری")]
     [SBVR(SBVRModality.Obligatory, "شناسایی مشتری", "هر بازخورد باید به یک مشتری مشخص نسبت داده شود")]
-    public int CustomerId { get; set; }
+    public int CustomerTenantId { get; set; }
 
     /// <summary>
     /// مشتری
     /// </summary>
     [DisplayName("مشتری")]
-    public Customer Customer { get; set; } = null!;
+    public CustomerTenant CustomerTenant { get; set; } = null!;
 
     /// <summary>
     /// نوع بازخورد
@@ -111,7 +111,7 @@ public class CustomerFeedback : ClubBaseCoreAuditableEntity<int>
     /// شناسه کاربر پاسخ‌دهنده
     /// </summary>
     [DisplayName("شناسه پاسخ‌دهنده")]
-    public int? AssignedToUserId { get; set; }
+    public UserId? AssignedToUserId { get; set; }
 
     /// <summary>
     /// کاربر پاسخ‌دهنده
@@ -178,19 +178,19 @@ public class CustomerFeedback : ClubBaseCoreAuditableEntity<int>
     /// نظرات بازخورد
     /// </summary>
     [DisplayName("نظرات")]
-    public ICollection<FeedbackComment> Comments { get; set; } = new List<FeedbackComment>();
+    public ICollection<FeedbackComment> Comments { get; set; } = [];
 
     /// <summary>
     /// مستندات پیوست
     /// </summary>
     [DisplayName("پیوست‌ها")]
-    public ICollection<FeedbackAttachment> Attachments { get; set; } = new List<FeedbackAttachment>();
+    public ICollection<FeedbackAttachment> Attachments { get; set; } = [];
 
     /// <summary>
     /// لایک‌ها
     /// </summary>
     [DisplayName("لایک‌ها")]
-    public ICollection<FeedbackLike> Likes { get; set; } = new List<FeedbackLike>();
+    public ICollection<FeedbackLike> Likes { get; set; } = [];
 }
 
 

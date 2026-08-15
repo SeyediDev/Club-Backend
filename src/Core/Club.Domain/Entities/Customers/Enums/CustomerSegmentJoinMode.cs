@@ -1,8 +1,8 @@
 namespace Club.Domain.Entities.Customers.Enums;
 
 /// <summary>
-/// نحوه عضویت در جامعه مشتریان
-/// تعیین می‌کند که مشتری چگونه می‌تواند عضو جامعه شود
+/// نحوه عضویت در جامعه/بازار مشتریان
+/// تعیین می‌کند که مشتری چگونه می‌تواند عضو جامعه/بازار شود
 /// </summary>
 public enum CustomerSegmentJoinMode
 {
@@ -25,7 +25,7 @@ public enum CustomerSegmentJoinMode
     /// <summary>
     /// عضویت آزاد - کاربر می‌تواند بدون کنترل شرایط عضو شود
     /// بدون بررسی CustomerSegmentKindCondition
-    /// مناسب برای جامعه‌های عمومی و باز
+    /// مناسب برای جامعه‌ها/بازارهای عمومی و باز
     /// </summary>
     [Description("عضویت آزاد - کاربر می‌تواند بدون کنترل شرایط عضو شود")]
     WithoutConditionCheck = 3

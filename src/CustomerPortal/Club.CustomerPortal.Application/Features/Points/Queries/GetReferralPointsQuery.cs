@@ -1,4 +1,6 @@
-﻿namespace Club.CustomerPortal.Application.Features.Points.Queries;
+using Club.CustomerPortal.Application.Interfaces;
+
+namespace Club.CustomerPortal.Application.Features.Points.Queries;
 
 public record GetReferralPointsQuery : IRequest<GetReferralPointsQueryResponse>;
 
@@ -7,25 +9,16 @@ public record GetReferralPointsQueryResponse
     public List<PointTransactionDto> Transactions { get; set; } = [];
 }
 
-public class GetReferralPointsQueryHandler : IRequestHandler<GetReferralPointsQuery, GetReferralPointsQueryResponse>
+public class GetReferralPointsQueryHandler(
+    IPointService pointService,
+    ICustomerRequesterUser requesterUser) : IRequestHandler<GetReferralPointsQuery, GetReferralPointsQueryResponse>
 {
-    private readonly IPointService _pointService;
-    private readonly IRequesterUser _requesterUser;
-
-    public GetReferralPointsQueryHandler(
-        IPointService pointService,
-        IRequesterUser requesterUser)
-    {
-        _pointService = pointService;
-        _requesterUser = requesterUser;
-    }
-
     public async Task<GetReferralPointsQueryResponse> Handle(GetReferralPointsQuery request, CancellationToken cancellationToken)
     {
-        var customerId = _requesterUser.GetUserId();
+        var customerId = requesterUser.CustomerId;
         
         // دریافت تراکنش‌های امتیاز مربوط به معرفی
-        var allTransactions = await _pointService.GetPointTransactionsAsync(customerId, 1, 100, cancellationToken);
+        var allTransactions = await pointService.GetPointTransactionsAsync(customerId, 1, 100, cancellationToken);
         
         // فیلتر کردن تراکنش‌هایی که مربوط به معرفی هستند
         var referralTransactions = allTransactions.Items

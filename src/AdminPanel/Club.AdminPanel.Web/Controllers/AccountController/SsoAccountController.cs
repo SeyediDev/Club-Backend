@@ -1,18 +1,17 @@
-﻿using Neo.Bpms.Domain.Entities.Security.Authentication;
-using Neo.Bpms.Domain.Features.Security;
-using Neo.Bpms.UI.MVC.Exceptions;
+﻿using Neo.Bpms.UI.MVC.Exceptions;
 using Neo.Bpms.UI.Resources.Resources;
 using Neo.Domain.Features.Client.Dto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Neo.Bpms.Domain.Models.Security.Authentication;
 
 namespace Club.AdminPanel.Web.Controllers.AccountController;
 
 public partial class AccountController
 {
-    private ISsoIntegrator _externalLoginIntegrator;
+    private ISsoIntegrator? _externalLoginIntegrator;
     protected ISsoIntegrator ExternalLoginIntegrator =>
-        _externalLoginIntegrator ??= null;// HttpContext.RequestServices.GetRequiredService<IExternalLoginIntegrator>();
+        _externalLoginIntegrator ??= null!;// HttpContext.RequestServices.GetRequiredService<IExternalLoginIntegrator>();
 
     [AllowAnonymous]
     [Route("{controller}/{action}")]

@@ -1,4 +1,5 @@
 ﻿using Club.Domain.Entities.Common;
+using Neo.Domain.Entities.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -13,5 +14,8 @@ internal class HelpConfiguration : IEntityTypeConfiguration<Help>
         entity.Property(e => e.ExpireDate).HasColumnType("datetime");
         entity.Property(e => e.LastModified).HasColumnType("datetime");
 
+        entity.HasOne(d => d.Language).WithMany()
+            .HasForeignKey(d => d.LanguageId)
+            .OnDelete(DeleteBehavior.NoAction);
     }
 }

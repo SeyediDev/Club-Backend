@@ -1,6 +1,4 @@
 ﻿using Neo.Application.Exceptions;
-using Neo.Domain.Features.Client;
-using Neo.Domain.Repository;
 using Club.Domain.Entities.Common;
 
 namespace Club.Application.Features.Common.Queries;
@@ -18,7 +16,7 @@ public class HelpQueryHandler(IRequesterUser user, IQueryRepository<Help, int> q
 {
     public async Task<HelpQueryResponse> Handle(HelpQuery request, CancellationToken cancellationToken)
     {
-        var userLangId = await user.GetLangIdAsync();
+        var userLangId = await user.GetLangIdAsync(cancellationToken);
         var help = await queryRepository.FirstOrDefaultAsync(x => x.LanguageId == userLangId, cancellationToken);
         if (help == null) throw new BadRequestException("محتوایی یافت نشد.");
         return new HelpQueryResponse

@@ -1,4 +1,6 @@
-﻿namespace Club.CustomerPortal.Application.Features.Surveys.Commands;
+using Club.CustomerPortal.Application.Interfaces;
+
+namespace Club.CustomerPortal.Application.Features.Surveys.Commands;
 
 public record SubmitSurveyCommand : IRequest
 {
@@ -23,25 +25,14 @@ public class SubmitSurveyCommandValidator : AbstractValidator<SubmitSurveyComman
     }
 }
 
-public class SubmitSurveyCommandHandler : IRequestHandler<SubmitSurveyCommand>
+public class SubmitSurveyCommandHandler(
+    ISurveyService surveyService,
+    ICustomerRequesterUser requesterUser,
+    ILogger<SubmitSurveyCommandHandler> logger) : IRequestHandler<SubmitSurveyCommand>
 {
-    private readonly ISurveyService _surveyService;
-    private readonly IRequesterUser _requesterUser;
-    private readonly ILogger<SubmitSurveyCommandHandler> _logger;
-
-    public SubmitSurveyCommandHandler(
-        ISurveyService surveyService,
-        IRequesterUser requesterUser,
-        ILogger<SubmitSurveyCommandHandler> logger)
-    {
-        _surveyService = surveyService;
-        _requesterUser = requesterUser;
-        _logger = logger;
-    }
-
     public async Task Handle(SubmitSurveyCommand request, CancellationToken cancellationToken)
     {
-        var customerId = _requesterUser.GetUserId();
+        var customerId = requesterUser.CustomerId;
         var answers = new Dictionary<int, string>();
         
         foreach (var response in request.Responses)
@@ -51,14 +42,14 @@ public class SubmitSurveyCommandHandler : IRequestHandler<SubmitSurveyCommand>
             answers[answerId] = answerValue;
         }
         
-        var result = await _surveyService.SubmitSurveyAsync(customerId, int.Parse(request.SurveyId), answers, cancellationToken);
+        var result = await surveyService.SubmitSurveyAsync(customerId, int.Parse(request.SurveyId), answers, cancellationToken);
         
         if (!result.Success)
         {
             throw new InvalidOperationException(result.Message);
         }
         
-        _logger.LogInformation("Customer {CustomerId} submitted survey {SurveyId}", customerId, request.SurveyId);
+        logger.LogInformation("Customer {CustomerId} submitted survey {SurveyId}", customerId, request.SurveyId);
     }
 }
 

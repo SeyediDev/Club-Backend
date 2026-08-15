@@ -197,6 +197,8 @@ var ConfigsTreeManager = function () {
 
 	$(instantiateTree);
 	return {
-		newFolder: newFolder
+		newFolder: newFolder,
+		goToConfig: goToConfig,
+		getContextMenu: contextMenu
 	};
 }();

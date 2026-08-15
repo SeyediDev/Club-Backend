@@ -1,4 +1,6 @@
 using System.ComponentModel.DataAnnotations;
+using Club.Domain.Entities.Promotions.Surveys;
+using Club.Domain.Entities.Promotions.Surveys.Enums;
 
 namespace Club.Application.Features.Surveys.Commands;
 
@@ -8,7 +10,7 @@ namespace Club.Application.Features.Surveys.Commands;
 public record CreateSurveyCommand : IRequest<int>
 {
     [Required]
-    public int TenantId { get; set; }
+    public int PromotionId { get; set; }
 
     [Required]
     [MaxLength(200)]
@@ -17,7 +19,7 @@ public record CreateSurveyCommand : IRequest<int>
     [MaxLength(1000)]
     public string? Description { get; set; }
 
-    public SurveyType SurveyType { get; set; } = SurveyType.RegularSurvey;
+    public SurveyType SurveyType { get; set; } = SurveyType.Survey;
 
     public int? ProductId { get; set; }
 
@@ -38,7 +40,7 @@ public record CreateSurveyCommand : IRequest<int>
     /// <summary>
     /// گزینه‌های نظرسنجی
     /// </summary>
-    public List<CreateSurveyItemDto> Items { get; set; } = new();
+    public List<CreateSurveyItemDto> Items { get; set; } = [];
 }
 
 public record CreateSurveyItemDto
@@ -58,7 +60,7 @@ public class CreateSurveyCommandValidator : AbstractValidator<CreateSurveyComman
 {
     public CreateSurveyCommandValidator(IMultiLingualService multiLingual)
     {
-        RuleFor(x => x.TenantId)
+        RuleFor(x => x.PromotionId)
             .NotEmpty().WithMessage(multiLingual.GetMessage("TenantIdIsRequired"));
 
         RuleFor(x => x.Title)
@@ -93,7 +95,7 @@ public class CreateSurveyCommandHandler(
     {
         var survey = new Survey
         {
-            TenantId = request.TenantId,
+            PromotionId = request.PromotionId,
             Title = request.Title,
             Description = request.Description,
             SurveyType = request.SurveyType,

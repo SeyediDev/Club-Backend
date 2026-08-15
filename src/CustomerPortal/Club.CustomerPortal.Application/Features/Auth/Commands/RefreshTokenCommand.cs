@@ -1,3 +1,5 @@
+using Club.CustomerPortal.Application.Interfaces;
+
 namespace Club.CustomerPortal.Application.Features.Auth.Commands;
 
 public record RefreshTokenCommand : IRequest<RefreshTokenCommandResponse>
@@ -20,26 +22,17 @@ public class RefreshTokenCommandValidator : AbstractValidator<RefreshTokenComman
     }
 }
 
-public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, RefreshTokenCommandResponse>
+public class RefreshTokenCommandHandler(
+    IAuthenticationService authenticationService,
+    ILogger<RefreshTokenCommandHandler> logger) : IRequestHandler<RefreshTokenCommand, RefreshTokenCommandResponse>
 {
-    private readonly IAuthenticationService _authenticationService;
-    private readonly ILogger<RefreshTokenCommandHandler> _logger;
-
-    public RefreshTokenCommandHandler(
-        IAuthenticationService authenticationService,
-        ILogger<RefreshTokenCommandHandler> logger)
-    {
-        _authenticationService = authenticationService;
-        _logger = logger;
-    }
-
     public async Task<RefreshTokenCommandResponse> Handle(RefreshTokenCommand request, CancellationToken cancellationToken)
     {
         try
         {
-            var tokenResult = await _authenticationService.RefreshTokenAsync(request.RefreshToken, cancellationToken);
+            var tokenResult = await authenticationService.RefreshTokenAsync(request.RefreshToken, cancellationToken);
 
-            _logger.LogInformation("Token refreshed successfully");
+            logger.LogInformation("Token refreshed successfully");
 
             return new RefreshTokenCommandResponse
             {
@@ -50,7 +43,7 @@ public class RefreshTokenCommandHandler : IRequestHandler<RefreshTokenCommand, R
         }
         catch (Exception ex)
         {
-            _logger.LogWarning(ex, "Token refresh failed");
+            logger.LogWarning(ex, "Token refresh failed");
             throw new UnauthorizedAccessException("توکن نامعتبر است");
         }
     }

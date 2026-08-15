@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Club.Domain.Entities.Feedback;
 
 namespace Club.Infrastructure.Data.Configurations;
 

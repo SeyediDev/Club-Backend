@@ -1,13 +1,13 @@
-/* Modern Controls Framework - Cando BPMS */
+/* Modern Controls Framework - Neo BPMS */
 /* Version: 1.0.0 */
 
 /* ===== CSS Variables ===== */
 :root {
-  /* Primary Colors */
-  --primary-color: #2563eb;
-  --primary-hover: #1d4ed8;
-  --primary-light: #dbeafe;
-  --primary-dark: #1e40af;
+  /* Primary Colors - از تم فعال؛ fallback آبی */
+  --primary-color: var(--neo-menu-primary, #2563eb);
+  --primary-hover: var(--neo-menu-primary-hover, #1d4ed8);
+  --primary-light: var(--neo-menu-primary-light, #dbeafe);
+  --primary-dark: var(--neo-menu-primary-active, #1e40af);
   
   /* Secondary Colors */
   --secondary-color: #64748b;
@@ -89,13 +89,13 @@ body {
 }
 
 /* ===== Modern Control Container ===== */
-.cando-control-modern {
+.neo-control-modern {
   position: relative;
   margin-bottom: var(--spacing-lg);
   transition: all var(--transition-normal);
 }
 
-.cando-control-modern:hover {
+.neo-control-modern:hover {
   transform: translateY(-1px);
 }
 
@@ -192,6 +192,58 @@ body {
 .field-textarea {
   min-height: 120px;
   resize: vertical;
+}
+
+/* ===== Modern RadioButtons ===== */
+.btn-group-toggle .btn {
+  position: relative;
+  overflow: hidden;
+  border: 2px solid var(--gray-300);
+  background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+  color: var(--gray-700);
+  font-weight: 500;
+  box-shadow: var(--shadow-sm);
+  transition: all var(--transition-fast);
+}
+
+.btn-group-toggle .btn:hover {
+  border-color: var(--primary-color);
+  background: linear-gradient(135deg, var(--primary-light) 0%, #ffffff 100%);
+  color: var(--primary-color);
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn-group-toggle .btn-primary {
+  background: linear-gradient(135deg, var(--primary-color) 0%, var(--primary-hover) 100%);
+  border-color: var(--primary-color);
+  color: white;
+  box-shadow: var(--shadow-md);
+}
+
+.btn-group-toggle .btn-primary:hover {
+  background: linear-gradient(135deg, var(--primary-hover) 0%, var(--primary-dark) 100%);
+  border-color: var(--primary-hover);
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: var(--shadow-lg);
+}
+
+.btn-group-toggle .btn input[type="radio"] {
+  position: absolute;
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.btn-group-toggle .btn:focus-within {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
+
+/* RTL Support for RadioButtons */
+[dir="rtl"] .btn-group-toggle .btn {
+  text-align: right;
 }
 
 /* ===== Checkbox & Radio ===== */
@@ -756,7 +808,7 @@ body {
 }
 
 /* Additional ComboBox vertical alignment fixes */
-.modern-form .cando-control select {
+.modern-form .neo-control select {
   display: block !important;
   width: 100% !important;
   height: 60px !important;
@@ -772,13 +824,50 @@ body {
   height: 60px !important;
   display: flex !important;
   align-items: center !important;
+  padding: 0 !important;
 }
 
 .modern-form .select2-container .select2-selection--single .select2-selection__rendered {
   line-height: 28px !important;
-  padding: 16px 20px !important;
+  padding: 0 20px !important;
+  margin: 0 !important;
+  height: 100% !important;
+  display: flex !important;
+  align-items: center !important;
   text-align: right !important;
-  direction: rtl !important;
+}
+
+.modern-form .select2-container .select2-selection--single .select2-selection__arrow {
+  height: 60px !important;
+  top: 0 !important;
+  left: auto !important;
+  right: 10px !important;
+}
+
+/* RTL arrow position - arrow should be on LEFT for RTL languages */
+[dir="rtl"] .modern-form .select2-container .select2-selection--single .select2-selection__arrow {
+  right: auto !important;
+  left: 10px !important;
+}
+
+/* Custom Combo Clear Button - hidden by default, show on hover/focus */
+.modern-form .combo-clear-btn {
+  opacity: 0 !important;
+  transition: opacity 0.2s ease !important;
+  pointer-events: none !important;
+}
+
+/* Show clear button when wrapper is hovered */
+.modern-form .dWrapper:hover .combo-clear-btn {
+  opacity: 1 !important;
+  pointer-events: auto !important;
+}
+
+/* Show clear button when select2 is focused or open */
+.modern-form .dWrapper:has(.select2-container--focus) .combo-clear-btn,
+.modern-form .dWrapper:has(.select2-container--open) .combo-clear-btn {
+  opacity: 1 !important;
+  pointer-events: auto !important;
 }
 
 .modern-form input:focus,
@@ -863,7 +952,7 @@ body {
   display: block !important;
 }
 
-.modern-form .cando-control {
+.modern-form .neo-control {
   width: 100% !important;
   display: block !important;
 }
@@ -933,6 +1022,11 @@ body {
   margin: 0;
   text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
   font-family: 'Vazir', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  /* Ensure proper alignment */
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  line-height: 1.2;
 }
 
 .modern-title-actions {
@@ -1003,7 +1097,7 @@ body {
 }
 
 /* Ensure controls take full width of their container */
-#main-part .cando-control {
+#main-part .neo-control {
   flex: 1;
   min-width: 300px;
   max-width: 100%;
@@ -1016,6 +1110,23 @@ body {
   min-width: 300px;
   max-width: 100%;
   width: auto !important;
+}
+
+/* ===== Max Width for Regular Form Controls ===== */
+/* Prevent controls from stretching too wide on sparse rows */
+/* Only apply to main form area, NOT to tables/subtables */
+#main-part > .neo-control > .dWrapper,
+#main-part > [class*="col-"] > .neo-control > .dWrapper {
+  max-width: 400px;
+}
+
+/* Ensure tables and subtables controls remain full width */
+#SubTablesTabMultiTab .dWrapper,
+.tab-content .dWrapper,
+table .dWrapper,
+td .dWrapper,
+th .dWrapper {
+  max-width: 100% !important;
 }
 
 /* ===== Modern Action Buttons ===== */
@@ -1112,48 +1223,139 @@ body {
 .modern-form {
   background: #f8fafc;
   min-height: 100vh;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-family: 'Vazir', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 /* ===== Modern Title Box Variations ===== */
-/* Details Page - Soft Orange */
-.modern-title-box.details-page {
-  background: linear-gradient(135deg, #fed7aa 0%, #fdba74 100%);
-}
-
-.modern-title-box.details-page::after {
-  background: linear-gradient(135deg, #fdba74 0%, #fb923c 100%);
-}
-
-/* Delete Page - Soft Red */
-.modern-title-box.delete-page {
-  background: linear-gradient(135deg, #fca5a5 0%, #f87171 100%);
-}
-
-.modern-title-box.delete-page::after {
-  background: linear-gradient(135deg, #f87171 0%, #ef4444 100%);
-}
-
-/* Edit Page - Soft Purple */
-.modern-title-box.edit-page {
-  background: linear-gradient(135deg, #93c5fd 0%, #60a5fa 100%);
-}
-
-.modern-title-box.edit-page::after {
-  background: linear-gradient(135deg, #60a5fa 0%, #3b82f6 100%);
-}
-
-/* Index Page - Soft Teal/Cyan */
-.modern-title-box.index-page {
-  background: linear-gradient(135deg, #93c5fd 0%, #60a5fa 100%);
+/* All form pages use the same menu color theme */
+.modern-title-box.details-page,
+.modern-title-box.delete-page,
+.modern-title-box.edit-page,
+.modern-title-box.index-page,
+.modern-title-box {
+  background: linear-gradient(to right, #5C96C6, #387CB4);
   padding: 21px 25px;
 }
 
+.modern-title-box.details-page::after,
+.modern-title-box.delete-page::after,
+.modern-title-box.edit-page::after,
 .modern-title-box.index-page::after {
-  background: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
+  background: linear-gradient(to right, #387CB4, #2d6a9f);
   bottom: -18px;
   height: 32px;
   border-radius: 0 0 32px 32px;
+}
+
+/* All form titles use flex layout for proper icon and text alignment */
+.modern-title-box .modern-title {
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: nowrap !important;
+  gap: 0 !important;
+}
+
+/* Page Header Icon Styles - Override sidemenu-icon for header context */
+.page-header-icon {
+    position: static !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    vertical-align: middle !important;
+    line-height: 1 !important;
+    margin-left: 8px !important;
+    margin-right: 12px !important;
+    margin-top: 0 !important;
+    margin-bottom: 0 !important;
+    width: auto !important;
+    height: auto !important;
+    flex-shrink: 0 !important;
+    /* Prevent text from overlapping */
+    float: none !important;
+    clear: none !important;
+    white-space: nowrap !important;
+}
+
+.page-header-icon .sidemenu-icon {
+    position: static !important;
+    width: 24px !important;
+    height: 24px !important;
+    min-width: 24px !important;
+    min-height: 24px !important;
+    max-width: 24px !important;
+    max-height: 24px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    vertical-align: middle !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    left: auto !important;
+    right: auto !important;
+    top: auto !important;
+    bottom: auto !important;
+    color: inherit !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+    overflow: visible !important;
+}
+
+.page-header-icon .sidemenu-icon svg {
+    width: 24px !important;
+    height: 24px !important;
+    display: block !important;
+    vertical-align: middle !important;
+}
+
+/* Ensure FontAwesome icons in title are aligned */
+.modern-title-box .modern-title i.fa,
+.modern-title-box .modern-title i.fas,
+.modern-title-box .modern-title i.far {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    vertical-align: middle !important;
+    line-height: 1 !important;
+}
+
+.page-header-icon .sidemenu-icon use {
+    fill: currentColor !important;
+}
+
+/* For index page with white text */
+.modern-title-box.index-page .page-header-icon {
+    color: white !important;
+}
+
+.modern-title-box.index-page .page-header-icon .sidemenu-icon {
+    color: white !important;
+}
+
+.modern-title-box.index-page .page-header-icon .sidemenu-icon svg {
+    color: white !important;
+    fill: white !important;
+}
+
+.modern-title-box.index-page .page-header-icon .sidemenu-icon use {
+    fill: white !important;
+}
+
+/* For other pages with dark text */
+.modern-title-box:not(.index-page) .page-header-icon {
+    color: #1e293b !important;
+}
+
+.modern-title-box:not(.index-page) .page-header-icon .sidemenu-icon {
+    color: #1e293b !important;
+}
+
+.modern-title-box:not(.index-page) .page-header-icon .sidemenu-icon svg {
+    color: #1e293b !important;
+    fill: #1e293b !important;
+}
+
+.modern-title-box:not(.index-page) .page-header-icon .sidemenu-icon use {
+    fill: #1e293b !important;
 }
 
 /* ===== Header Club Badge Styles ===== */
@@ -1224,6 +1426,100 @@ body {
   }
 }
 
+/* ===== Modern Filter Parameter Tooltip ===== */
+.filter-parameter-tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+.filter-parameter-icon {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 24px !important; /* Match choice-form-link size */
+  height: 24px !important; /* Match choice-form-link size */
+  background: linear-gradient(135deg, #dbeafe 0%, #93c5fd 100%) !important; /* Match choice-form-link gradient */
+  border: 1px solid rgba(59, 130, 246, 0.3) !important; /* Match choice-form-link border */
+  border-radius: 6px !important; /* Match choice-form-link radius */
+  cursor: pointer !important;
+  transition: all 0.3s ease !important; /* Match choice-form-link transition */
+  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2) !important; /* Match choice-form-link shadow */
+  margin-left: 2px !important; /* Match choice-form-link margin */
+  vertical-align: top !important; /* Align with choice-form-link */
+}
+
+.filter-parameter-icon:hover {
+  background: linear-gradient(135deg, #93c5fd 0%, #60a5fa 100%) !important; /* Match choice-form-link hover */
+  border-color: rgba(59, 130, 246, 0.5) !important; /* Match choice-form-link hover border */
+  transform: translateY(-1px) !important; /* Match choice-form-link hover transform */
+  box-shadow: 0 4px 8px rgba(59, 130, 246, 0.3) !important; /* Match choice-form-link hover shadow */
+}
+
+.filter-parameter-icon:active {
+  transform: translateY(0) !important;
+  box-shadow: 0 2px 4px rgba(59, 130, 246, 0.2) !important;
+}
+
+.filter-parameter-icon svg {
+  width: 14px !important; /* Match choice-form-link svg size */
+  height: 14px !important; /* Match choice-form-link svg size */
+  filter: drop-shadow(0 1px 2px rgba(0, 0, 0, 0.1)) !important; /* Match choice-form-link svg filter */
+}
+
+.filter-parameter-dropdown {
+  position: absolute !important;
+  top: 100% !important;
+  left: 0 !important;
+  z-index: 2002 !important; /* Higher than modern-filter-wrapper (2000) and filter-parameter-dropdown (2001) */
+  background: rgba(255, 255, 255, 0.98) !important;
+  backdrop-filter: blur(20px) !important;
+  border: 1px solid rgba(255, 255, 255, 0.2) !important;
+  border-radius: 12px !important;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.25) !important;
+  padding: 8px !important;
+  margin-top: 8px !important;
+  min-width: 200px !important;
+  animation: slideDown 0.3s ease !important;
+}
+
+.filter-parameter-item {
+  display: flex !important;
+  align-items: center !important;
+  padding: 8px 12px !important;
+  border-radius: 8px !important;
+  cursor: pointer !important;
+  transition: all 0.2s ease !important;
+  color: #374151 !important;
+  font-weight: 500 !important;
+  font-size: 14px !important;
+}
+
+.filter-parameter-item:hover {
+  background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%) !important;
+  transform: translateX(2px) !important;
+}
+
+.filter-parameter-item.selected {
+  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+  color: white !important;
+}
+
+.filter-parameter-item svg {
+  width: 18px !important;
+  height: 18px !important;
+  margin-left: 8px !important;
+}
+
+/* RTL Support for Filter Parameter Tooltip */
+[dir="rtl"] .filter-parameter-item svg {
+  margin-left: 0 !important;
+  margin-right: 8px !important;
+}
+
+[dir="rtl"] .filter-parameter-item:hover {
+  transform: translateX(-2px) !important;
+}
+
 /* ===== Modern Filter Styles ===== */
 .modern-filter-wrapper {
   background: white;
@@ -1244,7 +1540,7 @@ body {
 }
 
 /* ===== Filter Field Layout - Like Edit Page (Vertical) ===== */
-.modern-filter-wrapper .cando-control {
+.modern-filter-wrapper .neo-control {
   display: flex !important;
   flex-direction: column !important; /* عمودی مثل Edit */
   align-items: stretch !important;
@@ -1286,6 +1582,7 @@ body {
   margin-right: 0.5rem;
   margin-bottom: 0;
   display: inline-flex;
+  z-index: 2001 !important; /* Higher than modern-filter-wrapper (2000) */
 }
 
 /* ===== Filter Parameter Button Styling ===== */
@@ -1337,7 +1634,7 @@ body {
 }
 
 /* ===== Related Links Container ===== */
-.modern-filter-wrapper .cando-control {
+.modern-filter-wrapper .neo-control {
   position: relative;
 }
 
@@ -1416,6 +1713,12 @@ body {
   width: 100% !important;
 }
 
+/* Do NOT apply width:100% to choice tags - they need auto width to display correctly */
+.modern-filter-wrapper .select2-container .select2-selection,
+.modern-filter-wrapper .select2-container .select2-selection__rendered {
+  box-sizing: border-box !important;
+}
+
 .modern-filter-wrapper .select2-container .select2-selection--multiple {
   border: 2px solid #e2e8f0 !important;
   border-radius: 8px !important;
@@ -1432,12 +1735,14 @@ body {
   border-radius: 6px !important;
   color: white !important;
   padding: 4px 8px !important;
-  margin: 2px !important;
+  margin: 0 !important;
   font-size: 0.875rem !important;
   display: inline-flex !important;
   align-items: center !important;
   gap: 4px !important;
-  float: right !important; /* RTL support */
+  width: auto !important;
+  max-width: 100% !important;
+  flex-shrink: 0 !important;
 }
 
 .modern-filter-wrapper .select2-container .select2-selection--multiple .select2-selection__choice__remove {
@@ -1462,7 +1767,8 @@ body {
 .modern-filter-wrapper .select2-container .select2-selection--multiple .select2-search--inline {
   margin: 0 !important;
   padding: 0 !important;
-  float: right !important; /* RTL support */
+  flex: 1 !important;
+  min-width: 80px !important;
 }
 
 .modern-filter-wrapper .select2-container .select2-selection--multiple .select2-search--inline .select2-search__field {
@@ -1473,13 +1779,13 @@ body {
   margin: 0 !important;
   font-size: 0.875rem !important;
   color: #374151 !important;
-  min-width: 120px !important;
-  direction: rtl !important; /* RTL support */
+  width: 100% !important;
+  min-width: 20px !important;
+  direction: rtl !important;
 }
-
 /* ===== Fix for duplicate boxes ===== */
 .modern-filter-wrapper .select2-container--default .select2-selection--multiple {
-  background-image: none !important;
+    background-image: none !important;
 }
 
 .modern-filter-wrapper .select2-container--default .select2-selection--multiple:before {
@@ -1490,10 +1796,18 @@ body {
   display: none !important;
 }
 
-/* ===== Remove duplicate selection rendering ===== */
+/* ===== Remove duplicate selection rendering & ensure tag layout ===== */
 .modern-filter-wrapper .select2-container .select2-selection--multiple .select2-selection__rendered {
   padding: 0 !important;
   margin: 0 !important;
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center !important;
+  gap: 4px !important;
+}
+
+[dir="rtl"] .modern-filter-wrapper .select2-container .select2-selection--multiple .select2-selection__rendered {
+  flex-direction: row-reverse !important;
 }
 
 .modern-filter-wrapper .select2-container .select2-selection--multiple .select2-selection__rendered:before {
@@ -1525,7 +1839,7 @@ body {
 
 /* ===== Filter Parameter Dropdowns ===== */
 .modern-filter-wrapper .dropdown-menu {
-  z-index: 2002 !important; /* Higher than filter wrapper */
+  z-index: 99999 !important; /* Much higher than all other elements including tables */
   position: absolute !important;
   top: 100% !important;
   left: 0 !important;
@@ -1554,6 +1868,137 @@ body {
   filter: drop-shadow(0 3px 6px rgba(0, 0, 0, 0.5));
   opacity: 1;
   stroke-opacity: 1;
+}
+
+/* ===== Modern Refresh Button (بروزرسانی) ===== */
+.modern-refresh-btn {
+  background: linear-gradient(135deg, var(--primary-color), var(--primary-hover)) !important;
+  border: none !important;
+  color: white !important;
+}
+
+.modern-refresh-btn:hover {
+  background: linear-gradient(135deg, var(--primary-hover), var(--primary-dark)) !important;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.modern-refresh-btn svg {
+  color: white !important;
+  fill: white !important;
+}
+
+.modern-refresh-btn:hover svg {
+  color: white !important;
+  fill: white !important;
+}
+
+.modern-refresh-btn:active {
+  transform: translateY(0);
+}
+.modern-add-btn {
+  background: linear-gradient(135deg, #10b981, #059669) !important; /* سبز */
+  border-color: rgba(255, 255, 255, 0.4) !important;
+  position: relative;
+  overflow: hidden;
+}
+
+.modern-add-btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s ease, height 0.6s ease;
+}
+
+.modern-add-btn:hover::before {
+  width: 200%;
+  height: 200%;
+}
+
+.modern-add-btn:hover {
+  background: linear-gradient(135deg, #059669, #047857) !important;
+  transform: translateY(-3px) scale(1.05) !important;
+  box-shadow: 0 10px 30px rgba(16, 185, 129, 0.4) !important;
+}
+
+.modern-add-btn svg {
+  position: relative;
+  z-index: 1;
+  transition: transform 0.3s ease;
+}
+
+.modern-add-btn:hover svg {
+  transform: rotate(90deg) scale(1.1);
+}
+
+.modern-add-btn:active {
+  transform: translateY(-1px) scale(1.02) !important;
+}
+
+/* ===== Index Table Add Button ===== */
+.index-table-add-btn {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  width: 32px !important;
+  height: 32px !important;
+  background: linear-gradient(135deg, #10b981, #059669) !important;
+  border-radius: 8px !important;
+  color: white !important;
+  text-decoration: none !important;
+  transition: all 0.3s ease !important;
+  box-shadow: 0 2px 6px rgba(16, 185, 129, 0.3) !important;
+  vertical-align: middle !important;
+  margin: 0 4px !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+.index-table-add-btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.2);
+  transform: translate(-50%, -50%);
+  transition: width 0.6s ease, height 0.6s ease;
+}
+
+.index-table-add-btn:hover::before {
+  width: 200%;
+  height: 200%;
+}
+
+.index-table-add-btn:hover {
+  background: linear-gradient(135deg, #059669, #047857) !important;
+  transform: translateY(-2px) scale(1.08) !important;
+  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.5) !important;
+  color: white !important;
+  text-decoration: none !important;
+}
+
+.index-table-add-btn svg {
+  position: relative;
+  z-index: 1;
+  transition: transform 0.3s ease;
+  stroke: currentColor !important;
+}
+
+.index-table-add-btn:hover svg {
+  transform: rotate(90deg) scale(1.1);
+}
+
+.index-table-add-btn:active {
+  transform: translateY(0) scale(1.02) !important;
 }
 
 .modern-filter-wrapper::before {
@@ -1605,7 +2050,7 @@ body {
 }
 
 /* Reduce margin for filter controls */
-.modern-filter-wrapper .cando-control {
+.modern-filter-wrapper .neo-control {
   margin-bottom: 0.75rem !important; /* Reduced from 1.5rem */
   /* Ensure proper width in grid */
   width: 100% !important;
@@ -1614,13 +2059,13 @@ body {
 }
 
 /* Fix Select2 width in grid layout */
-.modern-filter-wrapper .cando-control .select2-container {
+.modern-filter-wrapper .neo-control .select2-container {
   width: 100% !important;
   max-width: 100% !important;
   box-sizing: border-box !important;
 }
 
-.modern-filter-wrapper .cando-control .dWrapper {
+.modern-filter-wrapper .neo-control .dWrapper {
   width: 100% !important;
   max-width: 100% !important;
   box-sizing: border-box !important;
@@ -1696,6 +2141,16 @@ body {
   gap: 0.5rem !important;
 }
 
+/* Hide default btn-group in filters when boolean-button-group exists */
+.modern-filter-wrapper .dWrapper:has(.boolean-button-group) .btn-group {
+  display: none !important;
+}
+
+/* Also hide labels that contain radio buttons when boolean-button-group exists */
+.modern-filter-wrapper .dWrapper:has(.boolean-button-group) label:has(input[type="radio"]) {
+  display: none !important;
+}
+
 /* ===== Modern Table Styles ===== */
 .modern-table-wrapper {
   background: white;
@@ -1741,10 +2196,10 @@ body {
 
 /* ===== Table Header Improvements ===== */
 .modern-table thead th {
-  padding: 0.75rem 1rem;
+  padding: 0.5rem 0.75rem !important; /* کاهش padding */
   text-align: right;
   font-weight: 600;
-  font-size: 0.9rem;
+  font-size: 0.8rem !important; /* کاهش font-size */
   border-bottom: 2px solid #e5e7eb;
   position: relative;
   vertical-align: middle;
@@ -1758,6 +2213,8 @@ body {
   font-family: 'Vazir', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   border-left: 1px solid #e5e7eb;
   border-right: 1px solid #e5e7eb;
+  line-height: 1.3 !important; /* کاهش line-height */
+  min-height: auto !important; /* حذف min-height */
 }
 
 .modern-table thead th:first-child {
@@ -1814,8 +2271,132 @@ body {
 }
 
 .modern-table-wrapper {
+  /* بهبود نمایش برای فرم‌های با ستون‌های زیاد */
   overflow-x: auto;
+  overflow-y: visible;
   border-radius: 12px;
+  /* جلوگیری از اسکرول افقی زشت */
+  position: relative;
+  /* بهبود اسکرول */
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f1f5f9;
+}
+
+.modern-table-wrapper::-webkit-scrollbar {
+  height: 6px;
+}
+
+.modern-table-wrapper::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 3px;
+}
+
+.modern-table-wrapper::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 3px;
+}
+
+.modern-table-wrapper::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* بهبود نمایش جدول برای ستون‌های زیاد */
+.modern-table-wrapper .modern-table {
+  /* استفاده از auto layout برای اندازه‌گیری خودکار ستون‌ها */
+  table-layout: auto;
+  /* اجازه wrap شدن متن در ستون‌ها */
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+/* محدود کردن عرض ستون‌ها برای جلوگیری از گسترش بیش از حد */
+.modern-table-wrapper .modern-table th,
+.modern-table-wrapper .modern-table td {
+  /* حداکثر عرض ستون - کاهش یافته */
+  max-width: 150px !important;
+  min-width: 60px !important;
+  /* اجازه wrap شدن متن */
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  /* متن را در چند خط نمایش بده */
+  line-height: 1.4;
+  /* padding مناسب - کاهش یافته */
+  padding: 0.5rem 0.4rem !important;
+  font-size: 0.8rem !important;
+}
+
+/* برای ستون‌های مهم، عرض بیشتری بده - کاهش یافته */
+.modern-table-wrapper .modern-table th:first-child,
+.modern-table-wrapper .modern-table td:first-child,
+.modern-table-wrapper .modern-table th:last-child,
+.modern-table-wrapper .modern-table td:last-child {
+  max-width: 180px !important;
+  min-width: 80px !important;
+}
+
+/* بهبود نمایش header */
+.modern-table-wrapper .modern-table thead th {
+  /* header را sticky نگه دار */
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: #f8fafc;
+  /* اجازه wrap شدن در header */
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  /* کاهش ارتفاع header */
+  min-height: auto !important;
+  padding: 0.5rem 0.4rem !important;
+  font-size: 0.75rem !important;
+  line-height: 1.3 !important;
+}
+
+/* وقتی تعداد ستون‌ها زیاد است، اسکرول را بهتر نمایش بده */
+.modern-table-wrapper.has-many-columns {
+  /* نمایش بهتر اسکرول */
+  scrollbar-width: thin;
+  scrollbar-color: #cbd5e1 #f1f5f9;
+}
+
+.modern-table-wrapper.has-many-columns::-webkit-scrollbar {
+  height: 8px;
+}
+
+.modern-table-wrapper.has-many-columns::-webkit-scrollbar-track {
+  background: #f1f5f9;
+  border-radius: 4px;
+}
+
+.modern-table-wrapper.has-many-columns::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+.modern-table-wrapper.has-many-columns::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* برای صفحات کوچک‌تر، ستون‌ها را کوچک‌تر کن */
+@media (max-width: 1200px) {
+  .modern-table-wrapper .modern-table th,
+  .modern-table-wrapper .modern-table td {
+    max-width: 150px;
+    min-width: 60px;
+    padding: 0.5rem 0.4rem;
+    font-size: 0.8rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .modern-table-wrapper .modern-table th,
+  .modern-table-wrapper .modern-table td {
+    max-width: 120px;
+    min-width: 50px;
+    padding: 0.4rem 0.3rem;
+    font-size: 0.75rem;
+  }
 }
 
 /* ===== Modern Sort Button Styles ===== */
@@ -1904,11 +2485,6 @@ body {
   line-height: 1;
 }
 
-.modern-table-wrapper {
-  overflow-x: auto;
-  border-radius: 12px;
-}
-
 .modern-table {
   width: 100%;
   border-collapse: separate;
@@ -1976,7 +2552,7 @@ body {
 }
 
 .modern-table tbody td {
-  padding: 0.75rem 1rem !important;
+  padding: 0.5rem 0.75rem !important; /* کاهش padding */
   vertical-align: middle !important;
   border-bottom: 1px solid #f3f4f6;
   text-align: right !important;
@@ -1986,6 +2562,8 @@ body {
   direction: rtl !important;
   box-sizing: border-box !important;
   width: auto !important;
+  font-size: 0.8rem !important; /* کاهش font-size */
+  line-height: 1.4 !important;
 }
 
 /* ===== Modern Action Links - Enhanced ===== */
@@ -1993,12 +2571,12 @@ body {
   display: inline-flex !important;
   align-items: center !important;
   justify-content: center !important;
-  width: 32px !important;
-  height: 32px !important;
-  border-radius: 8px !important;
+  width: 24px !important; /* کاهش از 32px */
+  height: 24px !important; /* کاهش از 32px */
+  border-radius: 6px !important;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
   text-decoration: none !important;
-  margin: 0 3px !important;
+  margin: 0 2px !important; /* کاهش margin */
   background: transparent !important;
   position: relative !important;
   overflow: hidden !important;
@@ -2043,8 +2621,8 @@ body {
 }
 
 .action-link-icon {
-  width: 18px !important;
-  height: 18px !important;
+  width: 14px !important; /* کاهش از 18px */
+  height: 14px !important; /* کاهش از 18px */
   color: #6b7280 !important;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1) !important;
   visibility: visible !important;
@@ -2572,8 +3150,8 @@ body {
 }
 
 .choice-form-link {
-  width: 24px !important; /* Reduced from 32px (25% smaller) */
-  height: 24px !important; /* Reduced from 32px (25% smaller) */
+  width: 20px !important; /* Reduced from 32px (25% smaller) */
+  height: 20px !important; /* Reduced from 32px (25% smaller) */
   background: linear-gradient(135deg, #dbeafe 0%, #93c5fd 100%) !important;
   color: #1e40af !important;
   border-radius: 6px !important; /* Reduced from 8px */
@@ -2744,23 +3322,321 @@ body {
     margin-bottom: 0.75rem;
   }
 }
-/* هر تب از SubTablesTabMultiTab در بلوک جدا نمایش داده شود */
+/* ===== MODERN 3D MULTITAB STYLES ===== */
+#SubTablesTabMultiTab {
+    margin-top: 2rem;
+    position: relative;
+}
+
+/* تب‌های ناوبری - استایل سه‌بعدی */
+#SubTablesTabMultiTab .nav-tabs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 0;
+    padding: 12px 16px;
+    background: linear-gradient(180deg, #f1f5f9 0%, #e2e8f0 100%);
+    border-radius: 16px 16px 0 0;
+    border: 1px solid #cbd5e1;
+    border-bottom: none;
+    position: relative;
+    box-shadow: 
+        inset 0 2px 4px rgba(255, 255, 255, 0.8),
+        inset 0 -1px 2px rgba(0, 0, 0, 0.05),
+        0 -4px 12px rgba(0, 0, 0, 0.08);
+}
+
+#SubTablesTabMultiTab .nav-tabs::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.8) 50%, transparent 100%);
+}
+
+/* آیتم‌های تب */
+#SubTablesTabMultiTab .nav-tabs .nav-item {
+    margin-bottom: 0;
+}
+
+/* لینک تب - حالت عادی */
+#SubTablesTabMultiTab .nav-tabs .nav-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #475569;
+    background: linear-gradient(180deg, #ffffff 0%, #f1f5f9 100%);
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    position: relative;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 
+        0 2px 4px rgba(0, 0, 0, 0.08),
+        0 1px 2px rgba(0, 0, 0, 0.04),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* افکت hover */
+#SubTablesTabMultiTab .nav-tabs .nav-link:hover {
+    color: #1e40af;
+    background: linear-gradient(180deg, #ffffff 0%, #e0e7ff 100%);
+    border-color: #93c5fd;
+    transform: translateY(-2px);
+    box-shadow: 
+        0 6px 16px rgba(59, 130, 246, 0.2),
+        0 2px 4px rgba(59, 130, 246, 0.1),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+/* تب فعال - استایل ملایم‌تر */
+#SubTablesTabMultiTab .nav-tabs .nav-link.active {
+    color: #ffffff;
+    background: linear-gradient(180deg, #60a5fa 0%, #3b82f6 100%);
+    border-color: #3b82f6;
+    transform: translateY(-2px);
+    box-shadow: 
+        0 4px 12px rgba(59, 130, 246, 0.3),
+        0 2px 4px rgba(59, 130, 246, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.3);
+    z-index: 10;
+}
+
+#SubTablesTabMultiTab .nav-tabs .nav-link.active::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, rgba(255,255,255,0.4), rgba(255,255,255,0.8), rgba(255,255,255,0.4));
+    border-radius: 10px 10px 0 0;
+}
+
+#SubTablesTabMultiTab .nav-tabs .nav-link.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, #60a5fa, transparent);
+    border-radius: 2px;
+}
+
+/* آیکون تب */
+#SubTablesTabMultiTab .nav-tabs .nav-link i,
+#SubTablesTabMultiTab .nav-tabs .nav-link .icon {
+    font-size: 16px;
+    opacity: 0.8;
+    transition: all 0.3s ease;
+}
+
+#SubTablesTabMultiTab .nav-tabs .nav-link.active i,
+#SubTablesTabMultiTab .nav-tabs .nav-link.active .icon {
+    opacity: 1;
+}
+
+/* محتوای تب */
+#SubTablesTabMultiTab .tab-content {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-top: none;
+    border-radius: 0 0 12px 12px;
+    padding: 12px;
+    position: relative;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.05),
+        0 1px 4px rgba(0, 0, 0, 0.03);
+}
+
+/* هر پانل تب */
 #SubTablesTabMultiTab .tab-content > .tab-pane {
     display: block !important;
-    margin-top: 20px;
+    margin-top: 16px;
     clear: both;
+    animation: tabFadeIn 0.3s ease;
 }
 
-/* فاصله بین تب‌ها */
-#SubTablesTabMultiTab .nav-tabs {
-    margin-bottom: 15px;
-    display: block;
-    width: 100%;
+@keyframes tabFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
-/* جلوگیری از چسبیدن جداول */
+/* عنوان هر بخش تب */
+#SubTablesTabMultiTab .tab-pane > h4,
+#SubTablesTabMultiTab .tab-pane > h5,
+#SubTablesTabMultiTab .tab-pane > .section-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+    font-weight: 700;
+    font-size: 15px;
+    color: #1e40af;
+    background: linear-gradient(135deg, #eff6ff 0%, #dbeafe 100%);
+    border-radius: 10px;
+    border-right: 4px solid #3b82f6;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);
+}
+
+/* جداول درون تب */
 #SubTablesTabMultiTab table {
-    margin-bottom: 25px;
+    margin-bottom: 20px;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* ===== ریسپانسیو MultiTab ===== */
+@media (max-width: 768px) {
+    #SubTablesTabMultiTab .nav-tabs {
+        padding: 10px 12px;
+        gap: 6px;
+        border-radius: 12px 12px 0 0;
+    }
+    
+    #SubTablesTabMultiTab .nav-tabs .nav-link {
+        padding: 10px 14px;
+        font-size: 13px;
+        border-radius: 8px;
+    }
+    
+    #SubTablesTabMultiTab .tab-content {
+        padding: 16px;
+        border-radius: 0 0 12px 12px;
+    }
+}
+
+@media (max-width: 576px) {
+    #SubTablesTabMultiTab .nav-tabs {
+        flex-direction: column;
+        gap: 4px;
+    }
+    
+    #SubTablesTabMultiTab .nav-tabs .nav-link {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    #SubTablesTabMultiTab .nav-tabs .nav-link.active {
+        transform: translateY(0) scale(1.02);
+    }
+}
+
+/* ===== GENERAL MODERN NAV-TABS STYLES ===== */
+/* استایل عمومی برای همه تب‌ها در فرم‌ها */
+.neo-control .nav-tabs,
+[data-id] > .row > .col-lg-12 > .nav-tabs,
+.nav-tabs {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+    margin-bottom: 0 !important;
+    padding: 12px 16px !important;
+    background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%) !important;
+    border-radius: 12px 12px 0 0 !important;
+    border: 1px solid #e2e8f0 !important;
+    border-bottom: none !important;
+    position: relative !important;
+    box-shadow: 
+        inset 0 2px 4px rgba(255, 255, 255, 0.8),
+        inset 0 -1px 2px rgba(0, 0, 0, 0.03),
+        0 -2px 8px rgba(0, 0, 0, 0.04) !important;
+}
+
+.neo-control .nav-tabs .nav-item,
+[data-id] > .row > .col-lg-12 > .nav-tabs .nav-item,
+.nav-tabs .nav-item {
+    margin-bottom: 0 !important;
+}
+
+.neo-control .nav-tabs .nav-link,
+[data-id] > .row > .col-lg-12 > .nav-tabs .nav-link,
+.nav-tabs .nav-link {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    padding: 10px 18px !important;
+    font-size: 14px !important;
+    font-weight: 500 !important;
+    color: #64748b !important;
+    background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%) !important;
+    border: 1px solid #e2e8f0 !important;
+    border-radius: 8px !important;
+    position: relative !important;
+    transition: all 0.25s ease !important;
+    box-shadow: 
+        0 1px 3px rgba(0, 0, 0, 0.05),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+    text-decoration: none !important;
+    cursor: pointer !important;
+}
+
+.neo-control .nav-tabs .nav-link:hover,
+[data-id] > .row > .col-lg-12 > .nav-tabs .nav-link:hover,
+.nav-tabs .nav-link:hover {
+    color: #3b82f6 !important;
+    background: linear-gradient(180deg, #ffffff 0%, #eff6ff 100%) !important;
+    border-color: #93c5fd !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 
+        0 4px 12px rgba(59, 130, 246, 0.15),
+        inset 0 1px 0 rgba(255, 255, 255, 0.9) !important;
+}
+
+.neo-control .nav-tabs .nav-link.active,
+[data-id] > .row > .col-lg-12 > .nav-tabs .nav-link.active,
+.nav-tabs .nav-link.active {
+    color: #ffffff !important;
+    background: linear-gradient(180deg, #60a5fa 0%, #3b82f6 100%) !important;
+    border-color: #3b82f6 !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 
+        0 4px 12px rgba(59, 130, 246, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2) !important;
+    z-index: 10 !important;
+}
+
+/* آیکون تب */
+.nav-tabs .nav-link i,
+.nav-tabs .nav-link .icon {
+    font-size: 14px !important;
+    opacity: 0.8 !important;
+    transition: all 0.25s ease !important;
+}
+
+.nav-tabs .nav-link.active i,
+.nav-tabs .nav-link.active .icon {
+    opacity: 1 !important;
+}
+
+.neo-control .tab-content,
+[data-id] > .row > .col-lg-12 > .tab-content,
+.tab-content {
+    background: #ffffff !important;
+    border: 1px solid #e2e8f0 !important;
+    border-top: none !important;
+    border-radius: 0 0 10px 10px !important;
+    padding: 12px !important;
+    position: relative !important;
+    box-shadow: 
+        0 4px 12px rgba(0, 0, 0, 0.04),
+        0 1px 4px rgba(0, 0, 0, 0.02) !important;
 }
 
 /* ===== MODERN ACCORDION STYLES ===== */
@@ -2874,7 +3750,7 @@ body {
 }
 
 /* Accordion animations */
-@@keyframes slideDown {
+@keyframes slideDown {
   from {
     opacity: 0;
     transform: translateY(-10px);
@@ -2886,7 +3762,7 @@ body {
 }
 
 /* Dark mode support for accordion */
-@@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: dark) {
   .modern-accordion .card {
     background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
     border-color: #475569;
@@ -2916,7 +3792,7 @@ body {
 }
 
 /* Responsive accordion */
-@@media (max-width: 768px) {
+@media (max-width: 768px) {
   .modern-accordion .card-header a {
     padding: 12px 16px;
     font-size: 14px;
@@ -3001,7 +3877,7 @@ body {
   animation: spin 1s linear infinite;
 }
 
-@@keyframes spin {
+@keyframes spin {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
@@ -3144,7 +4020,7 @@ body {
 }
 
 /* حالت تاریک برای اسکرول‌بار */
-@@media (prefers-color-scheme: dark) {
+@media (prefers-color-scheme: dark) {
   .custom-scroll {
     scrollbar-color: #475569 #1e293b !important;
   }
@@ -3247,5 +4123,73 @@ body {
   display: none !important;
   visibility: hidden !important;
   height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
   overflow: hidden !important;
+  border: none !important;
+}
+
+/* Hide parent rows/containers when ShowHide is applied */
+tr.ShowHide,
+td.ShowHide,
+th.ShowHide {
+  display: none !important;
+  height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  border: none !important;
+}
+
+/* ===== استایل‌های مختص کنترل Group ===== */
+/* طراحی سه‌بعدی و فشرده برای گروه‌ها */
+
+.neo-group-control {
+  margin-bottom: 0.5rem;
+}
+
+/* کارت اصلی Group - افکت سه‌بعدی */
+.neo-group-card {
+  background: #ffffff;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 0.75rem 1rem 0.5rem 1rem;
+  margin-bottom: 0.5rem;
+  position: relative;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.06), 
+              0 4px 6px rgba(0, 0, 0, 0.04),
+              inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  transition: all 0.2s ease;
+}
+
+.neo-group-card:hover {
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1), 
+              0 6px 12px rgba(0, 0, 0, 0.06),
+              inset 0 1px 0 rgba(255, 255, 255, 0.8);
+  border-color: #9ca3af;
+}
+
+/* هدر Group - ملایم‌تر */
+.neo-group-header {
+  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+  color: #334155;
+  margin: -0.75rem -1rem 0.625rem -1rem;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid #e2e8f0;
+  border-radius: 5px 5px 0 0;
+}
+
+/* عنوان Group */
+.neo-group-title {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1e40af;
+}
+
+/* محتوای داخلی Group */
+.neo-group-card .row {
+  margin: 0 -0.375rem;
+}
+
+.neo-group-card .row > [class*="col"] {
+  padding: 0 0.375rem;
 }

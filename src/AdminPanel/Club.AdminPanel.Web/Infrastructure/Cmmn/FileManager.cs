@@ -1,4 +1,4 @@
-﻿#if undercheck
+#if undercheck
 
 global using Neo.Bpms.Infrastructure.Features.Orm.DataSources.Base;
 
@@ -52,7 +52,7 @@ public class FileManager(ILogger Logger) : ICmmnFileManager
                 fileInfoData += string.Join(";", arr.Skip(2));
             }
 
-            DateTime curTime = DateTime.Now;
+            DateTime curTime = DateTime.UtcNow;
             string crc = GetCrc(fileInfoData);
             bool b = SaveFileInfo(guid, fileName, GetExtensionWithoutDot(extension),
                 contentType, entityId, fieldId,
@@ -123,7 +123,7 @@ public class FileManager(ILogger Logger) : ICmmnFileManager
 
         string guid = Guid.NewGuid().ToString();
         string fileName = Path.GetFileNameWithoutExtension(filePath);
-        DateTime curTime = DateTime.Now;
+        DateTime curTime = DateTime.UtcNow;
         return !SaveFileInfo(guid, fileName, GetExtensionWithoutDot(extension),
             GetMimeType(extension), entityId, fieldId,
             isPhysicalLocationDateBased, dateResolution, isPhysicalLocationCategoryBased, category,
@@ -154,7 +154,7 @@ public class FileManager(ILogger Logger) : ICmmnFileManager
     public void DeleteFileData(string transactionId, AuditTrail auditTrail,
         ref ExceptionInfos errors)
     {
-        QueryUtility fileInfo = QueryUtility<CandoFileInfo>.New();
+        QueryUtility fileInfo = QueryUtility<NeoFileInfo>.New();
         fileInfo.SelectFields("Id", "Time");
         fileInfo.SelectField("CategoryId")
             .Include("Category")
@@ -171,7 +171,7 @@ public class FileManager(ILogger Logger) : ICmmnFileManager
         }
 
         fileInfo.ReleaseQuery();
-        ApplyUtility delFileInfo = ApplyUtility<CandoFileInfo>.NewInTrail(auditTrail);
+        ApplyUtility delFileInfo = ApplyUtility<NeoFileInfo>.NewInTrail(auditTrail);
         delFileInfo.DeleteWithFilter("TransactionId='" + transactionId + "'");
         AppendError(ref errors, delFileInfo);
         delFileInfo.Release();
@@ -188,7 +188,7 @@ public class FileManager(ILogger Logger) : ICmmnFileManager
 
     public string GetFileName(string guid)
     {
-        QueryUtility fileInfo = QueryUtility<CandoFileInfo>.New();
+        QueryUtility fileInfo = QueryUtility<NeoFileInfo>.New();
         fileInfo.SelectFields("FileName");
         fileInfo.AddFilter("Id='" + guid + "'");
         if (!fileInfo.GetDocuments())
@@ -311,7 +311,7 @@ public class FileManager(ILogger Logger) : ICmmnFileManager
         bool FileIsDefinedInDatabase(string file)
         {
             string guid = Path.GetFileNameWithoutExtension(file);
-            return QueryUtility<CandoFileInfo>.New()
+            return QueryUtility<NeoFileInfo>.New()
             .Where("Id='" + guid + "'")
             .Any();
         }
@@ -354,7 +354,7 @@ public class FileManager(ILogger Logger) : ICmmnFileManager
 
     private ElasticObject FetchFileInfoRecord(string guid)
     {
-        QueryUtility fileInfo = QueryUtility<CandoFileInfo>.New();
+        QueryUtility fileInfo = QueryUtility<NeoFileInfo>.New();
         fileInfo.SelectFields("Id", "Time", "Extention", "FileName", "ContentType");
         fileInfo.AddFilter("Id='" + guid + "'");
         fileInfo.SelectField("CategoryId")
@@ -439,7 +439,7 @@ public class FileManager(ILogger Logger) : ICmmnFileManager
 
     private void DeleteFileFromServer(string guid, AuditTrail auditTrail)
     {
-        QueryUtility fileInfo = QueryUtility<CandoFileInfo>.New();
+        QueryUtility fileInfo = QueryUtility<NeoFileInfo>.New();
         fileInfo.SelectFields("Id", "Time", "Extention");
         fileInfo.AddFilter("Id='" + guid + "'");
         fileInfo.SelectField("CategoryId")
@@ -526,7 +526,7 @@ public class FileManager(ILogger Logger) : ICmmnFileManager
 
     private void DeleteFileInfo(string guid, AuditTrail auditTrail, ref ExceptionInfos errors)
     {
-        ApplyUtility fileInfo = ApplyUtility<CandoFileInfo>.NewInTrail(auditTrail);
+        ApplyUtility fileInfo = ApplyUtility<NeoFileInfo>.NewInTrail(auditTrail);
         fileInfo.AddField("Id", guid);
         ElasticObject record = new();
         record.SetField("Id", guid);
@@ -552,7 +552,7 @@ public class FileManager(ILogger Logger) : ICmmnFileManager
                 ["IsPhysicalLocationCategoryBased"] = isPhysicalLocationCategoryBased,
                 ["DateResolution"] = dateResolution
             };
-            ApplyUtility catFileInfo = ApplyUtility<CandoFileCategory>.NewInTrail(auditTrail);
+            ApplyUtility catFileInfo = ApplyUtility<NeoFileCategory>.NewInTrail(auditTrail);
             catFileInfo.Insert(categoryRecord, null);
             AppendError(ref errors, catFileInfo);
             catFileInfo.Release();
@@ -572,7 +572,7 @@ public class FileManager(ILogger Logger) : ICmmnFileManager
             ["Time"] = curTime.Year + "/" + curTime.Month + "/" + curTime.Day,
             ["CRC"] = crc
         };
-        ApplyUtility fileInfo = ApplyUtility<CandoFileInfo>.NewInTrail(auditTrail);
+        ApplyUtility fileInfo = ApplyUtility<NeoFileInfo>.NewInTrail(auditTrail);
         bool b = fileInfo.Insert(fileInfoRecord, null);
         AppendError(ref errors, fileInfo);
         fileInfo.Release();
@@ -876,7 +876,7 @@ public class FileManager(ILogger Logger) : ICmmnFileManager
     public string GetMimeType(string extension)
     {
         string extensionWithDot = extension.StartsWith(".") ? extension : "." + extension;
-        return CandoMimeTypes.GetMimeType(extensionWithDot);
+        return NeoMimeTypes.GetMimeType(extensionWithDot);
     }
 
     public string UploadedFilesPath()

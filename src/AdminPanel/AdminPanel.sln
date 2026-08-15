@@ -1,0 +1,30 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Club.AdminPanel.Domain", "Club.AdminPanel.Domain\Club.AdminPanel.Domain.csproj", "{F7CAB9FB-C0A8-2550-7F43-EADD09D050E5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Club.AdminPanel.Web", "Club.AdminPanel.Web\Club.AdminPanel.Web.csproj", "{DE7589BD-7B5E-1925-3002-CFC6E2ED6859}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F7CAB9FB-C0A8-2550-7F43-EADD09D050E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F7CAB9FB-C0A8-2550-7F43-EADD09D050E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F7CAB9FB-C0A8-2550-7F43-EADD09D050E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F7CAB9FB-C0A8-2550-7F43-EADD09D050E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DE7589BD-7B5E-1925-3002-CFC6E2ED6859}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DE7589BD-7B5E-1925-3002-CFC6E2ED6859}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DE7589BD-7B5E-1925-3002-CFC6E2ED6859}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DE7589BD-7B5E-1925-3002-CFC6E2ED6859}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {65A79A6B-CEDC-4FD5-9237-8D96BCA455CE}
+	EndGlobalSection
+EndGlobal

@@ -1,34 +1,23 @@
+using Club.CustomerPortal.Application.Interfaces;
+
 namespace Club.CustomerPortal.Application.Features.Auth.Commands;
 
-public class RegisterCommandHandler : IRequestHandler<RegisterCommand, LoginCommandResponse>
+public class RegisterCommandHandler(
+    ICustomerService customerService,
+    IAuthenticationService authenticationService,
+    IReferralService referralService,
+    ILogger<RegisterCommandHandler> logger) : IRequestHandler<RegisterCommand, LoginCommandResponse>
 {
-    private readonly ICustomerService _customerService;
-    private readonly IAuthenticationService _authenticationService;
-    private readonly IReferralService _referralService;
-    private readonly ILogger<RegisterCommandHandler> _logger;
-
-    public RegisterCommandHandler(
-        ICustomerService customerService,
-        IAuthenticationService authenticationService,
-        IReferralService referralService,
-        ILogger<RegisterCommandHandler> logger)
-    {
-        _customerService = customerService;
-        _authenticationService = authenticationService;
-        _referralService = referralService;
-        _logger = logger;
-    }
-
     public async Task<LoginCommandResponse> Handle(RegisterCommand request, CancellationToken cancellationToken)
     {
         // 1. بررسی وجود مشتری با ایمیل یا موبایل
-        var existingCustomerByEmail = await _customerService.GetCustomerByEmailAsync(request.Email, cancellationToken);
+        var existingCustomerByEmail = await customerService.GetCustomerByEmailAsync(request.Email, cancellationToken);
         if (existingCustomerByEmail != null)
         {
             throw new InvalidOperationException("این ایمیل قبلاً ثبت شده است");
         }
 
-        var existingCustomerByPhone = await _customerService.GetCustomerByPhoneAsync(request.PhoneNumber, cancellationToken);
+        var existingCustomerByPhone = await customerService.GetCustomerByPhoneAsync(request.PhoneNumber, cancellationToken);
         if (existingCustomerByPhone != null)
         {
             throw new InvalidOperationException("این شماره موبایل قبلاً ثبت شده است");
@@ -37,7 +26,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, LoginComm
         // 2. تایید کد معرف (در صورت وجود)
         if (!string.IsNullOrEmpty(request.ReferrerCode))
         {
-            var isValidReferrerCode = await _referralService.ValidateReferrerCodeAsync(request.ReferrerCode, cancellationToken);
+            var isValidReferrerCode = await referralService.ValidateReferrerCodeAsync(request.ReferrerCode, cancellationToken);
             if (!isValidReferrerCode)
             {
                 throw new InvalidOperationException("کد معرف نامعتبر است");
@@ -45,21 +34,23 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, LoginComm
         }
 
         // 3. ایجاد مشتری جدید
-        var customer = await _customerService.CreateCustomerAsync(request, cancellationToken);
+        var customer = await customerService.CreateCustomerAsync(request, cancellationToken);
 
         // 4. ثبت معرف (در صورت وجود)
         if (!string.IsNullOrEmpty(request.ReferrerCode))
         {
-            await _referralService.SetReferrerAsync(customer.Id, request.ReferrerCode, cancellationToken);
+            await referralService.SetReferrerAsync(customer.Id, request.ReferrerCode, cancellationToken);
         }
 
         // 5. تولید JWT Token
-        var tokenResult = await _authenticationService.GenerateTokenAsync(
+        var tokenResult = await authenticationService.GenerateTokenAsync(
             customer.Id,
             customer.MobileNo ?? string.Empty,
             cancellationToken);
 
-        _logger.LogInformation("New customer registered successfully: {CustomerId}", customer.Id);
+        logger.LogInformation("New customer registered successfully: {CustomerId}", customer.Id);
+
+        var customerTenant = await customerService.GetCustomerTenantAsync(customer.Id, null, cancellationToken);
 
         // 6. بازگشت پاسخ
         return new LoginCommandResponse
@@ -67,7 +58,7 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, LoginComm
             Token = tokenResult.AccessToken,
             RefreshToken = tokenResult.RefreshToken,
             ExpiresIn = tokenResult.ExpiresIn,
-            Customer = customer.Adapt<CustomerDto>()
+            Customer = CustomerDtoFactory.Create(customer, customerTenant)
         };
     }
 }

@@ -1,7 +1,7 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 	
 	<PropertyGroup>
-		<TargetFramework>net8.0</TargetFramework>
+		<TargetFramework>net10.0</TargetFramework>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 	</PropertyGroup>
@@ -14,8 +14,11 @@
 	<ItemGroup>
 		<!-- TODO: Replace with NuGet packages after Neo.Bpms is published -->
 		<!-- Temporary local project references -->
-		<ProjectReference Include="..\..\..\..\Neo.Bpms\src\Neo.Bpms.Domain\Neo.Bpms.Domain.csproj" />
-		<ProjectReference Include="..\..\..\..\Neo.Bpms\src\Neo.Bpms.Domain.Modeling\Neo.Bpms.Domain.Modeling.csproj" />
+		<ProjectReference Include="..\..\..\..\..\Neo-Bpms\src\Neo.Bpms.Domain\Neo.Bpms.Domain.csproj" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <Folder Include="UiDefinitions\Financial\" />
 	</ItemGroup>
 	
 </Project>

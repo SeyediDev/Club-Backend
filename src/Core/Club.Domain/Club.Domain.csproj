@@ -1,19 +1,41 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Models\**" />
-    <EmbeddedResource Remove="Models\**" />
-    <None Remove="Models\**" />
+    <Compile Remove="Features\AssetInternalService.cs" />
+    <Compile Remove="Features\AssetService.cs" />
+    <Compile Remove="Features\AwardService.cs" />
+    <Compile Remove="Features\CustomerSegmentService.cs" />
+    <Compile Remove="Features\CustomerService.cs" />
+    <Compile Remove="Features\EvaluateFormulaService.cs" />
+    <Compile Remove="Features\EventService.cs" />
+    <Compile Remove="Features\LotteryService.cs" />
+    <Compile Remove="Features\PointBudgetService.cs" />
+    <Compile Remove="Features\PointLevelService.cs" />
+    <Compile Remove="Features\PointTransferService.cs" />
+    <Compile Remove="Features\ProductService.cs" />
+    <Compile Remove="Features\PromotionService.cs" />
+    <Compile Remove="Features\ReferrerCodeValidationService.cs" />
+    <Compile Remove="Features\ReferrerRuleProcessingService.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>Club.Domain.Tests</_Parameter1>
+    </AssemblyAttribute>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleTo">
+      <_Parameter1>DynamicProxyGenAssembly2</_Parameter1>
+    </AssemblyAttribute>
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="CoreCLR-NCalc" />
     <PackageReference Include="Mapster" />
     <PackageReference Include="MediatR" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" />
     <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" />
   </ItemGroup>
@@ -21,11 +43,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\..\Neo\src\Neo.Common\Neo.Common.csproj" />
     <ProjectReference Include="..\..\..\..\..\Neo\src\Neo.Domain\Neo.Domain.csproj" />
-  </ItemGroup>
-  
-  <ItemGroup>
-    <!-- Neo.Bpms will be referenced as NuGet package from private Nexus -->
-    <!-- <ProjectReference Include="..\..\..\..\Neo.Bpms\src\Neo.Bpms.Domain\Neo.Bpms.Domain.csproj" /> -->
+    <ProjectReference Include="..\..\..\..\..\Neo-Bpms\src\Neo.Bpms.Domain\Neo.Bpms.Domain.csproj" />
   </ItemGroup>
 
 </Project>

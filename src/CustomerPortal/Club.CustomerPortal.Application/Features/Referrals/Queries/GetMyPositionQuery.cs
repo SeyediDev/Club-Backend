@@ -1,4 +1,6 @@
-﻿namespace Club.CustomerPortal.Application.Features.Referrals.Queries;
+using Club.CustomerPortal.Application.Interfaces;
+
+namespace Club.CustomerPortal.Application.Features.Referrals.Queries;
 
 public record GetMyPositionQuery : IRequest<GetMyPositionQueryResponse>
 {
@@ -12,21 +14,15 @@ public record GetMyPositionQueryResponse
     public LeaderboardEntryDto Position { get; set; } = null!;
 }
 
-public class GetMyPositionQueryHandler : IRequestHandler<GetMyPositionQuery, GetMyPositionQueryResponse>
+public class GetMyPositionQueryHandler(
+    IReferralService referralService,
+    ICustomerRequesterUser requesterUser)
+    : IRequestHandler<GetMyPositionQuery, GetMyPositionQueryResponse>
 {
-    private readonly IReferralService _referralService;
-    private readonly IRequesterUser _requesterUser;
-
-    public GetMyPositionQueryHandler(IReferralService referralService, IRequesterUser requesterUser)
-    {
-        _referralService = referralService;
-        _requesterUser = requesterUser;
-    }
-
     public async Task<GetMyPositionQueryResponse> Handle(GetMyPositionQuery request, CancellationToken cancellationToken)
     {
-        var customerId = _requesterUser.GetUserId();
-        var rank = await _referralService.GetCustomerPositionAsync(customerId, cancellationToken);
+        var customerId = requesterUser.CustomerId;
+        var rank = await referralService.GetCustomerPositionAsync(customerId, cancellationToken);
         
         return new GetMyPositionQueryResponse
         {

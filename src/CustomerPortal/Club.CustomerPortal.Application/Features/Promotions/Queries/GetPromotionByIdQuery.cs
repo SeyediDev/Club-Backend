@@ -1,3 +1,5 @@
+using Club.CustomerPortal.Application.Interfaces;
+
 namespace Club.CustomerPortal.Application.Features.Promotions.Queries;
 
 public record GetPromotionByIdQuery : IRequest<GetPromotionByIdQueryResponse>
@@ -10,18 +12,11 @@ public record GetPromotionByIdQueryResponse
     public PromotionDto Promotion { get; set; } = null!;
 }
 
-public class GetPromotionByIdQueryHandler : IRequestHandler<GetPromotionByIdQuery, GetPromotionByIdQueryResponse>
+public class GetPromotionByIdQueryHandler(IPromotionService promotionService) : IRequestHandler<GetPromotionByIdQuery, GetPromotionByIdQueryResponse>
 {
-    private readonly IPromotionService _promotionService;
-
-    public GetPromotionByIdQueryHandler(IPromotionService promotionService)
-    {
-        _promotionService = promotionService;
-    }
-
     public async Task<GetPromotionByIdQueryResponse> Handle(GetPromotionByIdQuery request, CancellationToken cancellationToken)
     {
-        var promotion = await _promotionService.GetPromotionByIdAsync(int.Parse(request.Id), cancellationToken);
+        var promotion = await promotionService.GetPromotionByIdAsync(int.Parse(request.Id), cancellationToken);
         
         if (promotion == null)
         {
@@ -32,18 +27,24 @@ public class GetPromotionByIdQueryHandler : IRequestHandler<GetPromotionByIdQuer
         {
             Promotion = new PromotionDto
             {
-                Id = promotion.Id.ToString(),
-                Name = promotion.Title,
+                Id = promotion.Id,
+                Title = promotion.Title,
                 Description = promotion.Description ?? string.Empty,
-                CategoryId = null,
-                CategoryName = null,
-                ImageUrl = promotion.ImageUrl,
+                ShortDescription = promotion.ShortDescription,
+                Benefits = promotion.Benefits,
+                ParticipationGuide = promotion.ParticipationGuide,
                 StartDate = promotion.StartDate,
                 EndDate = promotion.EndDate,
+                DaysUntilEnd = promotion.DaysUntilEnd,
+                ImageUrl = promotion.ImageUrl,
+                CardImageUrl = promotion.CardImageUrl,
+                BannerImageUrl = promotion.BannerImageUrl,
+                IconUrl = promotion.IconUrl,
+                PrimaryColor = promotion.PrimaryColor,
+                RewardType = promotion.RewardType,
                 IsActive = promotion.IsActive,
-                PromotionType = "Campaign",
-                TermsAndConditions = null,
-                ParticipationStatus = promotion.CanParticipate ? "Available" : "Unavailable"
+                CanParticipate = promotion.CanParticipate,
+                Category = promotion.Category
             }
         };
     }

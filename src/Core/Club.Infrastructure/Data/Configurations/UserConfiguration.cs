@@ -11,5 +11,10 @@ internal class UserConfiguration : IEntityTypeConfiguration<User>
 
         entity.Property(e => e.CreateDate).HasColumnType("datetime");
         entity.Property(e => e.ExpireDate).HasColumnType("datetime");
+        
+        // Index on Mobile for faster login lookup
+        entity.HasIndex(e => e.Mobile)
+            .HasDatabaseName("IX_Users_Mobile")
+            .IsUnique();
     }
 }

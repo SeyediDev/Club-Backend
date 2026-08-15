@@ -1,4 +1,6 @@
-﻿namespace Club.CustomerPortal.Application.Features.Referrals.Queries;
+using Club.CustomerPortal.Application.Interfaces;
+
+namespace Club.CustomerPortal.Application.Features.Referrals.Queries;
 
 public record GetReferredCustomersQuery : IRequest<GetReferredCustomersQueryResponse>
 {
@@ -23,21 +25,15 @@ public record ReferredCustomerDto
     public string Status { get; set; } = null!;
 }
 
-public class GetReferredCustomersQueryHandler : IRequestHandler<GetReferredCustomersQuery, GetReferredCustomersQueryResponse>
+public class GetReferredCustomersQueryHandler(
+    IReferralService referralService,
+    ICustomerRequesterUser requesterUser)
+    : IRequestHandler<GetReferredCustomersQuery, GetReferredCustomersQueryResponse>
 {
-    private readonly IReferralService _referralService;
-    private readonly IRequesterUser _requesterUser;
-
-    public GetReferredCustomersQueryHandler(IReferralService referralService, IRequesterUser requesterUser)
-    {
-        _referralService = referralService;
-        _requesterUser = requesterUser;
-    }
-
     public async Task<GetReferredCustomersQueryResponse> Handle(GetReferredCustomersQuery request, CancellationToken cancellationToken)
     {
-        var customerId = _requesterUser.GetUserId();
-        var result = await _referralService.GetReferredCustomersAsync(customerId, request.PageNumber, request.PageSize, cancellationToken);
+        var customerId = requesterUser.CustomerId;
+        var result = await referralService.GetReferredCustomersAsync(customerId, request.PageNumber, request.PageSize, cancellationToken);
         
         var customers = result.Items.Select(c => new ReferredCustomerDto
         {

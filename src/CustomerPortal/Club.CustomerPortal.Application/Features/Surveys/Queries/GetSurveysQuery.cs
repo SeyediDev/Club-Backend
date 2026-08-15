@@ -1,3 +1,5 @@
+using Club.CustomerPortal.Application.Interfaces;
+
 namespace Club.CustomerPortal.Application.Features.Surveys.Queries;
 
 public record GetSurveysQuery : IRequest<GetSurveysQueryResponse>
@@ -42,18 +44,11 @@ public record SurveyQuestionOptionDto
     public int Order { get; set; }
 }
 
-public class GetSurveysQueryHandler : IRequestHandler<GetSurveysQuery, GetSurveysQueryResponse>
+public class GetSurveysQueryHandler(ISurveyService surveyService) : IRequestHandler<GetSurveysQuery, GetSurveysQueryResponse>
 {
-    private readonly ISurveyService _surveyService;
-
-    public GetSurveysQueryHandler(ISurveyService surveyService)
-    {
-        _surveyService = surveyService;
-    }
-
     public async Task<GetSurveysQueryResponse> Handle(GetSurveysQuery request, CancellationToken cancellationToken)
     {
-        var result = await _surveyService.GetActiveSurveysAsync(request.PageNumber, request.PageSize, cancellationToken);
+        var result = await surveyService.GetActiveSurveysAsync(request.PageNumber, request.PageSize, cancellationToken);
         
         var surveys = result.Items.Select(s => new SurveyDto
         {

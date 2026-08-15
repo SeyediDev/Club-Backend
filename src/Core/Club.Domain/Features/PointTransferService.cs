@@ -1,8 +1,3 @@
-using Club.Domain.Entities.Customers.Enums;
-using Club.Domain.Entities.Events;
-using Club.Domain.Entities.Points;
-using Club.Domain.Enums;
-
 namespace Club.Domain.Features;
 
 public interface IPointTransferService
@@ -36,6 +31,7 @@ internal class PointTransferService(
     IQueryRepository<CustomerTenant, int> customerTenantQueryRepo,
     ICommandRepository<CustomerTenant, int> customerTenantCmdRepo,
     IQueryRepository<Point, int> pointQueryRepo,
+    IQueryRepository<EventChannel, int> eventChannelQueryRepo,
     IQueryRepository<PointConversionRate, int> conversionRateQueryRepo,
     IQueryRepository<CustomerTransaction, long> transactionQueryRepo,
     ICommandRepository<CustomerTransaction, long> transactionCmdRepo,
@@ -50,7 +46,15 @@ internal class PointTransferService(
             cancellationToken);
         
         if (point == null)
-            throw new InvalidOperationException($"امتیاز با شناسه {request.PointId} در سازمان {request.TenantId} یافت نشد");
+            throw new InvalidOperationException($"امتیاز با شناسه {request.PointId} در اکوسیستم {request.TenantId} یافت نشد");
+
+        // 1.1 Validate EventChannel exists in Tenant
+        var eventChannel = await eventChannelQueryRepo.FirstOrDefaultAsync(
+            ec => ec.Id == request.EventChannelId && ec.TenantId == request.TenantId,
+            cancellationToken);
+
+        if (eventChannel == null)
+            throw new InvalidOperationException($"کانال رویداد با شناسه {request.EventChannelId} در اکوسیستم {request.TenantId} یافت نشد");
 
         // 2. Find or Create Source Customer
         var sourceCustomer = await customerQueryRepo.FirstOrDefaultAsync(
@@ -66,7 +70,7 @@ internal class PointTransferService(
             cancellationToken);
         
         if (sourceCustomerTenant == null)
-            throw new InvalidOperationException("مشتری مبدا در این سازمان عضو نیست");
+            throw new InvalidOperationException("مشتری مبدا در این اکوسیستم عضو نیست");
 
         // 4. Find or Create Destination Customer
         var destinationCustomer = await customerQueryRepo.FirstOrDefaultAsync(
@@ -106,13 +110,13 @@ internal class PointTransferService(
         }
         else if (!destinationCustomerTenant.IsActive)
         {
-            throw new InvalidOperationException("مشتری مقصد در این سازمان غیرفعال است");
+            throw new InvalidOperationException("مشتری مقصد در این اکوسیستم غیرفعال است");
         }
 
         // 6. Calculate Source Balance
         var sourceTransactions = await transactionQueryRepo.GetAllAsync(
             cancellationToken,
-            ct => ct.CustomerId == sourceCustomer.Id && ct.PointId == request.PointId && ct.TenantId == request.TenantId);
+            ct => ct.CustomerTenantId == sourceCustomerTenant.Id && ct.PointId == request.PointId && ct.TenantId == request.TenantId);
         
         var sourceBalance = sourceTransactions.OrderByDescending(ct => ct.Id).FirstOrDefault()?.Balance ?? 0;
 
@@ -134,7 +138,7 @@ internal class PointTransferService(
             // Check commission balance
             var commissionTransactions = await transactionQueryRepo.GetAllAsync(
                 cancellationToken,
-                ct => ct.CustomerId == sourceCustomer.Id && ct.PointId == commissionPointId && ct.TenantId == request.TenantId);
+                ct => ct.CustomerTenantId == sourceCustomerTenant.Id && ct.PointId == commissionPointId && ct.TenantId == request.TenantId);
             
             var commissionBalance = commissionTransactions.OrderByDescending(ct => ct.Id).FirstOrDefault()?.Balance ?? 0;
 
@@ -149,7 +153,8 @@ internal class PointTransferService(
         // 9. Create EventLog
         var eventLog = new EventLog
         {
-            CustomerId = sourceCustomer.Id,
+            TenantId = request.TenantId,
+            CustomerTenantId = sourceCustomerTenant.Id,
             EventChannelId = request.EventChannelId,
             TriggerType = TriggerType.PointTransfer
         };
@@ -161,7 +166,8 @@ internal class PointTransferService(
         var sourceTransaction = new CustomerTransaction
         {
             TenantId = request.TenantId,
-            CustomerId = sourceCustomer.Id,
+            CustomerTenantId = sourceCustomerTenant.Id,
+            CustomerTenant = sourceCustomerTenant,
             PointId = request.PointId,
             Debit = request.Amount,
             Credit = null,
@@ -175,7 +181,7 @@ internal class PointTransferService(
         // 11. Calculate Destination Balance
         var destTransactions = await transactionQueryRepo.GetAllAsync(
             cancellationToken,
-            ct => ct.CustomerId == destinationCustomer.Id && ct.PointId == request.PointId && ct.TenantId == request.TenantId);
+            ct => ct.CustomerTenantId == destinationCustomerTenant.Id && ct.PointId == request.PointId && ct.TenantId == request.TenantId);
         
         var destBalance = destTransactions.OrderByDescending(ct => ct.Id).FirstOrDefault()?.Balance ?? 0;
 
@@ -183,7 +189,8 @@ internal class PointTransferService(
         var destinationTransaction = new CustomerTransaction
         {
             TenantId = request.TenantId,
-            CustomerId = destinationCustomer.Id,
+            CustomerTenantId = destinationCustomerTenant.Id,
+            CustomerTenant = destinationCustomerTenant,
             PointId = request.PointId,
             Debit = null,
             Credit = request.Amount,
@@ -199,14 +206,15 @@ internal class PointTransferService(
         {
             var commissionTransactions2 = await transactionQueryRepo.GetAllAsync(
                 cancellationToken,
-                ct => ct.CustomerId == sourceCustomer.Id && ct.PointId == commissionPointId && ct.TenantId == request.TenantId);
+                ct => ct.CustomerTenantId == sourceCustomerTenant.Id && ct.PointId == commissionPointId && ct.TenantId == request.TenantId);
             
             var commissionBalance = commissionTransactions2.OrderByDescending(ct => ct.Id).FirstOrDefault()?.Balance ?? 0;
 
             var commissionTransaction = new CustomerTransaction
             {
                 TenantId = request.TenantId,
-                CustomerId = sourceCustomer.Id,
+                CustomerTenantId = sourceCustomerTenant.Id,
+                CustomerTenant = sourceCustomerTenant,
                 PointId = commissionPointId.Value,
                 Debit = commissionAmount,
                 Credit = null,

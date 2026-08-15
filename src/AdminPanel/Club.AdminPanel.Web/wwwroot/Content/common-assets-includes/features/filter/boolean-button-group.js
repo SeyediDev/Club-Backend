@@ -40,6 +40,8 @@ function initBooleanButtonGroups() {
         
         // Hide original radio buttons and their parent labels
         $container.find('label').has('input[type="radio"]').hide();
+        // Also hide the btn-group container
+        $container.find('.btn-group').hide();
         
         // Create button group
         var $buttonGroup = $('<div class="boolean-button-group"></div>');

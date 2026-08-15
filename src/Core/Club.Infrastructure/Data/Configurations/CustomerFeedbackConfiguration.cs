@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Club.Domain.Entities.Feedback;
 
 namespace Club.Infrastructure.Data.Configurations;
 
@@ -26,11 +25,13 @@ internal class CustomerFeedbackConfiguration : IEntityTypeConfiguration<Customer
 
         entity.Property(e => e.Status)
             .IsRequired()
-            .HasDefaultValue(FeedbackStatus.New);
+            .HasDefaultValue(FeedbackStatus.New)
+            .HasSentinel((FeedbackStatus)0); // Use 0 as sentinel since enum starts at 1
 
         entity.Property(e => e.Priority)
             .IsRequired()
-            .HasDefaultValue(FeedbackPriority.Medium);
+            .HasDefaultValue(FeedbackPriority.Medium)
+            .HasSentinel((FeedbackPriority)0); // Use 0 as sentinel since enum starts at 1
 
         entity.Property(e => e.IsPublic)
             .IsRequired()
@@ -66,11 +67,11 @@ internal class CustomerFeedbackConfiguration : IEntityTypeConfiguration<Customer
             .OnDelete(DeleteBehavior.NoAction)
             .HasConstraintName("FK_CustomerFeedback_Tenant");
 
-        entity.HasOne(d => d.Customer)
+        entity.HasOne(d => d.CustomerTenant)
             .WithMany()
-            .HasForeignKey(d => d.CustomerId)
+            .HasForeignKey(d => d.CustomerTenantId)
             .OnDelete(DeleteBehavior.NoAction)
-            .HasConstraintName("FK_CustomerFeedback_Customer");
+            .HasConstraintName("FK_CustomerFeedback_CustomerTenant");
 
         entity.HasOne(d => d.Product)
             .WithMany()
@@ -109,8 +110,8 @@ internal class CustomerFeedbackConfiguration : IEntityTypeConfiguration<Customer
         entity.HasIndex(e => e.Priority)
             .HasDatabaseName("IX_CustomerFeedback_Priority");
 
-        entity.HasIndex(e => new { e.TenantId, e.CustomerId })
-            .HasDatabaseName("IX_CustomerFeedback_Tenant_Customer");
+        entity.HasIndex(e => new { e.TenantId, e.CustomerTenantId })
+            .HasDatabaseName("IX_CustomerFeedback_Tenant_CustomerTenant");
     }
 }
 

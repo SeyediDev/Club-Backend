@@ -1,44 +1,30 @@
+using Club.Application;
+using Club.EventHandler.Api.Infrastructure;
+using Club.EventHandler.Application;
+using Neo.Domain.Features.Telementry;
+using Neo.Endpoint.Infrastructure;
+using Neo.Infrastructure.Features.Telementry;
+
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.Configure<TelemetryOptions>(builder.Configuration.GetSection(nameof(TelemetryOptions)));
+builder.Services.AddClubApplicationServices(builder.Configuration);
+builder.Services.AddEventHandlerApplication();
+builder.Services.AddEventHandlerInfrastructureServices(builder.Configuration, builder.Environment);
+
+builder.Host.AddNeoSerilog();
+builder.Services.AddNeoOpenTelementry(builder.Configuration);
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+app.UseHealthChecks("/health");
+app.UseRecuringJobs();
 
-app.UseHttpsRedirection();
+app.MapGet("/", () => Results.Ok("Event handler online"));
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
+// Monitoring endpoint - استفاده از MonitoringController از Neo.Endpoint
+// این endpoint از طریق AddNeoControllerServices و MapControllers در دسترس است
 
-app.MapGet("/weatherforecast", () =>
-{
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
-})
-.WithName("GetWeatherForecast")
-.WithOpenApi();
+app.MapControllers();
 
 app.Run();
-
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}

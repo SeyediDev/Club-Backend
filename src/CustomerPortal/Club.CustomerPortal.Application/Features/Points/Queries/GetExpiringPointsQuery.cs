@@ -1,4 +1,6 @@
-﻿namespace Club.CustomerPortal.Application.Features.Points.Queries;
+using Club.CustomerPortal.Application.Interfaces;
+
+namespace Club.CustomerPortal.Application.Features.Points.Queries;
 
 public record GetExpiringPointsQuery : IRequest<GetExpiringPointsQueryResponse>;
 
@@ -14,24 +16,15 @@ public record ExpiringPointDto
     public DateTime ExpirationDate { get; set; }
 }
 
-public class GetExpiringPointsQueryHandler : IRequestHandler<GetExpiringPointsQuery, GetExpiringPointsQueryResponse>
+public class GetExpiringPointsQueryHandler(
+    IPointService pointService,
+    ICustomerRequesterUser requesterUser) : IRequestHandler<GetExpiringPointsQuery, GetExpiringPointsQueryResponse>
 {
-    private readonly IPointService _pointService;
-    private readonly IRequesterUser _requesterUser;
-
-    public GetExpiringPointsQueryHandler(
-        IPointService pointService,
-        IRequesterUser requesterUser)
-    {
-        _pointService = pointService;
-        _requesterUser = requesterUser;
-    }
-
     public async Task<GetExpiringPointsQueryResponse> Handle(GetExpiringPointsQuery request, CancellationToken cancellationToken)
     {
-        var customerId = _requesterUser.GetUserId();
+        var customerId = requesterUser.CustomerId;
         
-        var expiringPoints = await _pointService.GetExpiringPointsAsync(customerId, 30, cancellationToken);
+        var expiringPoints = await pointService.GetExpiringPointsAsync(customerId, 30, cancellationToken);
         
         var result = expiringPoints.Select(ep => new ExpiringPointDto
         {
@@ -44,7 +37,8 @@ public class GetExpiringPointsQueryHandler : IRequestHandler<GetExpiringPointsQu
                 Icon = "star",
                 IsConvertible = true,
                 IsTransferable = true,
-                ExpirationDays = 365
+                ExpirationDays = 365,
+                ShowInLeaderboard = true
             },
             Amount = (int)ep.Amount,
             ExpirationDate = ep.ExpiryDate

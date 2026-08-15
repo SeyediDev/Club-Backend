@@ -1,7 +1,7 @@
 ﻿namespace Club.Domain.Entities.Common;
 
 [DisplayName("نوع مستند")]
-public partial class DocumentType : ClubBaseCoreCommonAuditableEntity<int>
+public partial class DocumentType : ClubBaseCoreConfigAuditableEntity<int>
 {
     [DisplayName("عنوان")] [InDisplayString] [MaxLength(41)]
     public string Title { get; set; } = null!;

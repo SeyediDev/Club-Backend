@@ -18,7 +18,7 @@ public interface IRewardService
     /// <summary>
     /// دریافت جزئیات پاداش
     /// </summary>
-    Task<Interfaces.RewardDto?> GetRewardByIdAsync(int rewardId, CancellationToken cancellationToken = default);
+    Task<RewardDto?> GetRewardByIdAsync(int rewardId, CancellationToken cancellationToken = default);
     
     /// <summary>
     /// خرید پاداش
@@ -27,6 +27,15 @@ public interface IRewardService
         int customerId, 
         int rewardId, 
         int quantity = 1,
+        CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// محاسبه قیمت نهایی ریوارد با احتساب تخفیف طرح
+    /// </summary>
+    Task<long> CalculateFinalRewardPriceAsync(
+        int customerId,
+        int rewardId,
+        int pointId,
         CancellationToken cancellationToken = default);
     
     /// <summary>
@@ -41,7 +50,7 @@ public interface IRewardService
     /// <summary>
     /// دریافت دسته‌بندی‌های پاداش
     /// </summary>
-    Task<IEnumerable<Interfaces.RewardCategoryDto>> GetRewardCategoriesAsync(CancellationToken cancellationToken = default);
+    Task<IEnumerable<RewardCategoryDto>> GetRewardCategoriesAsync(CancellationToken cancellationToken = default);
 }
 
 public record RewardDto
@@ -51,7 +60,7 @@ public record RewardDto
     public string? Description { get; init; }
     public long Value { get; init; }
     public int Quantity { get; init; }
-    public string? Picture { get; init; }
+    public int? PictureId { get; init; }
     public string CategoryName { get; init; } = null!;
     public string MerchantName { get; init; } = null!;
     public bool IsAvailable { get; init; }

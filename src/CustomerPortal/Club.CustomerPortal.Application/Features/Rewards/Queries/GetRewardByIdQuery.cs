@@ -1,3 +1,6 @@
+using Club.CustomerPortal.Application.Common;
+using Club.CustomerPortal.Application.Interfaces;
+
 namespace Club.CustomerPortal.Application.Features.Rewards.Queries;
 
 public record GetRewardByIdQuery : IRequest<GetRewardByIdQueryResponse>
@@ -10,24 +13,53 @@ public record GetRewardByIdQueryResponse
     public RewardDto Reward { get; set; } = null!;
 }
 
-public class GetRewardByIdQueryHandler : IRequestHandler<GetRewardByIdQuery, GetRewardByIdQueryResponse>
+public class GetRewardByIdQueryHandler(
+    IRewardService rewardService,
+    IPlanService planService,
+    ICustomerRequesterUser requesterUser) : IRequestHandler<GetRewardByIdQuery, GetRewardByIdQueryResponse>
 {
-    private readonly IRewardService _rewardService;
-
-    public GetRewardByIdQueryHandler(IRewardService rewardService)
-    {
-        _rewardService = rewardService;
-    }
-
     public async Task<GetRewardByIdQueryResponse> Handle(GetRewardByIdQuery request, CancellationToken cancellationToken)
     {
-        var reward = await _rewardService.GetRewardByIdAsync(int.Parse(request.Id), cancellationToken);
+        var reward = await rewardService.GetRewardByIdAsync(int.Parse(request.Id), cancellationToken);
         
         if (reward == null)
         {
             throw new InvalidOperationException("پاداش یافت نشد");
         }
         
+        CustomerPlanServiceDto? activePlan = null;
+        var customerId = requesterUser.CustomerId;
+        var hasCustomer = customerId > 0;
+
+        if (hasCustomer)
+        {
+            activePlan = await planService.GetActiveCustomerPlanAsync(customerId, cancellationToken);
+        }
+
+        var originalPrice = reward.Value;
+        long finalPrice = originalPrice;
+
+        if (hasCustomer && activePlan != null)
+        {
+            finalPrice = await planService.CalculateRewardPriceWithPlanDiscountAsync(
+                customerId,
+                reward.Id,
+                activePlan.PointId,
+                originalPrice,
+                activePlan,
+                cancellationToken);
+        }
+
+        var costDto = new RewardCostDto
+        {
+            PointTypeId = activePlan?.PointId.ToString() ?? reward.Id.ToString(),
+            PointTypeName = activePlan?.PointTypeName ?? "امتیاز",
+            PointTypeColor = activePlan?.PointTypeColor ?? "#6366F1",
+            OriginalAmount = originalPrice,
+            FinalAmount = finalPrice,
+            HasDiscount = finalPrice < originalPrice
+        };
+
         return new GetRewardByIdQueryResponse
         {
             Reward = new RewardDto
@@ -37,17 +69,9 @@ public class GetRewardByIdQueryHandler : IRequestHandler<GetRewardByIdQuery, Get
                 Description = reward.Description ?? string.Empty,
                 CategoryId = "1",
                 CategoryName = reward.CategoryName,
-                ImageUrl = reward.Picture,
-                Costs =
-                [
-                    new RewardCostDto
-                    {
-                        PointTypeId = "1",
-                        PointTypeName = "امتیاز طلایی",
-                        PointTypeColor = "#FFD700",
-                        Amount = (int)reward.Value
-                    }
-                ],
+                PictureId = reward.PictureId,
+                ImageUrl = DocumentUrlHelper.BuildDocumentUrl(reward.PictureId),
+                Costs = [costDto],
                 Stock = reward.Quantity,
                 IsAvailable = reward.IsAvailable,
                 ValidFrom = null,

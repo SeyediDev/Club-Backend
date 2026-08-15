@@ -13,7 +13,7 @@ Sms/
 └── Notifications/
     └── OtpSmsNotificationHandler.cs     # Handler برای OtpSmsNotification (در Domain)
 
-Note: OtpSmsNotification در لایه Domain قرار دارد (Cando.Domain.Features.Sms.Dto)
+Note: OtpSmsNotification در لایه Domain قرار دارد (Neo.Domain.Features.Sms.Dto)
 ```
 
 ## 🚀 نحوه استفاده
@@ -41,7 +41,7 @@ public class SomeController(IMediator mediator)
 برای زمانی که نیاز به Fire-and-Forget داریم:
 
 ```csharp
-using Cando.Domain.Features.Sms.Dto; // Import for OtpSmsNotification
+using Neo.Domain.Features.Sms.Dto; // Import for OtpSmsNotification
 
 // در Controller یا Service
 public class SomeController(IMediator mediator)
@@ -80,7 +80,7 @@ public class SomeController(IMediator mediator)
 
 ```csharp
 using Club.Application.Features.Sms.Commands.SendOtpSms;
-using Cando.Domain.Features.Sms.Dto;
+using Neo.Domain.Features.Sms.Dto;
 
 // ارسال OTP با Command
 var otpCommand = new SendOtpSmsCommand("09121234567", "کد تایید شما: 123456");

@@ -1,4 +1,6 @@
-using Club.Domain.Features;
+using Club.CustomerPortal.Application.Interfaces;
+using Club.Domain.Entities.CustomerSegments.Enums;
+using Club.Domain.Features.Customers;
 
 namespace Club.CustomerPortal.Application.Features.Communities.Queries;
 
@@ -25,7 +27,7 @@ public record CommunityDto
     public int MemberCount { get; set; }
     public bool IsMember { get; set; }
     public string JoinMode { get; set; } = null!;
-    public List<string>? Benefits { get; set; }
+    public string? Benefits { get; set; }
     public bool CanJoin { get; set; }
 }
 
@@ -42,8 +44,9 @@ public class GetAvailableCommunitiesQueryHandler(
 
         // دریافت جامعه‌های قابل نمایش
         var segments = await customerSegmentService.GetEligibleSegmentsForCustomerAsync(
+            1/*TODO*/,
             customerId, 
-            onlyVisibleInPortal: true,
+            true,
             cancellationToken);
 
         // تبدیل به DTO
@@ -56,8 +59,8 @@ public class GetAvailableCommunitiesQueryHandler(
             MemberCount = s.MemberCount,
             IsMember = s.IsMember,
             JoinMode = s.JoinMode.ToString(),
-            Benefits = s.Benefits,
-            CanJoin = !s.IsMember && s.JoinMode != Domain.Entities.Customers.Enums.CustomerSegmentJoinMode.SystemOnly
+            Benefits = s.Benefits!,
+            CanJoin = !s.IsMember && s.JoinMode != CustomerSegmentJoinMode.SystemOnly
         }).ToList();
 
         // صفحه‌بندی

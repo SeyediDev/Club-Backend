@@ -1,23 +1,27 @@
-﻿namespace Club.AdminPanel.Domain.UiDefinitions.Points;
+namespace Club.AdminPanel.Domain.UiDefinitions.Points;
 
 public class PointLevelUiDefinitions : SubCRUDDefinition<PointLevel>
 {
-    protected override void IndexFormViewModel(FormDefinition form)
+    public override string? Icon => "fa fa-level-up";
+    
+    protected override void IndexFormViewModel()
     {
-        form.AddColumns(nameof(PointLevel.Title),
-            nameof(PointLevel.Point),
-            nameof(PointLevel.Level),
-            nameof(PointLevel.MinXp),
-            nameof(PointLevel.MaxXp)
-            );
+        AddColumns(nameof(PointLevel.Title),
+                        nameof(PointLevel.Key),
+                        nameof(PointLevel.Point),
+                        nameof(PointLevel.Level),
+                        nameof(PointLevel.MinXp),
+                        nameof(PointLevel.MaxXp)
+                        );
         form.AddOrderBy(nameof(PointLevel.Point));
         form.AddOrderBy(nameof(PointLevel.Level));
     }
 
-    protected override void CUDFormsViewModel(CUDForm form)
+    protected override void CUDFormsViewModel()
     {
-        form.AddFields(
+        AddFields(
             nameof(PointLevel.Title),
+            nameof(PointLevel.Key),
             nameof(PointLevel.Point),
             nameof(PointLevel.Level),
             nameof(PointLevel.MinXp),
@@ -25,9 +29,10 @@ public class PointLevelUiDefinitions : SubCRUDDefinition<PointLevel>
             );
     }
     public override string SubjectId => "Sub";
-    public override void SubIndexViewModel(FormDefinition form)
+    public override void SubIndexViewModel()
     {
-        form.AddColumns(nameof(PointLevel.Title),
+        AddColumns(nameof(PointLevel.Title),
+            nameof(PointLevel.Key),
             nameof(PointLevel.Point),
             nameof(PointLevel.Level),
             nameof(PointLevel.MinXp),
@@ -38,10 +43,11 @@ public class PointLevelUiDefinitions : SubCRUDDefinition<PointLevel>
         form.AddOrderBy(nameof(PointLevel.Level));
     }
 
-    public override void SubViewModel(FormDefinition form)
+    public override void SubViewModel()
     {
-        form.AddFields(
+        AddFields(
             nameof(PointLevel.Title),
+            nameof(PointLevel.Key),
             nameof(PointLevel.Point),
             nameof(PointLevel.Level),
             nameof(PointLevel.MinXp),

@@ -1,18 +1,4 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
-
-namespace Club.Domain.Entities.Common;
-
-public abstract class ClubBaseCoreCommonAuditableEntity<TKey> : BaseCoreCommonAuditableEntity<TKey>
-    where TKey : struct
-{
-    [NotMapped]
-    [DisplayName("ایجاد کننده")]
-    public User? CreatedBy { get; set; }
-    
-    [NotMapped]
-    [DisplayName("تغییر دهنده")]
-    public User? LastModifiedBy { get; set; }
-}
+﻿namespace Club.Domain.Entities.Common;
 
 public abstract class ClubBaseCoreConfigAuditableEntity<TKey> : BaseCoreConfigAuditableEntity<TKey>
     where TKey : struct

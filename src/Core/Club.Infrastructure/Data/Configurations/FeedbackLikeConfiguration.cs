@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Club.Domain.Entities.Feedback;
 
 namespace Club.Infrastructure.Data.Configurations;
 
@@ -21,16 +20,16 @@ internal class FeedbackLikeConfiguration : IEntityTypeConfiguration<FeedbackLike
             .OnDelete(DeleteBehavior.Cascade)
             .HasConstraintName("FK_FeedbackLike_CustomerFeedback");
 
-        entity.HasOne(d => d.Customer)
+        entity.HasOne(d => d.CustomerTenant)
             .WithMany()
-            .HasForeignKey(d => d.CustomerId)
+            .HasForeignKey(d => d.CustomerTenantId)
             .OnDelete(DeleteBehavior.NoAction)
-            .HasConstraintName("FK_FeedbackLike_Customer");
+            .HasConstraintName("FK_FeedbackLike_CustomerTenant");
 
         // Indexes - جلوگیری از لایک مجدد
-        entity.HasIndex(e => new { e.FeedbackId, e.CustomerId })
+        entity.HasIndex(e => new { e.FeedbackId, e.CustomerTenantId })
             .IsUnique()
-            .HasDatabaseName("IX_FeedbackLike_Feedback_Customer_Unique");
+            .HasDatabaseName("IX_FeedbackLike_Feedback_CustomerTenant_Unique");
     }
 }
 

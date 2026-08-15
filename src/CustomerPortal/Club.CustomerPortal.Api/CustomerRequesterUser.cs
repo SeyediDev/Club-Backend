@@ -1,15 +1,37 @@
-﻿using Neo.Common.Extensions;
-using Neo.Domain.Features.Client;
+using System.Security.Claims;
 using Club.CustomerPortal.Application.Interfaces;
 using Microsoft.Extensions.Primitives;
-using System.Security.Claims;
+using Neo.Common.Extensions;
+using Neo.Domain.Entities.Common;
+using Neo.Domain.Features.Client;
 
 namespace Club.CustomerPortal.Api;
 
-public class CustomerRequesterUser(IHttpContextAccessor httpContextAccessor) : IRequesterUser, ICustomerRequesterUser
+public class CustomerRequesterUser(IHttpContextAccessor httpContextAccessor)
+    : IRequesterUser, ICustomerRequesterUser
 {
+    private UserId? _id = null;
+    public UserId? Id
+    {
+        get
+        {
+            if (_id is null)
+            {
+                var userPrincipal = httpContextAccessor.HttpContext?.User?.Identities?.FirstOrDefault();
+                var value = userPrincipal?.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier)?.Value?.ToString();
+                _ = int.TryParse(value, out var id);
+                _id = (UserId)id;
+            }
+            return _id;
+        }
+        set
+        {
+            _id = value;
+        }
+    }
+
     private string? _customerId = null;
-    public int? Id
+    public int CustomerId
     {
         get
         {
@@ -17,11 +39,11 @@ public class CustomerRequesterUser(IHttpContextAccessor httpContextAccessor) : I
             {
                 _customerId = httpContextAccessor.HttpContext.User.FindFirstValue("customerId");
             }
-            return _customerId?.ToNullableInt32();
+            return _customerId?.ToNullableInt32()??0;
         }
         set
         {
-            _customerId = value?.ToString();
+            _customerId = value.ToString();
         }
     }
 
@@ -30,7 +52,7 @@ public class CustomerRequesterUser(IHttpContextAccessor httpContextAccessor) : I
     {
         get
         {
-            _mobile ??= httpContextAccessor.HttpContext?.User?.FindFirstValue("mobile") 
+            _mobile ??= httpContextAccessor.HttpContext?.User?.FindFirstValue("mobile")
                 ?? httpContextAccessor.HttpContext?.User?.FindFirstValue("username");
             return _mobile;
         }
@@ -64,10 +86,10 @@ public class CustomerRequesterUser(IHttpContextAccessor httpContextAccessor) : I
         }
     }
 
-    private int? _langId = null;
-    public Task<int> GetLangIdAsync(CancellationToken cancellationToken = default)
+    private LanguageId? _langId = null;
+    public Task<LanguageId> GetLangIdAsync(CancellationToken cancellationToken = default)
     {
-        return Task.FromResult(_langId ??= 1); // Default to Persian
+        return Task.FromResult(_langId ??= new(1)); // Default to Persian
     }
 
     private string? _correlationId = null;
@@ -82,7 +104,8 @@ public class CustomerRequesterUser(IHttpContextAccessor httpContextAccessor) : I
         }
     }
 
-    private string? _tenantId = null;
+    public int? TenantId = null;
+    /*private string? _tenantId = null;
     public string? TenantId
     {
         get
@@ -94,7 +117,7 @@ public class CustomerRequesterUser(IHttpContextAccessor httpContextAccessor) : I
         {
             _tenantId = value;
         }
-    }
+    }*/
 
     private string? _userAgent = null;
     public string Platform
@@ -127,6 +150,6 @@ public class CustomerRequesterUser(IHttpContextAccessor httpContextAccessor) : I
         return _isUserInRole;
     }
 
-    // Implementation of ICustomerRequesterUser
-    public int CustomerId => Id ?? throw new UnauthorizedAccessException("مشتری احراز هویت نشده است");
+    //TODO
+    int? ICustomerRequesterUser.TenantId { get { Properties.TryGetValue("TenantId", out var v); return v?.ToInt(); } }
 }

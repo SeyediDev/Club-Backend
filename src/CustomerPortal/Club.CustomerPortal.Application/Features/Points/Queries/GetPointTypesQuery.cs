@@ -17,6 +17,7 @@ public record PointTypeDto
     public bool IsConvertible { get; set; }
     public bool IsTransferable { get; set; }
     public int? ExpirationDays { get; set; }
+    public bool ShowInLeaderboard { get; set; }
 }
 
 public class GetPointTypesQueryHandler : IRequestHandler<GetPointTypesQuery, GetPointTypesQueryResponse>
@@ -36,7 +37,8 @@ public class GetPointTypesQueryHandler : IRequestHandler<GetPointTypesQuery, Get
                 Icon = "star",
                 IsConvertible = true,
                 IsTransferable = true,
-                ExpirationDays = 365
+                ExpirationDays = 365,
+                ShowInLeaderboard = true
             },
             new()
             {
@@ -47,7 +49,8 @@ public class GetPointTypesQueryHandler : IRequestHandler<GetPointTypesQuery, Get
                 Icon = "gift",
                 IsConvertible = true,
                 IsTransferable = false,
-                ExpirationDays = 180
+                ExpirationDays = 180,
+                ShowInLeaderboard = false
             }
         };
         

@@ -1,14 +1,24 @@
-﻿using Club.Domain.Entities.Surveys;
+using Club.Domain.Entities.Promotions.Surveys.Data;
 
 namespace Club.AdminPanel.Domain.UiDefinitions.Surveys;
 
 public class SurveyParticipationUiDefinitions : CRUDDefinition<SurveyParticipation>
 {
-    protected override void IndexFormViewModel(FormDefinition form)
+    private static readonly List<string> DefaultRoles =
+    [
+        Neo.Domain.Constants.Roles.Admin,
+        ClubRoles.Manager,
+        ClubRoles.MarketingManager,
+        ClubRoles.Analyst
+    ];
+
+    public override List<string>? Roles => DefaultRoles;
+
+    protected override void IndexFormViewModel()
     {
-        form.AddColumns(
+        AddColumns(
             nameof(SurveyParticipation.Survey),
-            nameof(SurveyParticipation.Customer),
+            nameof(SurveyParticipation.CustomerTenant),
             nameof(SurveyParticipation.SelectedItem),
             nameof(SurveyParticipation.ParticipationDate),
             nameof(SurveyParticipation.IsCorrect),
@@ -17,11 +27,11 @@ public class SurveyParticipationUiDefinitions : CRUDDefinition<SurveyParticipati
         );
     }
 
-    protected override void CUDFormsViewModel(CUDForm form)
+    protected override void CUDFormsViewModel()
     {
-        form.AddFields(
+        AddFields(
             nameof(SurveyParticipation.Survey),
-            nameof(SurveyParticipation.Customer),
+            nameof(SurveyParticipation.CustomerTenant),
             nameof(SurveyParticipation.SelectedItem),
             nameof(SurveyParticipation.Comment)
         );

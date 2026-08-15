@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Club.Domain.Entities.Forum;
 
 namespace Club.Infrastructure.Data.Configurations;
 
@@ -55,11 +54,11 @@ internal class ForumTopicConfiguration : IEntityTypeConfiguration<ForumTopic>
             .OnDelete(DeleteBehavior.NoAction)
             .HasConstraintName("FK_ForumTopic_Tenant");
 
-        entity.HasOne(d => d.Customer)
+        entity.HasOne(d => d.CreatorCustomerTenant)
             .WithMany()
-            .HasForeignKey(d => d.CustomerId)
+            .HasForeignKey(d => d.CreatorCustomerTenantId)
             .OnDelete(DeleteBehavior.NoAction)
-            .HasConstraintName("FK_ForumTopic_Customer");
+            .HasConstraintName("FK_ForumTopic_CustomerTenant");
 
         entity.HasOne(d => d.Product)
             .WithMany()

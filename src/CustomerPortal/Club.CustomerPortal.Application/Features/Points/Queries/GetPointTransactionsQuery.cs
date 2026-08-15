@@ -1,4 +1,6 @@
-﻿namespace Club.CustomerPortal.Application.Features.Points.Queries;
+using Club.CustomerPortal.Application.Interfaces;
+
+namespace Club.CustomerPortal.Application.Features.Points.Queries;
 
 public record GetPointTransactionsQuery : IRequest<GetPointTransactionsQueryResponse>
 {
@@ -30,24 +32,15 @@ public record PointTransactionDto
     public string Status { get; set; } = null!;
 }
 
-public class GetPointTransactionsQueryHandler : IRequestHandler<GetPointTransactionsQuery, GetPointTransactionsQueryResponse>
+public class GetPointTransactionsQueryHandler(
+    IPointService pointService,
+    ICustomerRequesterUser requesterUser) : IRequestHandler<GetPointTransactionsQuery, GetPointTransactionsQueryResponse>
 {
-    private readonly IPointService _pointService;
-    private readonly IRequesterUser _requesterUser;
-
-    public GetPointTransactionsQueryHandler(
-        IPointService pointService,
-        IRequesterUser requesterUser)
-    {
-        _pointService = pointService;
-        _requesterUser = requesterUser;
-    }
-
     public async Task<GetPointTransactionsQueryResponse> Handle(GetPointTransactionsQuery request, CancellationToken cancellationToken)
     {
-        var customerId = _requesterUser.GetUserId();
+        var customerId = requesterUser.CustomerId;
         
-        var result = await _pointService.GetPointTransactionsAsync(
+        var result = await pointService.GetPointTransactionsAsync(
             customerId,
             request.PageNumber,
             request.PageSize,
@@ -65,8 +58,8 @@ public class GetPointTransactionsQueryHandler : IRequestHandler<GetPointTransact
             Description = t.Description ?? t.Title,
             ReferenceId = null,
             ReferenceType = null,
-            ExpirationDate = null,
-            Status = "Completed"
+            ExpirationDate = t.ExpirationDate,
+            Status = t.IsExpired ? "Expired" : t.IsSpent ? "Spent" : "Active"
         }).ToList();
         
         return new GetPointTransactionsQueryResponse

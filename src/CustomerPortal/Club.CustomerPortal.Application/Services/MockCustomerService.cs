@@ -1,22 +1,16 @@
-using Club.CustomerPortal.Application.Features.Auth.Commands;
 using Club.CustomerPortal.Application.Interfaces;
-using Club.Domain.Entities.Customers;
 
 namespace Club.CustomerPortal.Application.Services;
 
 /// <summary>
 /// Mock implementation برای تست - باید با implementation واقعی جایگزین شود
 /// </summary>
-public class MockCustomerService : ICustomerService
+public class MockCustomerService(ILogger<MockCustomerService> logger) : ICustomerService
 {
-    private readonly ILogger<MockCustomerService> _logger;
-    private static readonly Dictionary<int, Customer> _customers = new();
+    private static readonly Dictionary<int, Customer> _customers = [];
+    private static readonly Dictionary<(int customerId, int tenantId), CustomerTenant> _customerTenants = [];
+    private const int DefaultTenantId = 1;
     private static int _nextId = 1;
-
-    public MockCustomerService(ILogger<MockCustomerService> logger)
-    {
-        _logger = logger;
-    }
 
     public Task<Customer> CreateCustomerAsync(RegisterCommand command, CancellationToken cancellationToken = default)
     {
@@ -31,7 +25,17 @@ public class MockCustomerService : ICustomerService
         };
 
         _customers[customer.Id] = customer;
-        _logger.LogInformation("Mock: Created customer {CustomerId}", customer.Id);
+
+        _customerTenants[(customer.Id, DefaultTenantId)] = new CustomerTenant
+        {
+            CustomerId = customer.Id,
+            TenantId = DefaultTenantId,
+            JoinDate = DateTime.UtcNow,
+            IsActive = true,
+            CurrentPointsBalance = 0,
+            TotalPointsEarned = 0
+        };
+        logger.LogInformation("Mock: Created customer {CustomerId}", customer.Id);
 
         return Task.FromResult(customer);
     }
@@ -68,13 +72,13 @@ public class MockCustomerService : ICustomerService
         if (!string.IsNullOrEmpty(command.NationalCode)) customer.NationalCode = long.Parse(command.NationalCode);
         if (command.BirthDate.HasValue) customer.BirthDate = command.BirthDate;
 
-        _logger.LogInformation("Mock: Updated customer {CustomerId}", customerId);
+        logger.LogInformation("Mock: Updated customer {CustomerId}", customerId);
         return Task.FromResult(customer);
     }
 
     public Task ChangePasswordAsync(int customerId, string currentPassword, string newPassword, CancellationToken cancellationToken = default)
     {
-        _logger.LogInformation("Mock: Password changed for customer {CustomerId}", customerId);
+        logger.LogInformation("Mock: Password changed for customer {CustomerId}", customerId);
         return Task.CompletedTask;
     }
 
@@ -87,14 +91,30 @@ public class MockCustomerService : ICustomerService
     public Task<string> GeneratePasswordResetTokenAsync(string phoneNumber, CancellationToken cancellationToken = default)
     {
         var token = Guid.NewGuid().ToString("N").Substring(0, 6);
-        _logger.LogInformation("Mock: Generated password reset token {Token} for {Phone}", token, phoneNumber);
+        logger.LogInformation("Mock: Generated password reset token {Token} for {Phone}", token, phoneNumber);
         return Task.FromResult(token);
     }
 
     public Task ResetPasswordAsync(string token, string newPassword, CancellationToken cancellationToken = default)
     {
-        _logger.LogInformation("Mock: Password reset with token {Token}", token);
+        logger.LogInformation("Mock: Password reset with token {Token}", token);
         return Task.CompletedTask;
+    }
+
+    public Task<CustomerTenant?> GetCustomerTenantAsync(int customerId, int? tenantId = null, CancellationToken cancellationToken = default)
+    {
+        if (tenantId.HasValue)
+        {
+            _customerTenants.TryGetValue((customerId, tenantId.Value), out var customerTenant);
+            return Task.FromResult(customerTenant);
+        }
+
+        var tenantEntry = _customerTenants
+            .Where(kvp => kvp.Key.customerId == customerId)
+            .Select(kvp => kvp.Value)
+            .FirstOrDefault();
+
+        return Task.FromResult(tenantEntry);
     }
 }
 

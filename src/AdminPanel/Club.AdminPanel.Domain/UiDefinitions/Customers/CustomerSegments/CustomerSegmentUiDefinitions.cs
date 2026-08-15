@@ -8,6 +8,7 @@ public partial class CustomerSegmentUiDefinitions : SubCRUDDefinition<CustomerSe
                         nameof(CustomerSegment.IsActive),
                         nameof(CustomerSegment.EstimatedSize),
                         nameof(CustomerSegment.Tenant));
+        form.AddSubjectColumn<CustomerSegmentConditions>();
     }
     protected override void CUDFormsViewModel(CUDForm form)
     {
@@ -16,11 +17,6 @@ public partial class CustomerSegmentUiDefinitions : SubCRUDDefinition<CustomerSe
                        nameof(CustomerSegment.IsActive),
                        nameof(CustomerSegment.EstimatedSize),
                        nameof(CustomerSegment.Description));
-    }
-    protected override void EditFormSubTables(CUDForm form)
-    {
-        form.AddSubTable(nameof(CustomerSegmentKindCondition), nameof(CustomerSegmentKindCondition.CustomerSegment), null,
-            "شرط‌های جامعه‌سازی", null, false);
     }
     public override string SubjectId => "Sub";
     public override void SubIndexViewModel(FormDefinition form)
@@ -36,5 +32,18 @@ public partial class CustomerSegmentUiDefinitions : SubCRUDDefinition<CustomerSe
                        nameof(CustomerSegment.IsActive),
                        nameof(CustomerSegment.EstimatedSize),
                        nameof(CustomerSegment.Description));
+    }
+
+    public class CustomerSegmentConditions : EditForm, ISubjectFormDefinition
+    {
+        public override string SubjectId => nameof(CustomerSegmentConditions);
+        public override string Name => "شرط‌های جامعه‌سازی/بازار";
+
+        protected override void ViewModel()
+        {
+            AddField(nameof(CustomerSegment.Title), eControlPropertyId.ReadOnly);
+            AddSubTable(nameof(CustomerSegmentKindCondition), nameof(CustomerSegmentKindCondition.CustomerSegment), null,
+                "شرط‌های جامعه‌سازی/بازار", null, false);
+        }
     }
 }

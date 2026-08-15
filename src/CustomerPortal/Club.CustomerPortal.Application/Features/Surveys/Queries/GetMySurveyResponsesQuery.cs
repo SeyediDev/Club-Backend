@@ -1,4 +1,6 @@
-﻿namespace Club.CustomerPortal.Application.Features.Surveys.Queries;
+using Club.CustomerPortal.Application.Interfaces;
+
+namespace Club.CustomerPortal.Application.Features.Surveys.Queries;
 
 public record GetMySurveyResponsesQuery : IRequest<GetMySurveyResponsesQueryResponse>
 {
@@ -18,23 +20,15 @@ public record SurveyResponseDto
     public bool IsCompleted { get; set; }
 }
 
-public class GetMySurveyResponsesQueryHandler : IRequestHandler<GetMySurveyResponsesQuery, GetMySurveyResponsesQueryResponse>
+public class GetMySurveyResponsesQueryHandler(
+    ISurveyService surveyService,
+    ICustomerRequesterUser requesterUser)
+    : IRequestHandler<GetMySurveyResponsesQuery, GetMySurveyResponsesQueryResponse>
 {
-    private readonly ISurveyService _surveyService;
-    private readonly IRequesterUser _requesterUser;
-
-    public GetMySurveyResponsesQueryHandler(
-        ISurveyService surveyService,
-        IRequesterUser requesterUser)
-    {
-        _surveyService = surveyService;
-        _requesterUser = requesterUser;
-    }
-
     public async Task<GetMySurveyResponsesQueryResponse> Handle(GetMySurveyResponsesQuery request, CancellationToken cancellationToken)
     {
-        var customerId = _requesterUser.GetUserId();
-        var result = await _surveyService.GetMyResponsesAsync(customerId, request.PageNumber, request.PageSize, cancellationToken);
+        var customerId = requesterUser.CustomerId;
+        var result = await surveyService.GetMyResponsesAsync(customerId, request.PageNumber, request.PageSize, cancellationToken);
         
         var responses = result.Items.Select(r => new SurveyResponseDto
         {

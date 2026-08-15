@@ -24,3 +24,30 @@ function grabReportData(key) {
 	window.top.reportsData[key] = [];
 	return window.top.reportsData[key];
 }
+
+// Generic dispatcher for chart types. If a specialized renderer exists,
+// it will be invoked here. Adds Calendar handling.
+function renderChartByType(selector, chartType, data, options){
+	options = options || {};
+	try{
+		if(!chartType) { $(selector).html(''); return; }
+		var type = (typeof chartType === 'string') ? chartType : chartType.toString();
+		if(type.toLowerCase().indexOf('calendar') !== -1 || type === 'Calendar' || chartType === 24){
+			if(window.renderCalendarChart){
+				window.renderCalendarChart(selector, data, options);
+				return;
+			}
+		}
+		// fallback: if no specific renderer, try to use Highcharts generic
+		if(window.renderHighchartGeneric){
+			window.renderHighchartGeneric(selector, data, options);
+			return;
+		}
+		// nothing matched
+		$(selector).html('');
+	}catch(e){
+		console.error('renderChartByType error', e);
+	}
+}
+
+window.renderChartByType = renderChartByType;

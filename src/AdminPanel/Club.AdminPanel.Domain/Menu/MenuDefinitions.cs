@@ -1,4 +1,6 @@
-﻿namespace Club.AdminPanel.Domain.Domain;
+using Neo.Bpms.Domain.Models.Cmmn.UI;
+
+namespace Club.AdminPanel.Domain.Domain;
 
 public partial class ClubMenuDefinitions : MenuDefinition
 {
@@ -9,7 +11,7 @@ public partial class ClubMenuDefinitions : MenuDefinition
 
     public override bool DefineMenuItems()
     {
-        var homeMenuItem = AddMenu("صفحه اول", "home-menu", "Home", "Index");
+        var homeMenuItem = AddMenu("صفحه اول", "home-dashboard", "Home", "Index");
         homeMenuItem.IsPublic = true;
         /*AddMenu("کارتابل", "cartable-menu", "", "");
         {
@@ -52,14 +54,48 @@ public partial class ClubMenuDefinitions : MenuDefinition
         }*/
         AddMenu_Club();
         
-        AddMenu("طراحی", "design-menu", "", "");
+        // System Monitoring - Fixed position, Public access for admins
+        var monitoringMenu = AddMenu("مانیتورینگ سیستم", "activity-monitor", "Monitoring", "Index");
+        monitoringMenu.IsPublic = true;
+        
+        // تنظیم target="_blank" برای باز شدن در تب جدید
+        // اگر MenuItem property ای برای LinkTarget یا Attributes دارد، استفاده می‌کنیم
+        try
+        {
+            // بررسی وجود property LinkTarget
+            var linkTargetProperty = monitoringMenu.GetType().GetProperty("LinkTarget");
+            if (linkTargetProperty != null && linkTargetProperty.CanWrite)
+            {
+                linkTargetProperty.SetValue(monitoringMenu, "_blank");
+            }
+            
+            // بررسی وجود property LinkAttributes
+            var linkAttributesProperty = monitoringMenu.GetType().GetProperty("LinkAttributes");
+            if (linkAttributesProperty != null && linkAttributesProperty.CanWrite)
+            {
+                var attributes = linkAttributesProperty.GetValue(monitoringMenu) as System.Collections.Generic.Dictionary<string, string>;
+                if (attributes == null)
+                {
+                    attributes = [];
+                    linkAttributesProperty.SetValue(monitoringMenu, attributes);
+                }
+                attributes["target"] = "_blank";
+                attributes["rel"] = "noopener noreferrer";
+            }
+        }
+        catch
+        {
+            // اگر property وجود نداشت، JavaScript در _Layout.cshtml این کار را انجام می‌دهد
+        }
+        
+        AddMenu("طراحی", "grid-layout", "", "");
         {
             StartSubMenus();
-            AddMenu("طراحی فرآیند", "design-menu", "Process", "BpmnDesign"); // todo icon!																																  //				    addMenu("فهرست فرآیند‌ها", "fa fa-process", "Process", "List"); // todo icon!
-            AddMenu("طراحی مدل اطلاعات و رابط کاربری", "design-menu", "MetaDesign/App", "entity"); // todo icon
-            AddMenu("طراحی مجموعه‌های پایه", "design-menu", "MetaDesign/App", "enum"); // todo icon
-            AddMenu("طراحی منو", "design-menu", "MetaDesign/App", "menu"); // todo icon!
-            AddMenu("یکسان‌سازی پایگاه داده", "design-menu", "Migration", "Index");
+            AddMenu("طراحی فرآیند", "rule-checklist", "Process", "BpmnDesign");
+            AddMenu("طراحی مدل اطلاعات و رابط کاربری", "cube-3d", "MetaDesign/App", "entity");
+            AddMenu("طراحی مجموعه‌های پایه", "grid-layout", "MetaDesign/App", "enum");
+            AddMenu("طراحی منو", "list-checklist", "MetaDesign/App", "menu");
+            AddMenu("یکسان‌سازی پایگاه داده", "cog-wheel", "Migration", "Index");
             EndSubMenus();
         }
         return true;

@@ -1,223 +1,180 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.UI.Reports;
-
 namespace Club.AdminPanel.Domain.UiDefinitions.Products;
 
-public partial class ProductUiDefinitions : CRUDDefinition<Product>
+public class ProductUiDefinitions : CRUDDefinition<Product>
 {
-    protected override void IndexFormViewModel(FormDefinition form)
+    private static readonly List<string> DefaultRoles =
+    [
+        Neo.Domain.Constants.Roles.Admin,
+        ClubRoles.Manager,
+        ClubRoles.MarketingManager,
+        ClubRoles.Analyst
+    ];
+
+    public override List<string>? Roles => DefaultRoles;
+    public override string? Icon => "fa fa-cube";
+
+    protected override void IndexFormViewModel()
     {
-        form.AddColumns(nameof(Product.Title),
-                        nameof(Product.ProductType),
-                        nameof(Product.Price),
-                        nameof(Product.PointsEarnable),
+        AddColumns(nameof(Product.Title),
                         nameof(Product.Tenant),
-                        nameof(Product.IsActive),
-                        nameof(Product.PurchaseCount),
-                        nameof(Product.TotalRevenue)
+                        nameof(Product.ProductCategory),
+                        nameof(Product.IsActive)
                         );
+        AddSubjectColumn<Attributes>();
     }
     
-    protected override void CUDFormsViewModel(CUDForm form)
+    protected override void CUDFormsViewModel()
     {
-        form.AddFields(nameof(Product.Title),
+        AddFields(nameof(Product.Title),
                        nameof(Product.Key),
                        nameof(Product.Description),
-                       nameof(Product.ProductType),
                        nameof(Product.Tenant),
-                       nameof(Product.Price),
-                       nameof(Product.PointsEarnable),
+                       nameof(Product.ProductCategory),
                        nameof(Product.IsActive),
                        nameof(Product.ExpectedConsumptionDuration),
                        nameof(Product.TypicalUsageFrequency),
                        nameof(Product.AveragePurchaseCycle),
                        nameof(Product.ReorderThreshold),
-                       nameof(Product.CustomerLifetimeValueProduct),
                        nameof(Product.TypicalCustomerLifetime),
                        nameof(Product.AveragePurchasesPerCustomerLifetime),
                        nameof(Product.RepeatPurchaseRate)
                        );
-        // Add Picture field as File control
-        form.AddField(nameof(Product.Picture), eControlTypeId.File);
+        AddField(nameof(Product.Picture), eControlTypeId.File);
     }
 
-    // =====================================================
-    // Public Reports
-    // =====================================================
+    public class Attributes : SubjectEditForm2<Attributes>
+    {
+        public override string Name => "ویژگی‌ها";
+        protected override void ViewModel()
+        {
+            AddSubTable<TenantAttribute>(nameof(TenantAttribute.Product), "ویژگی‌ها", ContainerControl.None);
+        }
+    }
 
     public new partial class PublicReport : CRUDDefinition.PublicReport
     {
-        /// <summary>
-        /// گزارش محصولات فعال
-        /// </summary>
-        public partial class ActiveProductsConfig : ReportConfigDefinition
-        {
-            protected override List<string> Roles { get => [Neo.Domain.Constants.Roles.Admin, ClubRoles.Manager]; }
-            protected override string WhereCondition => $"{nameof(Product.IsActive)} == true";
-            
-            protected override void Identify()
-            {
-                DefineConfig("محصولات فعال", ReportViewType.List);
-            }
+        public override List<string>? Roles => DefaultRoles;
 
+        public class ActiveProductsConfig() : ReportConfigDefinition
+        {
+            protected override List<string> Roles => [Neo.Domain.Constants.Roles.Admin, ClubRoles.Manager];
+            protected override string WhereCondition => $"{nameof(Product.IsActive)} == true";
+            protected override string Name => "محصولات فعال";
+            
             protected override void DefineColumns()
             {
                 DisplayColumn(nameof(Product.Title), "عنوان");
-                DisplayColumn(nameof(Product.ProductType), "نوع");
-                DisplayColumn(nameof(Product.Price), "قیمت");
-                DisplayColumn(nameof(Product.PointsEarnable), "امتیاز قابل کسب");
-                DisplayColumn(nameof(Product.PurchaseCount), "تعداد خرید");
-                OrderByDesc(nameof(Product.PurchaseCount));
+                DisplayColumn(nameof(Product.ProductCategory), "دسته‌بندی");
             }
         }
 
-        /// <summary>
-        /// گزارش محبوب‌ترین محصولات
-        /// </summary>
-        public partial class PopularProductsConfig : ReportConfigDefinition
+        public class PopularProductsConfig() : GroupByConfigDefinition
         {
-            protected override List<string> Roles { get => [Neo.Domain.Constants.Roles.Admin, ClubRoles.Analyst]; }
+            protected override List<string> Roles => [Neo.Domain.Constants.Roles.Admin, ClubRoles.Analyst];
             protected override string WhereCondition => $"{nameof(Product.IsActive)} == true";
-            
-            protected override void Identify()
-            {
-                DefineConfig("محبوب‌ترین محصولات", ReportViewType.GroupByList);
-            }
+            protected override string Name => "محبوب‌ترین محصولات";
 
-            protected override void DefineColumns()
+            protected override void DefineGroupBy()
             {
                 GroupBy(nameof(Product.Title), "محصول");
-                Sum(nameof(Product.PurchaseCount), "تعداد خرید");
-                Average(nameof(Product.Price), "میانگین قیمت");
                 OrderByDesc("SUM");
             }
         }
 
-        /// <summary>
-        /// گزارش محصولات به تفکیک سازمان
-        /// </summary>
-        public partial class ProductsByCategoryConfig : ReportConfigDefinition
+		public class ProductsByCategoryConfig() : ChartConfigDefinition(ChartType.Pie)
         {
-            protected override List<string> Roles { get => [Neo.Domain.Constants.Roles.Admin, ClubRoles.Manager]; }
-            
-            protected override void Identify()
-            {
-                DefineConfig("محصولات به تفکیک سازمان", ReportViewType.Chart, Report.ChartType.Pie);
-            }
+            protected override List<string> Roles => [Neo.Domain.Constants.Roles.Admin, ClubRoles.Manager];
+            protected override string Name => "محصولات به تفکیک اکوسیستم";
 
-            protected override void DefineColumns()
+            protected override void DefineGroupBy()
             {
-                GroupBy(nameof(Product.Tenant), "سازمان");
+                GroupBy(nameof(Product.Tenant), "اکوسیستم");
                 Count(null, "تعداد");
             }
         }
 
-        /// <summary>
-        /// گزارش محصولات به تفکیک نوع (محصول)
-        /// </summary>
-        public partial class ProductsByTypeConfig : ReportConfigDefinition
+        public class ProductsByTypeConfig() : ChartConfigDefinition(ChartType.Bar)
         {
-            protected override List<string> Roles { get => [Neo.Domain.Constants.Roles.Admin, ClubRoles.Analyst]; }
-            
-            protected override void Identify()
-            {
-                DefineConfig("محصولات به تفکیک نوع", ReportViewType.Chart, Report.ChartType.Bar);
-            }
+            protected override List<string> Roles => [Neo.Domain.Constants.Roles.Admin, ClubRoles.Analyst];
+            protected override string Name => "محصولات به تفکیک نوع";
 
-            protected override void DefineColumns()
+            protected override void DefineGroupBy()
             {
-                GroupBy(nameof(Product.ProductType), "نوع");
+                GroupBy(nameof(Product.ProductCategory), "دسته‌بندی"); // Changed from ProductType to Category
                 Count(null, "تعداد");
-                Sum(nameof(Product.PurchaseCount), "کل خریدها");
             }
         }
 
-        /// <summary>
-        /// گزارش محصولات به تفکیک سازمان
-        /// </summary>
-        public partial class ProductsByTenantConfig : ReportConfigDefinition
+		public class ProductsByTenantConfig : GroupByConfigDefinition
         {
-            protected override List<string> Roles { get => [Neo.Domain.Constants.Roles.Admin, ClubRoles.Manager]; }
-            
-            protected override void Identify()
-            {
-                DefineConfig("محصولات به تفکیک سازمان", ReportViewType.GroupByList);
-            }
+            protected override List<string> Roles => [Neo.Domain.Constants.Roles.Admin, ClubRoles.Manager];
+            protected override string Name => "محصولات به تفکیک اکوسیستم";
 
-            protected override void DefineColumns()
+            protected override void DefineGroupBy()
             {
-                GroupBy(nameof(Product.Tenant), "سازمان");
+                GroupBy(nameof(Product.Tenant), "اکوسیستم");
                 Count(null, "تعداد محصولات");
-                Sum(nameof(Product.PurchaseCount), "کل خریدها");
                 OrderByDesc("SUM");
             }
         }
 
-        /// <summary>
-        /// گزارش محصولات با بیشترین امتیاز
-        /// </summary>
-        public partial class HighPointProductsConfig : ReportConfigDefinition
+        public class HighPointProductsConfig : ReportConfigDefinition
         {
-            protected override List<string> Roles { get => [Neo.Domain.Constants.Roles.Admin, ClubRoles.Manager]; }
-            protected override string WhereCondition => $"{nameof(Product.IsActive)} == true AND {nameof(Product.PointsEarnable)} > 0";
+            protected override List<string> Roles => [Neo.Domain.Constants.Roles.Admin, ClubRoles.Manager];
+            protected override string WhereCondition => $"{nameof(Product.IsActive)} == true"; // PointsEarnable removed - use promotion rules instead
+            protected override string Name => "محصولات با بیشترین امتیاز";
             
-            protected override void Identify()
-            {
-                DefineConfig("محصولات با بیشترین امتیاز", ReportViewType.List);
-            }
 
             protected override void DefineColumns()
             {
                 DisplayColumn(nameof(Product.Title), "عنوان");
-                DisplayColumn(nameof(Product.PointsEarnable), "امتیاز");
-                DisplayColumn(nameof(Product.Price), "قیمت");
-                DisplayColumn(nameof(Product.PurchaseCount), "تعداد خرید");
-                OrderByDesc(nameof(Product.PointsEarnable));
+                DisplayColumn(nameof(Product.ProductCategory), "دسته‌بندی");
             }
         }
 
-        /// <summary>
-        /// گزارش نرخ تکرار خرید محصولات
-        /// </summary>
-        public partial class ProductRepeatPurchaseConfig : ReportConfigDefinition
+        public class ProductRepeatPurchaseConfig : ReportConfigDefinition
         {
-            protected override List<string> Roles { get => [Neo.Domain.Constants.Roles.Admin, ClubRoles.Analyst]; }
+            protected override List<string> Roles => [Neo.Domain.Constants.Roles.Admin, ClubRoles.Analyst];
             protected override string WhereCondition => $"{nameof(Product.RepeatPurchaseRate)} > 0";
+            protected override string Name => "نرخ تکرار خرید محصولات";
             
-            protected override void Identify()
-            {
-                DefineConfig("نرخ تکرار خرید محصولات", ReportViewType.List);
-            }
 
             protected override void DefineColumns()
             {
                 DisplayColumn(nameof(Product.Title), "محصول");
                 DisplayColumn(nameof(Product.RepeatPurchaseRate), "نرخ تکرار خرید");
                 DisplayColumn(nameof(Product.AveragePurchaseCycle), "چرخه خرید");
-                DisplayColumn(nameof(Product.PurchaseCount), "تعداد خرید");
                 OrderByDesc(nameof(Product.RepeatPurchaseRate));
             }
         }
 
-        /// <summary>
-        /// گزارش ارزش طول عمر مشتری برای محصولات
-        /// </summary>
-        public partial class ProductCLVConfig : ReportConfigDefinition
+        public class ProductCLVConfig : ReportConfigDefinition
         {
-            protected override List<string> Roles { get => [Neo.Domain.Constants.Roles.Admin, ClubRoles.Analyst]; }
-            protected override string WhereCondition => $"{nameof(Product.CustomerLifetimeValueProduct)} > 0";
+            protected override List<string> Roles => [Neo.Domain.Constants.Roles.Admin, ClubRoles.Analyst];
+            protected override string WhereCondition => $"{nameof(Product.IsActive)} == true";
+            protected override string Name => "ارزش طول عمر مشتری محصولات";
             
-            protected override void Identify()
-            {
-                DefineConfig("ارزش طول عمر مشتری محصولات", ReportViewType.List);
-            }
 
             protected override void DefineColumns()
             {
                 DisplayColumn(nameof(Product.Title), "محصول");
-                DisplayColumn(nameof(Product.CustomerLifetimeValueProduct), "CLV");
                 DisplayColumn(nameof(Product.AveragePurchasesPerCustomerLifetime), "میانگین خرید");
                 DisplayColumn(nameof(Product.TypicalCustomerLifetime), "طول عمر مشتری");
-                OrderByDesc(nameof(Product.CustomerLifetimeValueProduct));
+                DisplayColumn(nameof(Product.ProductCategory), "دسته‌بندی");
+            }
+        }
+
+        public class ProductCustomerMatrixConfig() : GroupByConfigDefinition
+        {
+            protected override List<string> Roles => [Neo.Domain.Constants.Roles.Admin, ClubRoles.Analyst];
+            protected override string Name => "ماتریس محصول × مشتری";
+            protected override GroupByViewType GroupByViewType => GroupByViewType.Matrix;
+
+            protected override void DefineGroupBy()
+            {
+                GroupBy($"{nameof(Product.Title)}", "محصول", true, ConfiguredReport.ReportMatrixType.Vertical);
+                GroupByFormula($"{nameof(Product.Tenant)}.{nameof(Tenant.Title)}", "اکوسیستم", true, ConfiguredReport.ReportMatrixType.Horizontal);
+
             }
         }
     }

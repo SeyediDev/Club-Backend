@@ -17,6 +17,3 @@ public enum SurveyType
     [Display(Name = "مسابقه")]
     Contest = 2
 }
-
-
-

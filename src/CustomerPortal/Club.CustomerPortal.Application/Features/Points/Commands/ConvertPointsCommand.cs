@@ -1,4 +1,6 @@
-﻿namespace Club.CustomerPortal.Application.Features.Points.Commands;
+using Club.CustomerPortal.Application.Interfaces;
+
+namespace Club.CustomerPortal.Application.Features.Points.Commands;
 
 public record ConvertPointsCommand : IRequest
 {
@@ -17,27 +19,16 @@ public class ConvertPointsCommandValidator : AbstractValidator<ConvertPointsComm
     }
 }
 
-public class ConvertPointsCommandHandler : IRequestHandler<ConvertPointsCommand>
+public class ConvertPointsCommandHandler(
+    IPointService pointService,
+    ICustomerRequesterUser requesterUser,
+    ILogger<ConvertPointsCommandHandler> logger) : IRequestHandler<ConvertPointsCommand>
 {
-    private readonly IPointService _pointService;
-    private readonly IRequesterUser _requesterUser;
-    private readonly ILogger<ConvertPointsCommandHandler> _logger;
-
-    public ConvertPointsCommandHandler(
-        IPointService pointService,
-        IRequesterUser requesterUser,
-        ILogger<ConvertPointsCommandHandler> logger)
-    {
-        _pointService = pointService;
-        _requesterUser = requesterUser;
-        _logger = logger;
-    }
-
     public async Task Handle(ConvertPointsCommand request, CancellationToken cancellationToken)
     {
-        var customerId = _requesterUser.GetUserId();
+        var customerId = requesterUser.CustomerId;
         
-        var result = await _pointService.ConvertPointsAsync(
+        var result = await pointService.ConvertPointsAsync(
             customerId,
             int.Parse(request.FromPointTypeId),
             int.Parse(request.ToPointTypeId),
@@ -49,7 +40,7 @@ public class ConvertPointsCommandHandler : IRequestHandler<ConvertPointsCommand>
             throw new InvalidOperationException(result.Message);
         }
         
-        _logger.LogInformation("Points converted successfully for customer {CustomerId}: {Amount} from {From} to {To}",
+        logger.LogInformation("Points converted successfully for customer {CustomerId}: {Amount} from {From} to {To}",
             customerId, request.Amount, request.FromPointTypeId, request.ToPointTypeId);
     }
 }

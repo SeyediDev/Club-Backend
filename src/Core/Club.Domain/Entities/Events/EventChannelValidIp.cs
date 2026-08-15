@@ -1,7 +1,6 @@
 namespace Club.Domain.Entities.Events;
 
 [DisplayName("آدرس معتبر کانال دریافت رویداد")]
-[OldDbMap("EventChannelValidIps")]
 public class EventChannelValidIp : ClubBaseCoreConfigAuditableEntity<int>
 {
     public int EventChannelId { get; set; }

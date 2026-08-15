@@ -52,7 +52,23 @@ var FolderManager = function() {
         }
         fillTheForm(folderInfo);
 
+        // Close report designs modal if open (to avoid z-index conflicts)
+        const designsModal = document.getElementById('report-designs-modal');
+        if (designsModal && designsModal.classList.contains('show')) {
+            designsModal.classList.remove('show');
+            if (document.body) {
+                document.body.style.overflow = '';
+            }
+        }
+
+        // Show modal with proper z-index
+        $modal.css('z-index', '10050');
         $modal.modal('show');
+        
+        // Ensure backdrop has correct z-index
+        setTimeout(function() {
+            $('.modal-backdrop').last().css('z-index', '10049');
+        }, 10);
     };
 
     var submissionCallback = null;

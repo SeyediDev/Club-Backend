@@ -1,4 +1,6 @@
-﻿namespace Club.CustomerPortal.Application.Features.Auth.Commands;
+using Club.CustomerPortal.Application.Interfaces;
+
+namespace Club.CustomerPortal.Application.Features.Auth.Commands;
 
 public record UpdateProfileCommand : IRequest<UpdateProfileCommandResponse>
 {
@@ -31,33 +33,24 @@ public class UpdateProfileCommandValidator : AbstractValidator<UpdateProfileComm
     }
 }
 
-public class UpdateProfileCommandHandler : IRequestHandler<UpdateProfileCommand, UpdateProfileCommandResponse>
+public class UpdateProfileCommandHandler(
+    ICustomerService customerService,
+    ICustomerRequesterUser requesterUser,
+    ILogger<UpdateProfileCommandHandler> logger) : IRequestHandler<UpdateProfileCommand, UpdateProfileCommandResponse>
 {
-    private readonly ICustomerService _customerService;
-    private readonly IRequesterUser _requesterUser;
-    private readonly ILogger<UpdateProfileCommandHandler> _logger;
-
-    public UpdateProfileCommandHandler(
-        ICustomerService customerService,
-        IRequesterUser requesterUser,
-        ILogger<UpdateProfileCommandHandler> logger)
-    {
-        _customerService = customerService;
-        _requesterUser = requesterUser;
-        _logger = logger;
-    }
-
     public async Task<UpdateProfileCommandResponse> Handle(UpdateProfileCommand request, CancellationToken cancellationToken)
     {
-        var customerId = _requesterUser.GetUserId();
+        var customerId = requesterUser.CustomerId;
         
-        var updatedCustomer = await _customerService.UpdateCustomerAsync(customerId, request, cancellationToken);
+        var updatedCustomer = await customerService.UpdateCustomerAsync(customerId, request, cancellationToken);
+        var tenantId = requesterUser.TenantId;
+        var customerTenant = await customerService.GetCustomerTenantAsync(customerId, tenantId, cancellationToken);
         
-        _logger.LogInformation("Profile updated successfully for customer {CustomerId}", customerId);
+        logger.LogInformation("Profile updated successfully for customer {CustomerId}", customerId);
         
         return new UpdateProfileCommandResponse
         {
-            Customer = updatedCustomer.Adapt<CustomerDto>()
+            Customer = CustomerDtoFactory.Create(updatedCustomer, customerTenant)
         };
     }
 }

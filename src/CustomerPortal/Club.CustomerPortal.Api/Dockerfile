@@ -7,27 +7,28 @@ EXPOSE 443
 # Build stage
 FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
 WORKDIR /src
+ARG BUILD_CONTEXT=Club/Backend
 
 # Copy project files
-COPY ["Club.CustomerPortal/Club.CustomerPortal.Api/Club.CustomerPortal.Api.csproj", "Club.CustomerPortal/Club.CustomerPortal.Api/"]
-COPY ["Club.CustomerPortal/Club.CustomerPortal.Application/Club.CustomerPortal.Application.csproj", "Club.CustomerPortal/Club.CustomerPortal.Application/"]
-COPY ["Club/src/Club.Domain/Club.Domain.csproj", "Club/src/Club.Domain/"]
-COPY ["Club/src/Club.Infrastructure/Club.Infrastructure.csproj", "Club/src/Club.Infrastructure/"]
-COPY ["Club/src/Club.Application/Club.Application.csproj", "Club/src/Club.Application/"]
-COPY ["Cando/Cando.Domain/Cando.Domain.csproj", "Cando/Cando.Domain/"]
-COPY ["Cando/Cando.Application/Cando.Application.csproj", "Cando/Cando.Application/"]
-COPY ["Cando/Cando.Infrastructure/Cando.Infrastructure.csproj", "Cando/Cando.Infrastructure/"]
-COPY ["Cando/Cando.Endpoint/Cando.Endpoint.csproj", "Cando/Cando.Endpoint/"]
-COPY ["Cando/Cando.Common/Cando.Common.csproj", "Cando/Cando.Common/"]
+COPY ["src/CustomerPortal/Club.CustomerPortal.Api/Club.CustomerPortal.Api.csproj", "src/CustomerPortal/Club.CustomerPortal.Api/"]
+COPY ["src/CustomerPortal/Club.CustomerPortal.Application/Club.CustomerPortal.Application.csproj", "src/CustomerPortal/Club.CustomerPortal.Application/"]
+COPY ["src/Core/Club.Domain/Club.Domain.csproj", "src/Core/Club.Domain/"]
+COPY ["src/Core/Club.Infrastructure/Club.Infrastructure.csproj", "src/Core/Club.Infrastructure/"]
+COPY ["src/Core/Club.Application/Club.Application.csproj", "src/Core/Club.Application/"]
+COPY ["../../Neo/src/Neo.Domain/Neo.Domain.csproj", "../../Neo/src/Neo.Domain/"]
+COPY ["../../Neo/src/Neo.Application/Neo.Application.csproj", "../../Neo/src/Neo.Application/"]
+COPY ["../../Neo/src/Neo.Infrastructure/Neo.Infrastructure.csproj", "../../Neo/src/Neo.Infrastructure/"]
+COPY ["../../Neo/src/Neo.Endpoint/Neo.Endpoint.csproj", "../../Neo/src/Neo.Endpoint/"]
+COPY ["../../Neo/src/Neo.Common/Neo.Common.csproj", "../../Neo/src/Neo.Common/"]
 
 # Restore dependencies
-RUN dotnet restore "Club.CustomerPortal/Club.CustomerPortal.Api/Club.CustomerPortal.Api.csproj"
+RUN dotnet restore "src/CustomerPortal/Club.CustomerPortal.Api/Club.CustomerPortal.Api.csproj"
 
 # Copy all source files
 COPY . .
 
 # Build
-WORKDIR "/src/Club.CustomerPortal/Club.CustomerPortal.Api"
+WORKDIR "/src/src/CustomerPortal/Club.CustomerPortal.Api"
 RUN dotnet build "Club.CustomerPortal.Api.csproj" -c Release -o /app/build
 
 # Publish

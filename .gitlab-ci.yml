@@ -1,225 +1,215 @@
-stages:
-  - build
-  - test
-  - deploy-develop
-  - deploy-stage
-  - deploy-production
-  - mirror
+# ===============================================
+# GitLab CI/CD Pipeline for Club Backend
+# ===============================================
 
 variables:
-  DOTNET_VERSION: "8.0"
+  DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: "/certs"
+  DOCKER_REGISTRY: registry.gitlab.com
+  # Update these variables
+  PROJECT_PATH: your-group/club-backend
+  NEO_REPO: your-group/neo
+  NEO_BPMS_REPO: your-group/neo-bpms
 
-# ============================================
-# BUILD ALL MICROSERVICES
-# ============================================
+stages:
+  - prepare
+  - build
+  - test
+  - docker-build
+  - deploy
+
+# ==========================================
+# Templates
+# ==========================================
+.dotnet_template: &dotnet_template
+  image: mcr.microsoft.com/dotnet/sdk:8.0
+  before_script:
+    - dotnet --version
+
+.docker_template: &docker_template
+  image: docker:24
+  services:
+    - docker:24-dind
+  before_script:
+    - docker info
+    - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin $DOCKER_REGISTRY
+
+# ==========================================
+# Prepare Stage - Clone Dependencies
+# ==========================================
+clone_dependencies:
+  stage: prepare
+  image: alpine/git:latest
+  script:
+    - echo "Cloning Neo repository..."
+    - git clone --depth 1 --branch ${NEO_BRANCH:-master} https://oauth2:${CI_JOB_TOKEN}@gitlab.com/${NEO_REPO}.git ../Neo
+    - echo "Cloning Neo.Bpms repository..."
+    - git clone --depth 1 --branch ${NEO_BPMS_BRANCH:-master} https://oauth2:${CI_JOB_TOKEN}@gitlab.com/${NEO_BPMS_REPO}.git ../Neo.Bpms
+  artifacts:
+    paths:
+      - ../Neo
+      - ../Neo.Bpms
+    expire_in: 1 hour
+  only:
+    - branches
+    - tags
+    - merge_requests
+
+# ==========================================
+# Build Stage
+# ==========================================
+restore:
+  <<: *dotnet_template
+  stage: build
+  dependencies:
+    - clone_dependencies
+  script:
+    - cd Club/Backend
+    - dotnet restore Club.Backend.sln
+  artifacts:
+    paths:
+      - Club/Backend/**/obj
+      - Club/Backend/**/bin
+    expire_in: 1 hour
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+      - .nuget/packages
+  only:
+    - branches
+    - tags
+    - merge_requests
 
 build:
+  <<: *dotnet_template
   stage: build
-  image: mcr.microsoft.com/dotnet/sdk:8.0
+  dependencies:
+    - clone_dependencies
+    - restore
   script:
-    - echo "Restoring NuGet packages..."
-    - dotnet restore Club.Backend.sln
-    - echo "Building all projects..."
+    - cd Club/Backend
     - dotnet build Club.Backend.sln --configuration Release --no-restore
   artifacts:
     paths:
-      - "**/bin/Release/"
-    expire_in: 1 hour
-  tags:
-    - docker
+      - Club/Backend/**/bin/Release
+    expire_in: 1 day
   only:
-    - develop
-    - stage
-    - master
+    - branches
+    - tags
+    - merge_requests
 
-# ============================================
-# TEST
-# ============================================
-
-test:
+# ==========================================
+# Test Stage
+# ==========================================
+unit_tests:
+  <<: *dotnet_template
   stage: test
-  image: mcr.microsoft.com/dotnet/sdk:8.0
-  script:
-    - echo "Running tests..."
-    - dotnet test --configuration Release --no-build --logger "trx" --collect:"XPlat Code Coverage" || echo "Tests completed"
   dependencies:
+    - clone_dependencies
     - build
+  script:
+    - cd Club/Backend
+    - dotnet test Club.Backend.sln --configuration Release --no-build --logger "trx;LogFileName=test-results.trx"
   artifacts:
     when: always
-    paths:
-      - "**/TestResults/**/*.trx"
     reports:
       junit:
-        - "**/TestResults/**/*.trx"
-  tags:
-    - docker
-  allow_failure: true
+        - Club/Backend/**/TestResults/*.trx
+    expire_in: 7 days
+  coverage: '/Total\s+\|\s+(\d+\.?\d*)%/'
   only:
-    - develop
-    - stage
+    - branches
+    - tags
+    - merge_requests
+
+# ==========================================
+# Docker Build Stage
+# ==========================================
+docker_build_admin_panel:
+  <<: *docker_template
+  stage: docker-build
+  dependencies:
+    - clone_dependencies
+  script:
+    - cd ../..
+    - docker build -f Club/Backend/src/AdminPanel/Club.AdminPanel.Web/Dockerfile.new -t $DOCKER_REGISTRY/$PROJECT_PATH/admin-panel:$CI_COMMIT_SHORT_SHA -t $DOCKER_REGISTRY/$PROJECT_PATH/admin-panel:latest .
+    - docker push $DOCKER_REGISTRY/$PROJECT_PATH/admin-panel:$CI_COMMIT_SHORT_SHA
+    - docker push $DOCKER_REGISTRY/$PROJECT_PATH/admin-panel:latest
+  only:
     - master
+    - develop
+    - tags
 
-# ============================================
-# DEPLOY TO DEVELOP
-# ============================================
-
-deploy:channel-api:develop:
-  stage: deploy-develop
-  image: mcr.microsoft.com/dotnet/sdk:8.0
-  script:
-    - echo "Publishing Channel API..."
-    - dotnet publish src/Channel/Club.Channel.Api/Club.Channel.Api.csproj -c Release -o ./publish/channel-api
-    - echo "Deploying to develop..."
-    # TODO: Docker build/push or SSH deploy
-  environment:
-    name: develop-channel
-    url: https://channel-develop.club.stts.dev
+docker_build_channel_api:
+  <<: *docker_template
+  stage: docker-build
   dependencies:
-    - build
-  tags:
-    - docker
+    - clone_dependencies
+  script:
+    - cd ../..
+    - docker build -f Club/Backend/src/Channel/Club.Channel.Api/Dockerfile.new -t $DOCKER_REGISTRY/$PROJECT_PATH/channel-api:$CI_COMMIT_SHORT_SHA -t $DOCKER_REGISTRY/$PROJECT_PATH/channel-api:latest .
+    - docker push $DOCKER_REGISTRY/$PROJECT_PATH/channel-api:$CI_COMMIT_SHORT_SHA
+    - docker push $DOCKER_REGISTRY/$PROJECT_PATH/channel-api:latest
+  only:
+    - master
+    - develop
+    - tags
+
+docker_build_customer_portal_api:
+  <<: *docker_template
+  stage: docker-build
+  dependencies:
+    - clone_dependencies
+  script:
+    - cd ../..
+    - docker build -f Club/Backend/src/CustomerPortal/Club.CustomerPortal.Api/Dockerfile.new -t $DOCKER_REGISTRY/$PROJECT_PATH/customer-portal-api:$CI_COMMIT_SHORT_SHA -t $DOCKER_REGISTRY/$PROJECT_PATH/customer-portal-api:latest .
+    - docker push $DOCKER_REGISTRY/$PROJECT_PATH/customer-portal-api:$CI_COMMIT_SHORT_SHA
+    - docker push $DOCKER_REGISTRY/$PROJECT_PATH/customer-portal-api:latest
+  only:
+    - master
+    - develop
+    - tags
+
+# ==========================================
+# Deploy Stage (Example for Kubernetes)
+# ==========================================
+deploy_staging:
+  stage: deploy
+  image: bitnami/kubectl:latest
+  dependencies: []
+  script:
+    - echo "Deploying to staging environment..."
+    - kubectl config use-context staging
+    - kubectl set image deployment/club-admin-panel club-admin-panel=$DOCKER_REGISTRY/$PROJECT_PATH/admin-panel:$CI_COMMIT_SHORT_SHA -n club-staging
+    - kubectl set image deployment/club-channel-api club-channel-api=$DOCKER_REGISTRY/$PROJECT_PATH/channel-api:$CI_COMMIT_SHORT_SHA -n club-staging
+    - kubectl set image deployment/club-customer-portal-api club-customer-portal-api=$DOCKER_REGISTRY/$PROJECT_PATH/customer-portal-api:$CI_COMMIT_SHORT_SHA -n club-staging
+    - kubectl rollout status deployment/club-admin-panel -n club-staging
+    - kubectl rollout status deployment/club-channel-api -n club-staging
+    - kubectl rollout status deployment/club-customer-portal-api -n club-staging
+  environment:
+    name: staging
+    url: https://staging.club.example.com
   only:
     - develop
-
-deploy:customerportal-api:develop:
-  stage: deploy-develop
-  image: mcr.microsoft.com/dotnet/sdk:8.0
-  script:
-    - echo "Publishing CustomerPortal API..."
-    - dotnet publish src/CustomerPortal/Club.CustomerPortal.Api/Club.CustomerPortal.Api.csproj -c Release -o ./publish/portal-api
-    - echo "Deploying to develop..."
-  environment:
-    name: develop-portal
-    url: https://portal-api-develop.club.stts.dev
-  dependencies:
-    - build
-  tags:
-    - docker
-  only:
-    - develop
-
-deploy:eventhandler-api:develop:
-  stage: deploy-develop
-  image: mcr.microsoft.com/dotnet/sdk:8.0
-  script:
-    - echo "Publishing EventHandler API..."
-    - dotnet publish src/EventHandler/Club.EventHandler.Api/Club.EventHandler.Api.csproj -c Release -o ./publish/eventhandler-api
-    - echo "Deploying to develop..."
-  environment:
-    name: develop-eventhandler
-    url: https://events-develop.club.stts.dev
-  dependencies:
-    - build
-  tags:
-    - docker
-  only:
-    - develop
-
-deploy:promotionjob-api:develop:
-  stage: deploy-develop
-  image: mcr.microsoft.com/dotnet/sdk:8.0
-  script:
-    - echo "Publishing PromotionJobWorker API..."
-    - dotnet publish src/PromotionJobWorker/Club.PromotionJobWorker.Api/Club.PromotionJobWorker.Api.csproj -c Release -o ./publish/promotionjob-api
-    - echo "Deploying to develop..."
-  environment:
-    name: develop-promotionjob
-    url: https://jobs-develop.club.stts.dev
-  dependencies:
-    - build
-  tags:
-    - docker
-  only:
-    - develop
-
-deploy:admin-web:develop:
-  stage: deploy-develop
-  image: mcr.microsoft.com/dotnet/sdk:8.0
-  script:
-    - echo "Publishing Admin Panel..."
-    - dotnet publish src/AdminPanel/Club.AdminPanel.Web/Club.AdminPanel.Web.csproj -c Release -o ./publish/admin-web
-    - echo "Deploying to develop..."
-  environment:
-    name: develop-admin
-    url: https://admin-develop.club.stts.dev
-  dependencies:
-    - build
-  tags:
-    - docker
-  only:
-    - develop
-
-# ============================================
-# DEPLOY TO STAGE
-# ============================================
-
-deploy:stage:
-  stage: deploy-stage
-  image: mcr.microsoft.com/dotnet/sdk:8.0
-  script:
-    - echo "Publishing all services..."
-    - dotnet publish src/Channel/Club.Channel.Api/Club.Channel.Api.csproj -c Release -o ./publish/channel-api
-    - dotnet publish src/CustomerPortal/Club.CustomerPortal.Api/Club.CustomerPortal.Api.csproj -c Release -o ./publish/portal-api
-    - dotnet publish src/EventHandler/Club.EventHandler.Api/Club.EventHandler.Api.csproj -c Release -o ./publish/eventhandler-api
-    - dotnet publish src/PromotionJobWorker/Club.PromotionJobWorker.Api/Club.PromotionJobWorker.Api.csproj -c Release -o ./publish/promotionjob-api
-    - dotnet publish src/AdminPanel/Club.AdminPanel.Web/Club.AdminPanel.Web.csproj -c Release -o ./publish/admin-web
-    - echo "Deploying to stage..."
-  environment:
-    name: stage
-    url: https://stage.club.stts.dev
-  dependencies:
-    - build
-  tags:
-    - docker
-  only:
-    - stage
   when: manual
 
-# ============================================
-# DEPLOY TO PRODUCTION
-# ============================================
-
-deploy:production:
-  stage: deploy-production
-  image: mcr.microsoft.com/dotnet/sdk:8.0
+deploy_production:
+  stage: deploy
+  image: bitnami/kubectl:latest
+  dependencies: []
   script:
-    - echo "Publishing all services..."
-    - dotnet publish src/Channel/Club.Channel.Api/Club.Channel.Api.csproj -c Release -o ./publish/channel-api
-    - dotnet publish src/CustomerPortal/Club.CustomerPortal.Api/Club.CustomerPortal.Api.csproj -c Release -o ./publish/portal-api
-    - dotnet publish src/EventHandler/Club.EventHandler.Api/Club.EventHandler.Api.csproj -c Release -o ./publish/eventhandler-api
-    - dotnet publish src/PromotionJobWorker/Club.PromotionJobWorker.Api/Club.PromotionJobWorker.Api.csproj -c Release -o ./publish/promotionjob-api
-    - dotnet publish src/AdminPanel/Club.AdminPanel.Web/Club.AdminPanel.Web.csproj -c Release -o ./publish/admin-web
-    - echo "Deploying to production..."
+    - echo "Deploying to production environment..."
+    - kubectl config use-context production
+    - kubectl set image deployment/club-admin-panel club-admin-panel=$DOCKER_REGISTRY/$PROJECT_PATH/admin-panel:$CI_COMMIT_SHORT_SHA -n club-production
+    - kubectl set image deployment/club-channel-api club-channel-api=$DOCKER_REGISTRY/$PROJECT_PATH/channel-api:$CI_COMMIT_SHORT_SHA -n club-production
+    - kubectl set image deployment/club-customer-portal-api club-customer-portal-api=$DOCKER_REGISTRY/$PROJECT_PATH/customer-portal-api:$CI_COMMIT_SHORT_SHA -n club-production
+    - kubectl rollout status deployment/club-admin-panel -n club-production
+    - kubectl rollout status deployment/club-channel-api -n club-production
+    - kubectl rollout status deployment/club-customer-portal-api -n club-production
   environment:
     name: production
-    url: https://club.stts.dev
-  dependencies:
-    - build
-  tags:
-    - docker
+    url: https://club.example.com
   only:
     - master
+    - tags
   when: manual
-
-# ============================================
-# MIRROR TO GITHUB
-# ============================================
-
-mirror:github:
-  stage: mirror
-  image: alpine/git
-  script:
-    - echo "Mirroring to GitHub..."
-    - git clone --mirror $CI_REPOSITORY_URL temp-repo
-    - cd temp-repo
-    - git push --mirror https://$GITHUB_TOKEN@github.com/SeyediDev/Club-Backend.git || true
-  only:
-    - master
-    - develop
-    - stage
-  when: on_success
-  allow_failure: true
-  tags:
-    - docker
-  variables:
-    GITHUB_TOKEN: $GITHUB_MIRROR_TOKEN

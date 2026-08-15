@@ -1,5 +1,4 @@
 ﻿using Neo.Application.Exceptions;
-using Neo.Domain.Features.Client;
 using Neo.Domain.Features.Client.Dto;
 
 namespace Club.Application.Features.Account.Commands.Refresh;

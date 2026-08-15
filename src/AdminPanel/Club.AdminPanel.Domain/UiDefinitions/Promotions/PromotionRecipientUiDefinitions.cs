@@ -5,7 +5,7 @@ public class PromotionRecipientDefinitions : SubCRUDDefinition<PromotionRecipien
     protected override void IndexFormViewModel(FormDefinition form)
     {
         form.AddColumns(nameof(PromotionRecipient.Promotion),
-                        nameof(PromotionRecipient.Customer),
+                        nameof(PromotionRecipient.CustomerTenant),
                         nameof(PromotionRecipient.Status),
                         nameof(PromotionRecipient.SentDate),
                         nameof(PromotionRecipient.DeliveredDate),
@@ -19,7 +19,7 @@ public class PromotionRecipientDefinitions : SubCRUDDefinition<PromotionRecipien
     protected override void CUDFormsViewModel(CUDForm form)
     {
         form.AddFields(nameof(PromotionRecipient.Promotion),
-                       nameof(PromotionRecipient.Customer),
+                       nameof(PromotionRecipient.CustomerTenant),
                        nameof(PromotionRecipient.Status),
                        nameof(PromotionRecipient.SentDate),
                        nameof(PromotionRecipient.DeliveredDate),
@@ -37,7 +37,7 @@ public class PromotionRecipientDefinitions : SubCRUDDefinition<PromotionRecipien
     public override string SubjectId => "Sub";
     public override void SubIndexViewModel(FormDefinition form)
     {
-        form.AddColumns(nameof(PromotionRecipient.Customer),
+        form.AddColumns(nameof(PromotionRecipient.CustomerTenant),
                         nameof(PromotionRecipient.Status),
                         nameof(PromotionRecipient.SentDate),
                         nameof(PromotionRecipient.DeliveredDate),
@@ -48,7 +48,7 @@ public class PromotionRecipientDefinitions : SubCRUDDefinition<PromotionRecipien
 
     public override void SubViewModel(FormDefinition form)
     {
-        form.AddFields(nameof(PromotionRecipient.Customer),
+        form.AddFields(nameof(PromotionRecipient.CustomerTenant),
                        nameof(PromotionRecipient.Status),
                        nameof(PromotionRecipient.SentDate),
                        nameof(PromotionRecipient.DeliveredDate),

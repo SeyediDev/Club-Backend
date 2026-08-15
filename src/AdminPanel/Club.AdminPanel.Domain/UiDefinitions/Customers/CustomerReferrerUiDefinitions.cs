@@ -10,19 +10,19 @@ public class CustomerReferrerUiDefinitions : SubCRUDDefinition<CustomerReferrer>
     {
         form.AddColumns(nameof(CustomerReferrer.Tenant),
         nameof(CustomerReferrer.ReferrerCode),
-        nameof(CustomerReferrer.ReferrerCustomer),
-        nameof(CustomerReferrer.ReferredCustomer));
+        nameof(CustomerReferrer.ReferrerCustomerTenant),
+        nameof(CustomerReferrer.ReferredCustomerTenant));
     }
 
     public override void SubViewModel(FormDefinition form)
     {
         form.AddFields(nameof(CustomerReferrer.Tenant),
         nameof(CustomerReferrer.ReferrerCode),
-        nameof(CustomerReferrer.ReferrerCustomer),
-        nameof(CustomerReferrer.ReferredCustomer),
+        nameof(CustomerReferrer.ReferrerCustomerTenant),
+        nameof(CustomerReferrer.ReferredCustomerTenant),
         nameof(CustomerReferrer.EventLog),
-        nameof(CustomerReferrer.Rule),
-        nameof(CustomerReferrer.RuleAction)
+        nameof(CustomerReferrer.Promotion),
+        nameof(CustomerReferrer.PromotionAction)
         );
     }
 }

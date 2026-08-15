@@ -1,15 +1,17 @@
-﻿namespace Club.AdminPanel.Domain.UiDefinitions.Events;
+using Club.Domain.Entities.Channels;
+
+namespace Club.AdminPanel.Domain.UiDefinitions.Events;
 
 public class EventChannelValidIpUiDefinitions : SubCRUDDefinition<EventChannelValidIp>
 {
     public override string SubjectId => "Sub";
-    public override void SubIndexViewModel(FormDefinition form)
+    public override void SubIndexViewModel()
     {
-        form.AddColumns(nameof(EventChannelValidIp.ValidIp));
+        AddColumns(nameof(EventChannelValidIp.ValidIp));
     }
 
-    public override void SubViewModel(FormDefinition form)
+    public override void SubViewModel()
     {
-        form.AddFields(nameof(EventChannelValidIp.ValidIp));
+        AddFields(nameof(EventChannelValidIp.ValidIp));
     }
 }

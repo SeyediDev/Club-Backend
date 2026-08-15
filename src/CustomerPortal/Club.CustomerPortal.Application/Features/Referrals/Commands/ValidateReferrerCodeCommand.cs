@@ -1,3 +1,5 @@
+using Club.CustomerPortal.Application.Interfaces;
+
 namespace Club.CustomerPortal.Application.Features.Referrals.Commands;
 
 public record ValidateReferrerCodeCommand : IRequest<ValidateReferrerCodeCommandResponse>
@@ -19,18 +21,11 @@ public class ValidateReferrerCodeCommandValidator : AbstractValidator<ValidateRe
     }
 }
 
-public class ValidateReferrerCodeCommandHandler : IRequestHandler<ValidateReferrerCodeCommand, ValidateReferrerCodeCommandResponse>
+public class ValidateReferrerCodeCommandHandler(IReferralService referralService) : IRequestHandler<ValidateReferrerCodeCommand, ValidateReferrerCodeCommandResponse>
 {
-    private readonly IReferralService _referralService;
-
-    public ValidateReferrerCodeCommandHandler(IReferralService referralService)
-    {
-        _referralService = referralService;
-    }
-
     public async Task<ValidateReferrerCodeCommandResponse> Handle(ValidateReferrerCodeCommand request, CancellationToken cancellationToken)
     {
-        var isValid = await _referralService.ValidateReferrerCodeAsync(request.Code, cancellationToken);
+        var isValid = await referralService.ValidateReferrerCodeAsync(request.Code, cancellationToken);
         return new ValidateReferrerCodeCommandResponse
         {
             IsValid = isValid,

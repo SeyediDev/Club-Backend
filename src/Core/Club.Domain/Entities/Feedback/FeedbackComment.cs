@@ -36,7 +36,7 @@ public class FeedbackComment : ClubBaseCoreAuditableEntity<int>
     /// شناسه کاربر (اگر کارمند نظر داده)
     /// </summary>
     [DisplayName("شناسه کاربر")]
-    public int? UserId { get; set; }
+    public UserId? UserId { get; set; }
 
     /// <summary>
     /// کاربر
@@ -68,12 +68,12 @@ public class FeedbackComment : ClubBaseCoreAuditableEntity<int>
     /// پاسخ‌ها
     /// </summary>
     [DisplayName("پاسخ‌ها")]
-    public ICollection<FeedbackComment> Replies { get; set; } = new List<FeedbackComment>();
+    public ICollection<FeedbackComment> Replies { get; set; } = [];
 
-    /// <summary>
-    /// آیا نظر رسمی است (از طرف سازمان)
-    /// </summary>
-    [DisplayName("نظر رسمی")]
+	/// <summary>
+	/// آیا نظر رسمی است (از طرف اکوسیستم)
+	/// </summary>
+	[DisplayName("نظر رسمی")]
     public bool IsOfficial { get; set; } = false;
 }
 

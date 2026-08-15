@@ -1,6 +1,4 @@
-﻿using Neo.Domain.Features.Multilingual;
-
-namespace Club.Application.Features.Common.Commands.Documents;
+﻿namespace Club.Application.Features.Common.Commands.Documents;
 
 public record RemoveDocumentCommand : IRequest<Unit>
 {

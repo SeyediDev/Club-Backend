@@ -1,4 +1,7 @@
 using System.ComponentModel.DataAnnotations;
+using Club.Domain.Entities.Promotions.Surveys;
+using Club.Domain.Entities.Promotions.Surveys.Data;
+using Club.Domain.Entities.Promotions.Surveys.Enums;
 
 namespace Club.Application.Features.Surveys.Queries;
 
@@ -10,7 +13,7 @@ public record GetActiveSurveysQuery : IRequest<List<ActiveSurveyDto>>
     [Required]
     public int TenantId { get; set; }
 
-    public int? CustomerId { get; set; }
+    public int? CustomerTenantId { get; set; }
 
     public SurveyType? SurveyType { get; set; }
 }
@@ -51,19 +54,19 @@ public class GetActiveSurveysQueryHandler(
         var surveys = await surveyRepo.GetAllWithIncludeAsync(
             include: s => s.Items,
             cancellationToken: cancellationToken,
-            predicate: s => s.TenantId == request.TenantId &&
+            predicate: s => s.Promotion.TenantId == request.TenantId &&
                      s.IsActive &&
                      (!s.StartDate.HasValue || s.StartDate.Value <= now) &&
                      (!s.EndDate.HasValue || s.EndDate.Value >= now) &&
                      (!request.SurveyType.HasValue || s.SurveyType == request.SurveyType));
 
         // دریافت لیست نظرسنجی‌هایی که مشتری در آنها شرکت کرده
-        HashSet<int> participatedSurveyIds = new();
-        if (request.CustomerId.HasValue)
+        HashSet<int> participatedSurveyIds = [];
+        if (request.CustomerTenantId.HasValue)
         {
             var participationRepo = unitOfWork.Repository<SurveyParticipation, int>();
-            var participations = await participationRepo.GetEntityAsQueryable()
-                .Where(p => p.CustomerId == request.CustomerId)
+            var participations = await participationRepo.Query()
+                .Where(p => p.CustomerTenantId == request.CustomerTenantId)
                 .ToListAsync(cancellationToken);
 
             participatedSurveyIds = participations.Select(p => p.SurveyId).ToHashSet();

@@ -1,4 +1,4 @@
-﻿window.FormUtils = function() {
+window.FormUtils = function() {
 	var getDefaultValue = function($input) {
 		return $input.data('default-value');
 	};
@@ -403,7 +403,7 @@ function getControlContainer(fieldName) {
 }
 
 function getSpecifierContainer(specifier) {
-	var $container = $("[" + specifier + "]").closest(".cando-control");
+	var $container = $("[" + specifier + "]").closest(".neo-control");
 	if ($container.length)
 		return $container;
 	return $("[" + specifier + "]").closest("div").parent();
@@ -680,24 +680,52 @@ function Client_AddClass(This, scope, fieldName, className, targetArea, formula)
 	}
 	switch (targetArea) {
 	case "Container":
+		var $container;
 		if (formula) {
 			if ($("*[name=" + fieldName + "]").closest("div.upload")[0]) {
-				$("*[name=" + fieldName + "]").closest("div").parent().addClass(className);
+				$container = $("*[name=" + fieldName + "]").closest("div").parent();
+				$container.addClass(className);
 			} else {
 				if ($("[name=" + fieldName + "]").length)
-					getControlContainer(fieldName).addClass(className);
-				else $('[id="' + fieldName + '"]').addClass(className);
+					$container = getControlContainer(fieldName);
+				else $container = $('[id="' + fieldName + '"]');
+				$container.addClass(className);
 			}
-
+			// Also hide parent table cells/rows to free up space
+			if (className == "ShowHide" && $container.length) {
+				$container.closest("td, th").addClass(className);
+				// If all cells in a row are hidden, hide the row too
+				var $row = $container.closest("tr");
+				if ($row.length) {
+					var visibleCells = $row.find("td, th").not(".ShowHide").length;
+					if (visibleCells === 0) {
+						$row.addClass(className);
+					}
+				}
+			}
 		} else {
 			if ($("*[name=" + fieldName + "]").closest("div.upload")[0]) {
-				$("*[name=" + fieldName + "]").closest("div").parent().removeClass(className);
+				$container = $("*[name=" + fieldName + "]").closest("div").parent();
+				$container.removeClass(className);
 			} else {
 				if ($("[name=" + fieldName + "]").length)
-					getControlContainer(fieldName).removeClass(className);
-				else $('[id="' + fieldName + '"]').removeClass(className);
+					$container = getControlContainer(fieldName);
+				else $container = $('[id="' + fieldName + '"]');
+				$container.removeClass(className);
 			}
-
+			// Also show parent table cells/rows
+			if (className == "ShowHide" && $container.length) {
+				var $cell = $container.closest("td, th");
+				$cell.removeClass(className);
+				// Show the row if at least one cell is now visible
+				var $row = $container.closest("tr");
+				if ($row.length) {
+					var visibleCells = $row.find("td, th").not(".ShowHide").length;
+					if (visibleCells > 0) {
+						$row.removeClass(className);
+					}
+				}
+			}
 		}
 		break;
 	case "Input":
@@ -1031,6 +1059,24 @@ var Select2Beneficiary = function() {
 		return data.text;
 	};
 
+	var hasOptionalValue = function($select) {
+		return $select.find('option').filter(function() {
+			var optionValue = $(this).val();
+			return optionValue === '' || optionValue === null || optionValue === undefined || optionValue === '0';
+		}).length > 0;
+	};
+
+	var ensureOptionalOption = function($select) {
+		if ($select.prop('multiple')) return;
+		if ($select.prop('required')) return;
+		if (hasOptionalValue($select)) return;
+
+		var placeholderText = $select.data('placeholder') || $select.attr('placeholder') || '';
+		var optionalOption = new Option(placeholderText, '', false, false);
+		$(optionalOption).attr('data-empty-option', 'true');
+		$select.prepend(optionalOption);
+	};
+
 	var getAjaxObject = function(namespaceId, entityId, fieldId, formId, isMandatory, remoteUrl, filterFormula) {
 		var ret = {
 			url: remoteUrl || (window.top.rootUrl + 'form/GetComboData'),
@@ -1142,22 +1188,40 @@ var Select2Beneficiary = function() {
 		var namespaceId = $thisRemoteSelect.data('namespace') || window.PageAddressManager.getNamespaceId();
 		var entityId = $thisRemoteSelect.data('entity') || window.PageAddressManager.getEntityId();
 		var fieldId = $thisRemoteSelect.data('column') ||
-			$thisRemoteSelect.parents('.cando-control').data('id');
+			$thisRemoteSelect.parents('.neo-control').data('id');
 
 		var formId = $thisRemoteSelect.data('form') || window.PageAddressManager.getPageId();
-		$thisRemoteSelect
-			.select2({
-				ajax: getAjaxObject(
-					namespaceId,
-					entityId,
-					fieldId,
-					formId,
-					$thisRemoteSelect.attr("required") ? true : false,
-					$thisRemoteSelect.data("remote-url"),
-					$thisRemoteSelect.attr('filter-formula')),
-				templateResult: templateResult,
-				templateSelection: templateSelection
-			});
+
+		ensureOptionalOption($thisRemoteSelect);
+
+		var allowClear = !$thisRemoteSelect.prop('multiple') && !$thisRemoteSelect.prop('required');
+		var placeholderText = $thisRemoteSelect.data('placeholder') || $thisRemoteSelect.attr('placeholder');
+		if (placeholderText === undefined && allowClear) {
+			placeholderText = ' ';
+		}
+
+		var select2Options = {
+			ajax: getAjaxObject(
+				namespaceId,
+				entityId,
+				fieldId,
+				formId,
+				$thisRemoteSelect.attr("required") ? true : false,
+				$thisRemoteSelect.data("remote-url"),
+				$thisRemoteSelect.attr('filter-formula')),
+			templateResult: templateResult,
+			templateSelection: templateSelection
+		};
+
+		if (allowClear) {
+			select2Options.allowClear = true;
+		}
+
+		if (placeholderText !== undefined) {
+			select2Options.placeholder = placeholderText;
+		}
+
+		$thisRemoteSelect.select2(select2Options);
 
 		var initialValuesOfSelect = $thisRemoteSelect.attr('initvalue');
 		if (Boolean(initialValuesOfSelect)) {
@@ -1203,12 +1267,13 @@ var Select2Beneficiary = function() {
 		fetchInitValues(values,
 				namespaceId,
 				entityId,
-				$remoteSelect.parents('.cando-control').data('id'),
+				$remoteSelect.parents('.neo-control').data('id'),
 				formId,
 				$remoteSelect.attr("filter-formula"))
 			.then(function(rows) {
 					//					window.FormUtils.clearField($remoteSelect);
 					$remoteSelect.empty();
+					ensureOptionalOption($remoteSelect);
 					selectRows(rows, $remoteSelect);
 				},
 				function(err) {
@@ -1327,9 +1392,47 @@ function instantiatePlugins() {
 	AddClearBeneficiary.instantiate();
 }
 
+// Select2 Change Handler - برای اجرای ShowHide و سایر UI Rules
+// این handler لازم است چون Select2 از jQuery events استفاده می‌کند و onchange attribute DOM با آن کار نمی‌کند
+var Select2ChangeHandler = function() {
+	var initializeChangeHandlers = function() {
+		// برای همه select ها که onchange attribute دارند
+		$(document).on('change', 'select[onchange]', function(e) {
+			// اگر از طریق Select2 trigger شده، اجازه بده handler اجرا شود
+			var $select = $(this);
+			var onchangeAttr = $select.attr('onchange');
+			
+			
+			// اگر onchange شامل inputChanged است، آن را فراخوانی کن
+			if (onchangeAttr && onchangeAttr.indexOf('inputChanged') !== -1) {
+				try {
+					// استخراج پارامترها از onchange attribute
+					var match = onchangeAttr.match(/inputChanged\(this,\s*'([^']*)',\s*'([^']*)'\)/);
+					if (match) {
+						var source = match[1];
+						var scope = match[2];
+						
+						// فراخوانی تابع inputChanged
+						if (typeof inputChanged === 'function') {
+							inputChanged(this, source, scope);
+						}
+					}
+				} catch (ex) {
+					console.error('[Select2ChangeHandler] Error executing onchange:', ex);
+				}
+			}
+		});
+	};
+	
+	return {
+		initialize: initializeChangeHandlers
+	};
+}();
+
 $(function() {
 	initializePluginsDefaults();
 	instantiatePlugins();
+	Select2ChangeHandler.initialize();
 	$('[nodatamandatory]').prop('selectedIndex', -1);
 	$('[nodatamandatory]').trigger('change');
 	$('form').trigger('reinitialize.areYouSure');

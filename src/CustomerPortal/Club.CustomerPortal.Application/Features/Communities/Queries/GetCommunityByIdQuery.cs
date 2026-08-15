@@ -1,4 +1,6 @@
-using Club.Domain.Features;
+using Club.CustomerPortal.Application.Interfaces;
+using Club.Domain.Entities.CustomerSegments.Enums;
+using Club.Domain.Features.Customers;
 
 namespace Club.CustomerPortal.Application.Features.Communities.Queries;
 
@@ -24,10 +26,9 @@ public record CommunityDetailDto
     public int MemberCount { get; set; }
     public bool IsMember { get; set; }
     public string JoinMode { get; set; } = null!;
-    public List<string>? Benefits { get; set; }
+    public string? Benefits { get; set; }
     public bool CanJoin { get; set; }
     public bool IsEligible { get; set; }
-    public List<string>? FailedConditions { get; set; }
 }
 
 public class GetCommunityByIdQueryHandler(
@@ -43,6 +44,7 @@ public class GetCommunityByIdQueryHandler(
 
         // دریافت همه جامعه‌ها
         var segments = await customerSegmentService.GetEligibleSegmentsForCustomerAsync(
+            1/*TODO*/,
             customerId, 
             onlyVisibleInPortal: false,
             cancellationToken);
@@ -56,7 +58,7 @@ public class GetCommunityByIdQueryHandler(
         // بررسی واجد شرایط بودن
         var eligibility = await customerSegmentService.CheckCustomerEligibilityAsync(
             customerId, 
-            request.CommunityId, 
+            request.CommunityId, []/*TODO*/,
             cancellationToken);
 
         var communityDetail = new CommunityDetailDto
@@ -69,9 +71,8 @@ public class GetCommunityByIdQueryHandler(
             IsMember = segment.IsMember,
             JoinMode = segment.JoinMode.ToString(),
             Benefits = segment.Benefits,
-            CanJoin = !segment.IsMember && segment.JoinMode != Domain.Entities.Customers.Enums.CustomerSegmentJoinMode.SystemOnly,
-            IsEligible = eligibility.IsEligible,
-            FailedConditions = eligibility.FailedConditions
+            CanJoin = !segment.IsMember && segment.JoinMode != CustomerSegmentJoinMode.SystemOnly,
+            IsEligible = eligibility.IsEligible
         };
 
         return new GetCommunityByIdQueryResponse

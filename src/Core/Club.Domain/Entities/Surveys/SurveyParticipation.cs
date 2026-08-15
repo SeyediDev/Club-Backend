@@ -19,17 +19,14 @@ public class SurveyParticipation : ClubBaseCoreAuditableEntity<int>
     [DisplayName("نظرسنجی")]
     public Survey Survey { get; set; } = null!;
 
-    /// <summary>
-    /// شناسه مشتری
-    /// </summary>
     [DisplayName("شناسه مشتری")]
-    public int CustomerId { get; set; }
+    public int CustomerTenantId { get; set; }
 
     /// <summary>
     /// مشتری
     /// </summary>
     [DisplayName("مشتری")]
-    public Customer Customer { get; set; } = null!;
+    public CustomerTenant CustomerTenant { get; set; } = null!;
 
     /// <summary>
     /// شناسه گزینه انتخاب شده

@@ -1,4 +1,6 @@
-﻿namespace Club.CustomerPortal.Application.Features.Points.Commands;
+using Club.CustomerPortal.Application.Interfaces;
+
+namespace Club.CustomerPortal.Application.Features.Points.Commands;
 
 public record TransferPointsCommand : IRequest
 {
@@ -18,27 +20,16 @@ public class TransferPointsCommandValidator : AbstractValidator<TransferPointsCo
     }
 }
 
-public class TransferPointsCommandHandler : IRequestHandler<TransferPointsCommand>
+public class TransferPointsCommandHandler(
+    IPointService pointService,
+    ICustomerRequesterUser requesterUser,
+    ILogger<TransferPointsCommandHandler> logger) : IRequestHandler<TransferPointsCommand>
 {
-    private readonly IPointService _pointService;
-    private readonly IRequesterUser _requesterUser;
-    private readonly ILogger<TransferPointsCommandHandler> _logger;
-
-    public TransferPointsCommandHandler(
-        IPointService pointService,
-        IRequesterUser requesterUser,
-        ILogger<TransferPointsCommandHandler> logger)
-    {
-        _pointService = pointService;
-        _requesterUser = requesterUser;
-        _logger = logger;
-    }
-
     public async Task Handle(TransferPointsCommand request, CancellationToken cancellationToken)
     {
-        var customerId = _requesterUser.GetUserId();
+        var customerId = requesterUser.CustomerId;
         
-        var result = await _pointService.TransferPointsAsync(
+        var result = await pointService.TransferPointsAsync(
             customerId,
             request.ToCustomerId, // این در واقع شماره موبایل است
             request.Amount,
@@ -49,7 +40,7 @@ public class TransferPointsCommandHandler : IRequestHandler<TransferPointsComman
             throw new InvalidOperationException(result.Message);
         }
         
-        _logger.LogInformation("Points transferred successfully from customer {CustomerId} to {ToCustomer}: {Amount}",
+        logger.LogInformation("Points transferred successfully from customer {CustomerId} to {ToCustomer}: {Amount}",
             customerId, request.ToCustomerId, request.Amount);
     }
 }

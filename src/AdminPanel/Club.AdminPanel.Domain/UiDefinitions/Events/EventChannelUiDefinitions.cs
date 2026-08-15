@@ -1,25 +1,57 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.UI.Reports;
+using Club.Domain.Entities.Channels;
 
 namespace Club.AdminPanel.Domain.UiDefinitions.Events;
 
 public partial class EventChannelUiDefinitions : CRUDDefinition<EventChannel>
 {
-    protected override void IndexFormViewModel(FormDefinition form)
+    private static readonly List<string> DefaultRoles =
+    [
+        Neo.Domain.Constants.Roles.Admin,
+        ClubRoles.Manager,
+        ClubRoles.Analyst
+    ];
+
+    public override List<string>? Roles => DefaultRoles;
+    public override string? Icon => "fa fa-plug";
+
+    protected override void IndexFormViewModel()
     {
-        form.AddColumns(nameof(EventChannel.Title),
+        AddColumns(nameof(EventChannel.Tenant),
+                        nameof(EventChannel.Title),
                         nameof(EventChannel.Key));
+        form.AddOrderBy(nameof(EventChannel.Tenant));
+        form.AddOrderBy(nameof(EventChannel.Title));
+        AddSubjectColumn<EventChannelRelations>();
+        AddSubjectColumn<Attributes>();
     }
-    protected override void CUDFormsViewModel(CUDForm form)
+    protected override void CUDFormsViewModel()
     {
-        form.AddFields(nameof(EventChannel.Title),
+        AddFields(nameof(EventChannel.Tenant),
+                       nameof(EventChannel.Title),
                        nameof(EventChannel.Key));
     }
-    protected override void EditFormSubTables(CUDForm form)
+
+    public class EventChannelRelations : SubjectEditForm2<EventChannelRelations>
     {
-        form.AddSubTable(nameof(EventChannelValidEventType), nameof(EventChannelValidEventType.EventChannel), "Sub",
-            "نوع رویدادهای مجاز", null, true, eControlTypeId.MultiTab);
-        form.AddSubTable(nameof(EventChannelValidIp), nameof(EventChannelValidIp.EventChannel), "Sub",
-            "آدرس های مجاز", null, true, eControlTypeId.MultiTab);
+        public override string Name => "قواعد و محدودیت‌ها";
+        public override List<string>? Roles => DefaultRoles;
+
+        protected override void ViewModel()
+        {
+            AddSubTable(nameof(EventChannelValidEvent), nameof(EventChannelValidEvent.EventChannel), "Sub",
+                "نوع رویدادهای مجاز", null, true, ContainerControl.MultiTab);
+            AddSubTable(nameof(EventChannelValidIp), nameof(EventChannelValidIp.EventChannel), "Sub",
+                "آدرس‌های مجاز", null, true, ContainerControl.MultiTab);
+        }
+    }
+
+    public class Attributes : SubjectEditForm2<Attributes>
+    {
+        public override string Name => "ویژگی‌ها";
+        protected override void ViewModel()
+        {
+            AddSubTable<TenantAttribute>(nameof(TenantAttribute.Channel), "ویژگی‌ها", ContainerControl.None);
+        }
     }
 
     // =====================================================
@@ -28,20 +60,20 @@ public partial class EventChannelUiDefinitions : CRUDDefinition<EventChannel>
 
     public new partial class PublicReport : CRUDDefinition.PublicReport
     {
+        public override List<string>? Roles => DefaultRoles;
+
         /// <summary>
         /// گزارش لیست کانال‌های رویداد
         /// </summary>
-        public partial class AllEventChannelsConfig : ReportConfigDefinition
+        public class AllEventChannelsConfig : ReportConfigDefinition
         {
-            protected override List<string> Roles { get => [Neo.Domain.Constants.Roles.Admin, ClubRoles.Manager]; }
+            protected override List<string> Roles => [Neo.Domain.Constants.Roles.Admin, ClubRoles.Manager];
+            protected override string Name => "لیست کانال‌های رویداد";
             
-            protected override void Identify()
-            {
-                DefineConfig("لیست کانال‌های رویداد", ReportViewType.List);
-            }
 
             protected override void DefineColumns()
             {
+                DisplayColumn(nameof(EventChannel.Tenant), "اکوسیستم");
                 DisplayColumn(nameof(EventChannel.Title), "عنوان");
                 DisplayColumn(nameof(EventChannel.Key), "کلید");
                 OrderBy(nameof(EventChannel.Title));
@@ -51,16 +83,12 @@ public partial class EventChannelUiDefinitions : CRUDDefinition<EventChannel>
         /// <summary>
         /// گزارش پرکاربردترین کانال‌ها
         /// </summary>
-        public partial class MostUsedChannelsConfig : ReportConfigDefinition
+        public class MostUsedChannelsConfig : GroupByConfigDefinition
         {
-            protected override List<string> Roles { get => [Neo.Domain.Constants.Roles.Admin, ClubRoles.Analyst]; }
-            
-            protected override void Identify()
-            {
-                DefineConfig("پرکاربردترین کانال‌ها", ReportViewType.GroupByList);
-            }
+            protected override List<string> Roles => [Neo.Domain.Constants.Roles.Admin, ClubRoles.Analyst];
+            protected override string Name => "پرکاربردترین کانال‌ها";
 
-            protected override void DefineColumns()
+            protected override void DefineGroupBy()
             {
                 GroupBy(nameof(EventChannel.Title), "کانال");
                 Count(null, "تعداد استفاده");
@@ -69,3 +97,4 @@ public partial class EventChannelUiDefinitions : CRUDDefinition<EventChannel>
         }
     }
 }
+

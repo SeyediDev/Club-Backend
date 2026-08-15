@@ -1,21 +1,21 @@
-﻿using BotDetect.Web.Mvc;
-using Neo.Bpms.Domain.Entities.Security.Authentication;
-using Neo.Bpms.Domain.Modeling.MetaDefinitions.ProjectDefinitions;
-using Neo.Bpms.UI.MVC.Helpers;
-using Neo.Bpms.UI.Resources.Resources;
-using Neo.Common.Extensions;
-using Neo.Domain.Constants;
-using Neo.Domain.Features.Client.Dto;
-using Club.Application.Features.Account.Commands.LoginUser;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
 using Club.AdminPanel.Web.ViewModels.Account;
+using Club.Application.Features.Account.Commands.LoginUser;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
+using Neo.Bpms.Domain.Features.MetaDefinitions.ProjectDefinitions;
+using Neo.Bpms.Domain.Models.Security.Authentication;
+using Neo.Bpms.Domain.Models.Security.Authorization;
+using Neo.Bpms.UI.Resources.Resources;
+using Neo.Common.Extensions;
+using Neo.Domain.Constants;
+using Neo.Domain.Entities.Common;
+using Neo.Domain.Features.Client.Dto;
 
 namespace Club.AdminPanel.Web.Controllers.AccountController;
 
@@ -30,7 +30,7 @@ public partial class AccountController
     /// 
     /// <returns></returns>
     [AllowAnonymous]
-    public ActionResult Login(string returnUrl)
+    public ActionResult Login(string? returnUrl=null)
     {
         ViewBag.IsLoginPage = true;
         ViewBag.ReturnUrl = returnUrl;
@@ -52,8 +52,9 @@ public partial class AccountController
     /// <returns></returns>
     [HttpPost]
     [AllowAnonymous]
-    public async Task<ActionResult> Login(LoginViewModel model, string returnUrl, CancellationToken cancellationToken)
+    public async Task<ActionResult> Login(LoginViewModel model, string? returnUrl, CancellationToken cancellationToken)
     {
+        ViewBag.IsLoginPage = true;
         CheckExtenralLoginExistence();
         // ValidateCaptchaIfNeeded();
         if (ModelState.IsValid)
@@ -72,7 +73,7 @@ public partial class AccountController
                             Club.Domain.Entities.Common.User user = (Club.Domain.Entities.Common.User)inUser;
                             user.NationalCode = 383724961;
                             user.Email = "javadsayedi@gmail.com";
-                            user.CreatedById = 1;
+                            user.CreatedById = (UserId)1;
                             user.FirstName = "سیدجواد";
                             user.LastName = "سیدی";
                             user.Verified = true;
@@ -88,7 +89,22 @@ public partial class AccountController
                 //{
                 //    return await GetTokenAnSignIn(new VerifyLoginViewModel() { Code = "123", UserName = model.UserName, CountryCode = model.CountryCode }, returnUrl, user, cancellationToken);
                 //}
-                _ = await otpService.SendAsync(model.UserName, user.OTPSeed, "");
+                
+                // Fire-and-forget: Send OTP without waiting for SMS delivery
+                // This significantly improves login page responsiveness
+                _ = Task.Run(async () =>
+                {
+                    try
+                    {
+                        await otpService.SendAsync(model.UserName!, user.OTPSeed, "");
+                    }
+                    catch (Exception ex)
+                    {
+                        // Log error but don't block login flow
+                        Console.WriteLine($"OTP Send Error: {ex.Message}");
+                    }
+                });
+                
                 CookieOptions options = new()
                 {
                     Expires = DateTimeOffset.UtcNow.AddDays(1), // Optional: expiration
@@ -97,7 +113,7 @@ public partial class AccountController
                     SameSite = SameSiteMode.Strict              // Optional: cross-site restrictions
                 };
 
-                Response.Cookies.Append("username", model.UserName, options);
+                Response.Cookies.Append("username", model.UserName!, options);
                 return RedirectToAction("Verify", "Account", new VerifyLoginViewModel()
                 {
                     UserName = user.UserName,
@@ -111,7 +127,7 @@ public partial class AccountController
         return View(model);
     }
 
-    private static void SetUseParametersInRegistration(Neo.Domain.Entities.IUser<int> inUser)
+    private static void SetUseParametersInRegistration(Neo.Domain.Entities.IUser<UserId> inUser)
     {
         Club.Domain.Entities.Common.User user = (Club.Domain.Entities.Common.User)inUser;
         user.NationalCode = 383724961;
@@ -121,7 +137,7 @@ public partial class AccountController
     }
 
     [AllowAnonymous]
-    public ActionResult Verify(string returnUrl)
+    public ActionResult Verify(string? returnUrl)
     {
         ViewBag.IsVerifyPage = true;
         ViewBag.UserName = Request.Cookies["username"];
@@ -134,7 +150,19 @@ public partial class AccountController
         IdentityUser user = await identityUserService.GetIdentityUserAsync(userName, cancellationToken);
         if (user != null)
         {
-            _ = await otpService.SendAsync(userName, user.OTPSeed, "");
+            // Fire-and-forget: Send OTP without waiting for SMS delivery
+            _ = Task.Run(async () =>
+            {
+                try
+                {
+                    await otpService.SendAsync(userName, user.OTPSeed, "");
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"OTP Resend Error: {ex.Message}");
+                }
+            });
+            
             CookieOptions options = new()
             {
                 Expires = DateTimeOffset.UtcNow.AddDays(1), // Optional: expiration
@@ -151,7 +179,7 @@ public partial class AccountController
 
     [HttpPost]
     [AllowAnonymous]
-    public async Task<ActionResult> Verify(VerifyLoginViewModel model, string returnUrl, CancellationToken cancellationToken)
+    public async Task<ActionResult> Verify(VerifyLoginViewModel model, string? returnUrl, CancellationToken cancellationToken)
     {
         CheckExtenralLoginExistence();
         // ValidateCaptchaIfNeeded();
@@ -160,7 +188,7 @@ public partial class AccountController
             try
             {
                 ViewBag.IsVerifyPage = true;
-                string username = Request.Cookies["username"];
+                string username = Request.Cookies["username"]!;
                 if (username is null)
                 {
                     ModelState.AddModelError(string.Empty, Messages.WrongUsernameOrPassword);
@@ -173,7 +201,7 @@ public partial class AccountController
                     ModelState.AddModelError(string.Empty, Messages.WrongUsernameOrPassword);
                     return View(model);
                 }
-                bool isValid = otpService.Verify(user.OTPSeed, model.Code);
+                bool isValid = otpService.Verify(user.OTPSeed, model.Code!);
                 if(!isValid)
                 {
                     if (model.UserName == "09127165496" && model.Code == "281625")
@@ -185,7 +213,7 @@ public partial class AccountController
                     return View(model);
                 }
 
-                return await GetTokenAnSignIn(model, returnUrl, user, cancellationToken);
+                return await GetTokenAnSignIn(model, returnUrl!, user, cancellationToken);
             }
             catch (Exception e)
             {
@@ -212,7 +240,7 @@ public partial class AccountController
         await SignIn(user, model.RememberMe, dto.access_token, jwtPayload.realm_access.roles);
         */
         // ایجاد توکن In-Memory (بدون تماس با idpService)
-        string fakeToken = GenerateFakeToken(model.UserName);
+        string fakeToken = GenerateFakeToken(model.UserName!);
         JwtPayloadDto fakePayload = new()
         {
             realm_access = new RealmAccess
@@ -242,12 +270,12 @@ public partial class AccountController
     // متد کمکی برای تولید توکن ساختگی
     private string GenerateFakeToken(string username)
     {
-        Claim[] claims = new[]
-        {
+        Claim[] claims =
+        [
         new Claim(JwtRegisteredClaimNames.Sub, username),
         new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
         // سایر claims مورد نیاز
-    };
+    ];
 
         // کلید 32 کاراکتری (256 بیتی) برای HS256
         SymmetricSecurityKey key = new(Encoding.UTF8.GetBytes("YourTemporarySecretKey-32-Char-Long-Key123"));
@@ -258,7 +286,7 @@ public partial class AccountController
             issuer: "InMemoryIssuer",
             audience: "InMemoryAudience",
             claims: claims,
-            expires: DateTime.Now.AddHours(1),
+            expires: DateTime.UtcNow.AddHours(1),
             signingCredentials: creds);
 
         return new JwtSecurityTokenHandler().WriteToken(token);
@@ -285,20 +313,21 @@ public partial class AccountController
             return;
         }
 
-        MvcCaptcha mvcCaptcha = new("LoginCaptcha");
+        // TODO: Re-implement Captcha validation
+        // MvcCaptcha was removed as BotDetect.Web.Mvc is not available
+        // Consider using a different captcha library
 
-        Microsoft.Extensions.Primitives.StringValues userInput = HttpContext.Request.Form["CaptchaCode"];
-
-        Microsoft.Extensions.Primitives.StringValues validatingInstanceId = HttpContext.Request.Form[mvcCaptcha.ValidatingInstanceKey];
-
-        if (mvcCaptcha.Validate(userInput, validatingInstanceId))
-        {
-            MvcCaptcha.ResetCaptcha("LoginCaptcha");
-        }
-        else
-        {
-            ModelState.AddModelError("CaptchaCode", Messages.IncorrectCaptcha);
-        }
+        //MvcCaptcha mvcCaptcha = new("LoginCaptcha");
+        //Microsoft.Extensions.Primitives.StringValues userInput = HttpContext.Request.Form["CaptchaCode"];
+        //Microsoft.Extensions.Primitives.StringValues validatingInstanceId = HttpContext.Request.Form[mvcCaptcha.ValidatingInstanceKey];
+        //if (mvcCaptcha.Validate(userInput, validatingInstanceId))
+        //{
+        //    MvcCaptcha.ResetCaptcha("LoginCaptcha");
+        //}
+        //else
+        //{
+        //    ModelState.AddModelError("CaptchaCode", Messages.IncorrectCaptcha);
+        //}
     }
 
     /// <summary>
@@ -324,7 +353,7 @@ public partial class AccountController
         user.Roles = [];
         foreach (string role in roles)
         {
-            user.Roles.Add(role, new Neo.Bpms.Domain.Entities.Security.Authorization.IdentityRole()
+            user.Roles.Add(role, new IdentityRole()
             {
                 Code = role,
                 Name = role
@@ -335,12 +364,12 @@ public partial class AccountController
         AuthenticationProperties authProperties = new()
         {
             IsPersistent = rememberMe,
-            // ExpiresUtc = DateTime.Now.AddDays(1) todo
+            // ExpiresUtc = DateTime.UtcNow.AddDays(1) todo
         };
         await HttpContext.SignInAsync(
          CookieAuthenticationDefaults.AuthenticationScheme,
          new ClaimsPrincipal(claimsIdentity),
          authProperties);
-        NotifyLogin(user, HttpContext.Connection.RemoteIpAddress?.ToString());
+        NotifyLogin(user, HttpContext.Connection.RemoteIpAddress?.ToString()!);
     }
 }

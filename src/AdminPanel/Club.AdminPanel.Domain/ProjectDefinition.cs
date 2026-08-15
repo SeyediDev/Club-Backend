@@ -1,8 +1,4 @@
-﻿global using Neo.Bpms.Domain.Model.Project;
-global using Neo.Bpms.Domain.Modeling.MetaDefinitions.Projects;
-global using Neo.Bpms.MetaModel.ProcessData;
-global using Club.AdminPanel.Domain.Domain.Club;
-using Neo.Bpms.Domain.Modeling.UiDefinitions;
+﻿using Neo.Bpms.Domain.Features.UiDefinitions;
 
 namespace Club.AdminPanel.Domain;
 

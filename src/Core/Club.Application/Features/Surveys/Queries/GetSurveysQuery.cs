@@ -1,4 +1,6 @@
 using System.Linq.Expressions;
+using Club.Domain.Entities.Promotions.Surveys;
+using Club.Domain.Entities.Promotions.Surveys.Enums;
 
 namespace Club.Application.Features.Surveys.Queries;
 
@@ -31,7 +33,7 @@ public record SurveyDto
     public long? ParticipationPoints { get; set; }
     public long? CorrectAnswerPoints { get; set; }
     public DateTime CreateDate { get; set; }
-    public List<SurveyItemDto> Items { get; set; } = new();
+    public List<SurveyItemDto> Items { get; set; } = [];
 }
 
 public record SurveyItemDto
@@ -54,21 +56,22 @@ public class GetSurveysQueryHandler(
         var includes = new List<Expression<Func<Survey, object?>>> 
         { 
             s => s.Items,
-            s => s.Tenant,
+            s => s.Promotion,
+            s => s.Promotion.Tenant,
             s => s.Product
         };
         var surveys = await surveyRepo.GetAllWithIncludeAsync(
             includes: includes,
             cancellationToken: cancellationToken,
-            predicate: s => (!request.TenantId.HasValue || s.TenantId == request.TenantId) &&
+            predicate: s => (!request.TenantId.HasValue || s.Promotion.TenantId == request.TenantId) &&
                      (!request.SurveyType.HasValue || s.SurveyType == request.SurveyType) &&
                      (!request.IsActive.HasValue || s.IsActive == request.IsActive.Value));
 
         return surveys.Select(s => new SurveyDto
         {
             Id = s.Id,
-            TenantId = s.TenantId,
-            TenantName = s.Tenant?.Title ?? string.Empty,
+            TenantId = s.Promotion.TenantId,
+            TenantName = s.Promotion.Tenant?.Title ?? string.Empty,
             Title = s.Title,
             Description = s.Description,
             SurveyType = s.SurveyType,

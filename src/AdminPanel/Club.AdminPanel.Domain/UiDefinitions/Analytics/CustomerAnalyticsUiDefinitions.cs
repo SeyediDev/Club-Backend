@@ -1,10 +1,10 @@
-using Club.Domain.Entities.Analytics;
+namespace Club.AdminPanel.Domain.UiDefinitions.Analytics;
 
-public class CustomerAnalyticsDefinitions : SubCRUDDefinition<CustomerAnalytics>
+public class CustomerAnalyticsUiDefinitions : SubCRUDDefinition<CustomerAnalytics>
 {
-    protected override void IndexFormViewModel(FormDefinition form)
+    protected override void IndexFormViewModel()
     {
-        form.AddColumns(nameof(CustomerAnalytics.Customer),
+        AddColumns(nameof(CustomerAnalytics.CustomerTenant),
                         nameof(CustomerAnalytics.Tenant),
                         nameof(CustomerAnalytics.AnalysisDate),
                         nameof(CustomerAnalytics.Period),
@@ -17,9 +17,9 @@ public class CustomerAnalyticsDefinitions : SubCRUDDefinition<CustomerAnalytics>
                         );
     }
 
-    protected override void CUDFormsViewModel(CUDForm form)
+    protected override void CUDFormsViewModel()
     {
-        form.AddFields(nameof(CustomerAnalytics.Customer),
+        AddFields(nameof(CustomerAnalytics.CustomerTenant),
                        nameof(CustomerAnalytics.Tenant),
                        nameof(CustomerAnalytics.AnalysisDate),
                        nameof(CustomerAnalytics.Period),
@@ -43,9 +43,9 @@ public class CustomerAnalyticsDefinitions : SubCRUDDefinition<CustomerAnalytics>
     }
 
     public override string SubjectId => "Sub";
-    public override void SubIndexViewModel(FormDefinition form)
+    public override void SubIndexViewModel()
     {
-        form.AddColumns(nameof(CustomerAnalytics.Customer),
+        AddColumns(nameof(CustomerAnalytics.CustomerTenant),
                         nameof(CustomerAnalytics.AnalysisDate),
                         nameof(CustomerAnalytics.RFMScore),
                         nameof(CustomerAnalytics.CustomerLifetimeValue),
@@ -54,9 +54,9 @@ public class CustomerAnalyticsDefinitions : SubCRUDDefinition<CustomerAnalytics>
                         );
     }
 
-    public override void SubViewModel(FormDefinition form)
+    public override void SubViewModel()
     {
-        form.AddFields(nameof(CustomerAnalytics.Customer),
+        AddFields(nameof(CustomerAnalytics.CustomerTenant),
                        nameof(CustomerAnalytics.AnalysisDate),
                        nameof(CustomerAnalytics.Period),
                        nameof(CustomerAnalytics.RFMScore),

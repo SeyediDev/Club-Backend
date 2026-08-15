@@ -1,6 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.UI.Reports;
-
-namespace Club.AdminPanel.Domain.UiDefinitions.Customers.CustomerSegments;
+﻿namespace Club.AdminPanel.Domain.UiDefinitions.Customers.CustomerSegments;
 
 public partial class CustomerSegmentUiDefinitions
 {
@@ -11,125 +9,102 @@ public partial class CustomerSegmentUiDefinitions
         // =====================================================
 
         /// <summary>
-        /// گزارش توزیع جوامع مشتریان
+        /// گزارش توزیع جوامع/بازارهای مشتریان
         /// </summary>
-        public partial class SegmentDistributionConfig : ReportConfigDefinition
+        public class SegmentDistributionConfig() : ChartConfigDefinition(ChartType.Pie)
         {
-            protected override List<string> Roles { get => [Neo.Domain.Constants.Roles.Admin, ClubRoles.Manager]; }
+            protected override List<string> Roles => ClubRoles.RolesManager;
             protected override string WhereCondition => $"{nameof(CustomerSegment.IsActive)} == true";
-            
-            protected override void Identify()
-            {
-                DefineConfig("توزیع جوامع مشتریان", ReportViewType.Chart, Report.ChartType.Pie);
-            }
+            protected override string Name => "توزیع جوامع/بازارهای مشتریان";
 
-            protected override void DefineColumns()
+            protected override void DefineGroupBy()
             {
-                GroupBy(nameof(CustomerSegment.Title), "عنوان جامعه");
+                GroupBy(nameof(CustomerSegment.Title), "عنوان جامعه/بازار");
                 Sum(nameof(CustomerSegment.ActualSize), "تعداد اعضا");
             }
         }
 
         /// <summary>
-        /// گزارش مقایسه اندازه تخمینی و واقعی جوامع
+        /// گزارش مقایسه اندازه تخمینی و واقعی جوامع/بازارها
         /// </summary>
-        public partial class SegmentSizeComparisonConfig : ReportConfigDefinition
+        public class SegmentSizeComparisonConfig() : GroupByConfigDefinition
         {
-            protected override List<string> Roles { get => [Neo.Domain.Constants.Roles.Admin, ClubRoles.Analyst]; }
+            protected override List<string> Roles => ClubRoles.RolesAnalyst;
             protected override string WhereCondition => $"{nameof(CustomerSegment.IsActive)} == true";
-            
-            protected override void Identify()
-            {
-                DefineConfig("مقایسه اندازه جوامع", ReportViewType.GroupByList);
-            }
+            protected override string Name => "مقایسه اندازه جوامع/بازارها";
 
-            protected override void DefineColumns()
+            protected override void DefineGroupBy()
             {
-                GroupBy(nameof(CustomerSegment.Title), "عنوان جامعه");
+                GroupBy(nameof(CustomerSegment.Title), "عنوان جامعه/بازار");
                 Sum(nameof(CustomerSegment.EstimatedSize), "تخمینی");
                 Sum(nameof(CustomerSegment.ActualSize), "واقعی");
             }
         }
 
         /// <summary>
-        /// گزارش نرخ رشد جوامع
+        /// گزارش نرخ رشد جوامع/بازارها
         /// </summary>
-        public partial class SegmentGrowthRateConfig : ReportConfigDefinition
+        public class SegmentGrowthRateConfig() : ChartConfigDefinition(ChartType.Bar)
         {
-            protected override List<string> Roles { get => [Neo.Domain.Constants.Roles.Admin, ClubRoles.Manager]; }
+            protected override List<string> Roles => ClubRoles.RolesManager;
             protected override string WhereCondition => $"{nameof(CustomerSegment.IsActive)} == true";
-            
-            protected override void Identify()
-            {
-                DefineConfig("نرخ رشد جوامع", ReportViewType.Chart, Report.ChartType.Bar);
-            }
+            protected override string Name => "نرخ رشد جوامع/بازارها";
 
-            protected override void DefineColumns()
+            protected override void DefineGroupBy()
             {
-                GroupBy(nameof(CustomerSegment.Title), "عنوان جامعه");
+                GroupBy(nameof(CustomerSegment.Title), "عنوان جامعه/بازار");
                 Average(nameof(CustomerSegment.GrowthRate), "نرخ رشد (%)");
                 Sum(nameof(CustomerSegment.ActualSize), "تعداد فعلی");
             }
         }
 
         /// <summary>
-        /// گزارش نرخ حفظ مشتریان جوامع
+        /// گزارش نرخ حفظ مشتریان جوامع/بازارها
         /// </summary>
-        public partial class SegmentRetentionRateConfig : ReportConfigDefinition
+        public class SegmentRetentionRateConfig() : ChartConfigDefinition(ChartType.Bar)
         {
-            protected override List<string> Roles { get => [Neo.Domain.Constants.Roles.Admin, ClubRoles.Manager]; }
+            protected override List<string> Roles => ClubRoles.RolesManager;
             protected override string WhereCondition => $"{nameof(CustomerSegment.IsActive)} == true";
-            
-            protected override void Identify()
-            {
-                DefineConfig("نرخ حفظ مشتریان جوامع", ReportViewType.Chart, Report.ChartType.Bar);
-            }
+            protected override string Name => "نرخ حفظ مشتریان جوامع/بازارها";
 
-            protected override void DefineColumns()
+            protected override void DefineGroupBy()
             {
-                GroupBy(nameof(CustomerSegment.Title), "عنوان جامعه");
+                GroupBy(nameof(CustomerSegment.Title), "عنوان جامعه/بازار");
                 Average(nameof(CustomerSegment.RetentionRate), "نرخ حفظ (%)");
                 Sum(nameof(CustomerSegment.ActualSize), "تعداد اعضا");
             }
         }
 
         /// <summary>
-        /// گزارش نرخ تعامل جوامع
+        /// گزارش نرخ تعامل جوامع/بازارها
         /// </summary>
-        public partial class SegmentEngagementRateConfig : ReportConfigDefinition
+        public class SegmentEngagementRateConfig() : ChartConfigDefinition(ChartType.Bar)
         {
-            protected override List<string> Roles { get => [Neo.Domain.Constants.Roles.Admin, ClubRoles.Analyst]; }
+            protected override List<string> Roles => ClubRoles.RolesAnalyst;
             protected override string WhereCondition => $"{nameof(CustomerSegment.IsActive)} == true";
-            
-            protected override void Identify()
-            {
-                DefineConfig("نرخ تعامل جوامع", ReportViewType.Chart, Report.ChartType.Bar);
-            }
+            protected override string Name => "نرخ تعامل جوامع/بازارها";
 
-            protected override void DefineColumns()
+            protected override void DefineGroupBy()
             {
-                GroupBy(nameof(CustomerSegment.Title), "عنوان جامعه");
+                GroupBy(nameof(CustomerSegment.Title), "عنوان جامعه/بازار");
                 Average(nameof(CustomerSegment.EngagementRate), "نرخ تعامل (%)");
                 Sum(nameof(CustomerSegment.ActualSize), "تعداد اعضا");
             }
         }
 
         /// <summary>
-        /// گزارش جوامع به تفکیک محدوده امتیاز عضویت
+        /// گزارش جوامع/بازارها به تفکیک محدوده امتیاز عضویت
         /// </summary>
-        public partial class SegmentsByMembershipScoreConfig : ReportConfigDefinition
+        public class SegmentsByMembershipScoreConfig() : ReportConfigDefinition
         {
-            protected override List<string> Roles { get => [Neo.Domain.Constants.Roles.Admin, ClubRoles.Analyst]; }
+            protected override List<string> Roles => [Neo.Domain.Constants.Roles.Admin, ClubRoles.Analyst];
             protected override string WhereCondition => $"{nameof(CustomerSegment.IsActive)} == true";
+            protected override string Name => "جوامع/بازارها بر اساس امتیاز عضویت";
             
-            protected override void Identify()
-            {
-                DefineConfig("جوامع بر اساس امتیاز عضویت", ReportViewType.List);
-            }
 
             protected override void DefineColumns()
             {
-                DisplayColumn(nameof(CustomerSegment.Title), "عنوان جامعه");
+                DisplayColumn(nameof(CustomerSegment.Title), "عنوان جامعه/بازار");
                 DisplayColumn(nameof(CustomerSegment.MinMembershipScore), "حداقل امتیاز");
                 DisplayColumn(nameof(CustomerSegment.MaxMembershipScore), "حداکثر امتیاز");
                 DisplayColumn(nameof(CustomerSegment.ActualSize), "تعداد اعضا");
@@ -137,21 +112,18 @@ public partial class CustomerSegmentUiDefinitions
         }
 
         /// <summary>
-        /// گزارش آخرین محاسبه جوامع
+        /// گزارش آخرین محاسبه جوامع/بازارها
         /// </summary>
-        public partial class SegmentLastCalculationConfig : ReportConfigDefinition
+        public class SegmentLastCalculationConfig() : ReportConfigDefinition
         {
-            protected override List<string> Roles { get => [Neo.Domain.Constants.Roles.Admin, ClubRoles.Manager]; }
+            protected override List<string> Roles => [Neo.Domain.Constants.Roles.Admin, ClubRoles.Manager];
             protected override string WhereCondition => $"{nameof(CustomerSegment.IsActive)} == true";
+            protected override string Name => "آخرین محاسبه جوامع/بازارها";
             
-            protected override void Identify()
-            {
-                DefineConfig("آخرین محاسبه جوامع", ReportViewType.List);
-            }
 
             protected override void DefineColumns()
             {
-                DisplayColumn(nameof(CustomerSegment.Title), "عنوان جامعه");
+                DisplayColumn(nameof(CustomerSegment.Title), "عنوان جامعه/بازار");
                 DisplayColumn(nameof(CustomerSegment.LastCalculationDate), "آخرین محاسبه");
                 DisplayColumn(nameof(CustomerSegment.CalculationIntervalDays), "فاصله محاسبه (روز)");
                 DisplayColumn(nameof(CustomerSegment.ActualSize), "تعداد فعلی");
@@ -159,25 +131,86 @@ public partial class CustomerSegmentUiDefinitions
         }
 
         /// <summary>
-        /// گزارش عملکرد کلی جوامع
+        /// گزارش عملکرد کلی جوامع/بازارها
         /// </summary>
-        public partial class SegmentPerformanceOverviewConfig : ReportConfigDefinition
+        public class SegmentPerformanceOverviewConfig() : ReportConfigDefinition
         {
-            protected override List<string> Roles { get => [Neo.Domain.Constants.Roles.Admin, ClubRoles.Manager]; }
+            protected override List<string> Roles => [Neo.Domain.Constants.Roles.Admin, ClubRoles.Manager];
             protected override string WhereCondition => $"{nameof(CustomerSegment.IsActive)} == true";
+            protected override string Name => "عملکرد کلی جوامع/بازارها";
             
-            protected override void Identify()
-            {
-                DefineConfig("عملکرد کلی جوامع", ReportViewType.List);
-            }
 
             protected override void DefineColumns()
             {
-                DisplayColumn(nameof(CustomerSegment.Title), "عنوان جامعه");
+                DisplayColumn(nameof(CustomerSegment.Title), "عنوان جامعه/بازار");
                 DisplayColumn(nameof(CustomerSegment.ActualSize), "تعداد اعضا");
                 DisplayColumn(nameof(CustomerSegment.GrowthRate), "نرخ رشد");
                 DisplayColumn(nameof(CustomerSegment.RetentionRate), "نرخ حفظ");
                 DisplayColumn(nameof(CustomerSegment.EngagementRate), "نرخ تعامل");
+            }
+        }
+
+        // =====================================================
+        // KPI Configs for Dashboard
+        // =====================================================
+
+        /// <summary>
+        /// KPI: تعداد کل جوامع/بازارهای فعال
+        /// </summary>
+        public class TotalActiveCommunitiesConfig() : ChartConfigDefinition(ChartType.MetricBox)
+        {
+            protected override List<string> Roles => ClubRoles.RolesManager;
+            protected override string WhereCondition => $"{nameof(CustomerSegment.IsActive)} == true";
+            protected override string Name => "تعداد کل جوامع/بازارهای فعال";
+
+            protected override void DefineGroupBy()
+            {
+                Count(null, string.Empty);
+            }
+        }
+
+        /// <summary>
+        /// KPI: تعداد کل اعضای جوامع/بازارها
+        /// </summary>
+        public class TotalCommunityMembersConfig() : ChartConfigDefinition(ChartType.MetricBox)
+        {
+            protected override List<string> Roles => ClubRoles.RolesManager;
+            protected override string WhereCondition => $"{nameof(CustomerSegment.IsActive)} == true";
+            protected override string Name => "تعداد کل اعضای جوامع/بازارها";
+
+            protected override void DefineGroupBy()
+            {
+                Sum(nameof(CustomerSegment.ActualSize), string.Empty);
+            }
+        }
+
+        /// <summary>
+        /// KPI: میانگین اندازه جوامع/بازارها
+        /// </summary>
+        public class AverageCommunitySizeConfig() : ChartConfigDefinition(ChartType.MetricBox)
+        {
+            protected override List<string> Roles => ClubRoles.RolesManager;
+            protected override string WhereCondition => $"{nameof(CustomerSegment.IsActive)} == true";
+            protected override string Name => "میانگین اندازه جوامع/بازارها";
+
+            protected override void DefineGroupBy()
+            {
+                Average(nameof(CustomerSegment.ActualSize), string.Empty);
+            }
+        }
+
+        /// <summary>
+        /// KPI: میانگین نرخ رشد جوامع/بازارها
+        /// </summary>
+        public class AverageGrowthRateConfig() : ChartConfigDefinition(ChartType.MetricBox)
+        {
+            protected override List<string> Roles => ClubRoles.RolesManager;
+            protected override string WhereCondition => $"{nameof(CustomerSegment.IsActive)} == true";
+            protected override string Name => "میانگین نرخ رشد جوامع/بازارها";
+
+            protected override void DefineGroupBy()
+            {
+                Average(nameof(CustomerSegment.GrowthRate), string.Empty);
             }
         }
     }

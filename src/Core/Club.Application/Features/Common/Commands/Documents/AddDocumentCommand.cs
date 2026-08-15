@@ -1,7 +1,5 @@
-﻿using Neo.Application.Features.GenericEntity.Commands;
-using Neo.Domain.Features.Multilingual;
+using Neo.Application.Features.GenericEntity.Commands;
 using Neo.Domain.Features.ObjectStore;
-using Neo.Domain.Repository;
 using Club.Domain.Entities.Common;
 
 namespace Club.Application.Features.Common.Commands.Documents;
@@ -58,7 +56,7 @@ public class AddDocumentCommandHandler(
                                                                                     cancellationToken);
                     if (oldDocument is not null)
                     {
-                        oldDocument.ExpireDate = DateTime.Now;
+                        oldDocument.ExpireDate = DateTime.UtcNow;
                         oldDocument.IsDeleted = true;
                         await documentCommandRepository.UnitOfWork.SaveChangesAsync();
                     }

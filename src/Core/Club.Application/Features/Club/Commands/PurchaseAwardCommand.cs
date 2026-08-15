@@ -1,4 +1,4 @@
-﻿using Neo.Domain.Features.Multilingual;
+using Club.Domain.Features.Rewards;
 
 namespace Club.Application.Features.Club.Commands;
 
@@ -20,16 +20,16 @@ public class PurchaseAwardCommandValidator : AbstractValidator<PurchaseAwardComm
     }
 }
 
-public class PurchaseAwardCommandHandler(IAwardAssetService awardAssetService)
+public class PurchaseAwardCommandHandler(IRewardAssetService awardAssetService)
     : IRequestHandler<PurchaseAwardCommand, PurchaseAwardCommandResponse>
 {
     public async Task<PurchaseAwardCommandResponse> Handle(PurchaseAwardCommand request, CancellationToken cancellationToken)
     {
-        PurchaseAwardResponse response = await awardAssetService.PurchaseAward(
+        PurchaseRewardResponse response = await awardAssetService.PurchaseReward(
             new()
             { 
                 Customer= request.CustomerId, 
-                AwardId= request.AwardId 
+                RewardId= request.AwardId 
             }, cancellationToken);
         return response.Adapt<PurchaseAwardCommandResponse>();
     }

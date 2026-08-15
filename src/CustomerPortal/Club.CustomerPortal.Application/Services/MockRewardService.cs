@@ -5,22 +5,19 @@ namespace Club.CustomerPortal.Application.Services;
 /// <summary>
 /// Mock implementation برای تست
 /// </summary>
-public class MockRewardService : IRewardService
+public class MockRewardService(ILogger<MockRewardService> logger) : IRewardService
 {
-    private readonly ILogger<MockRewardService> _logger;
-    private static readonly List<PurchasedRewardDto> _purchasedRewards = new();
-
-    public MockRewardService(ILogger<MockRewardService> logger)
-    {
-        _logger = logger;
-    }
+    private static readonly List<PurchasedRewardDto> _purchasedRewards = [];
 
     public Task<PaginatedList<Interfaces.RewardDto>> GetRewardsAsync(int? categoryId = null, string? searchTerm = null, int pageNumber = 1, int pageSize = 20, CancellationToken cancellationToken = default)
     {
+        // NOTE: This is a Mock implementation. 
+        // When implementing real RewardService, ensure to filter out rewards where IsLotteryOnly = true
+        // Example: .Where(r => r.IsLotteryOnly == false || r.IsLotteryOnly == null)
         var rewards = new List<Interfaces.RewardDto>
         {
-            new() { Id = 1, Title = "کارت هدیه 50 هزار تومانی", Description = "کارت هدیه دیجیتال", Value = 5000, Quantity = 100, Picture = null, CategoryName = "کارت هدیه", MerchantName = "فروشگاه آنلاین", IsAvailable = true },
-            new() { Id = 2, Title = "تخفیف 20 درصدی", Description = "کد تخفیف خرید", Value = 2000, Quantity = 50, Picture = null, CategoryName = "تخفیف", MerchantName = "فروشگاه", IsAvailable = true }
+            new() { Id = 1, Title = "کارت هدیه 50 هزار تومانی", Description = "کارت هدیه دیجیتال", Value = 5000, Quantity = 100, PictureId = null, CategoryName = "کارت هدیه", MerchantName = "فروشگاه آنلاین", IsAvailable = true },
+            new() { Id = 2, Title = "تخفیف 20 درصدی", Description = "کد تخفیف خرید", Value = 2000, Quantity = 50, PictureId = null, CategoryName = "تخفیف", MerchantName = "فروشگاه", IsAvailable = true }
         };
 
         return Task.FromResult(new PaginatedList<Interfaces.RewardDto>(rewards, 2, pageNumber, pageSize));
@@ -28,6 +25,9 @@ public class MockRewardService : IRewardService
 
     public Task<Interfaces.RewardDto?> GetRewardByIdAsync(int rewardId, CancellationToken cancellationToken = default)
     {
+        // NOTE: This is a Mock implementation.
+        // When implementing real RewardService, ensure to check IsLotteryOnly field
+        // If reward.IsLotteryOnly == true, return null (not available in Club)
         var reward = new Interfaces.RewardDto
         {
             Id = rewardId,
@@ -35,7 +35,7 @@ public class MockRewardService : IRewardService
             Description = "توضیحات پاداش",
             Value = 1000,
             Quantity = 10,
-            Picture = null,
+            PictureId = null,
             CategoryName = "عمومی",
             MerchantName = "فروشگاه",
             IsAvailable = true
@@ -47,7 +47,7 @@ public class MockRewardService : IRewardService
     public Task<PurchaseRewardResultDto> PurchaseRewardAsync(int customerId, int rewardId, int quantity = 1, CancellationToken cancellationToken = default)
     {
         var serial = $"SN-{Guid.NewGuid().ToString("N").Substring(0, 12).ToUpper()}";
-        var qrCode = $"QR-{customerId}-{rewardId}-{DateTime.Now.Ticks}";
+        var qrCode = $"QR-{customerId}-{rewardId}-{DateTime.UtcNow.Ticks}";
 
         var purchasedReward = new PurchasedRewardDto
         {
@@ -63,7 +63,7 @@ public class MockRewardService : IRewardService
 
         _purchasedRewards.Add(purchasedReward);
 
-        _logger.LogInformation("Mock: Purchased reward {RewardId} for customer {CustomerId}", rewardId, customerId);
+        logger.LogInformation("Mock: Purchased reward {RewardId} for customer {CustomerId}", rewardId, customerId);
 
         return Task.FromResult(new PurchaseRewardResultDto
         {
@@ -89,6 +89,12 @@ public class MockRewardService : IRewardService
         };
 
         return Task.FromResult<IEnumerable<Interfaces.RewardCategoryDto>>(categories);
+    }
+
+    public Task<long> CalculateFinalRewardPriceAsync(int customerId, int rewardId, int pointId, CancellationToken cancellationToken = default)
+    {
+        // Mock implementation - returns base price
+        return Task.FromResult(1000L);
     }
 }
 

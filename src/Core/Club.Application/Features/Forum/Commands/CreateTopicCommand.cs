@@ -8,10 +8,7 @@ namespace Club.Application.Features.Forum.Commands;
 public record CreateTopicCommand : IRequest<int>
 {
     [Required]
-    public int TenantId { get; set; }
-    
-    [Required]
-    public int CustomerId { get; set; }
+    public int CustomerTenantId { get; set; }
     
     [Required]
     [MaxLength(200)]
@@ -34,8 +31,7 @@ public class CreateTopicCommandValidator : AbstractValidator<CreateTopicCommand>
 {
     public CreateTopicCommandValidator(IMultiLingualService multiLingual)
     {
-        RuleFor(x => x.TenantId).NotEmpty();
-        RuleFor(x => x.CustomerId).NotEmpty();
+        RuleFor(x => x.CustomerTenantId).NotEmpty();
         RuleFor(x => x.Title).NotEmpty().MaximumLength(200);
         RuleFor(x => x.Content).NotEmpty().MaximumLength(10000);
     }
@@ -49,10 +45,16 @@ public class CreateTopicCommandHandler(
     {
         const long topicPoints = 15;
 
+        var customerTenantRepo = unitOfWork.Repository<CustomerTenant, int>();
+        CustomerTenant? customerTenant = await customerTenantRepo.FirstOrDefaultAsync(
+            ct => ct.Id == request.CustomerTenantId,
+            cancellationToken) ?? throw new System.ComponentModel.DataAnnotations.ValidationException("رابطه مشتری-اکوسیستم یافت نشد");
+
         var topic = new ForumTopic
         {
-            TenantId = request.TenantId,
-            CustomerId = request.CustomerId,
+            TenantId = customerTenant.TenantId,
+            CreatorCustomerTenantId = customerTenant.Id,
+            CreatorCustomerTenant = customerTenant,
             Title = request.Title,
             Content = request.Content,
             Category = request.Category,
@@ -65,15 +67,9 @@ public class CreateTopicCommandHandler(
 
         unitOfWork.Repository<ForumTopic, int>().Add(topic);
 
-        // اعطای امتیاز
-        var customerRepo = unitOfWork.Repository<Customer, int>();
-        var customer = await customerRepo.GetAsync(request.CustomerId, cancellationToken);
-        if (customer != null)
-        {
-            customer.CurrentPointsBalance = (customer.CurrentPointsBalance ?? 0) + topicPoints;
-            customer.TotalPointsEarned = (customer.TotalPointsEarned ?? 0) + topicPoints;
-            customerRepo.Update(customer);
-        }
+        customerTenant.CurrentPointsBalance = (customerTenant.CurrentPointsBalance ?? 0) + topicPoints;
+        customerTenant.TotalPointsEarned = (customerTenant.TotalPointsEarned ?? 0) + topicPoints;
+        customerTenantRepo.Update(customerTenant);
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
 

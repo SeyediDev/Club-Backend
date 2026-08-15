@@ -7,21 +7,11 @@ namespace Club.Domain.Entities.Rewards;
 [DisplayName("پاداش")]
 [SBVR(SBVRModality.Obligatory, "مدیریت پاداش‌ها", "هر پاداش باید برای فروش امتیازی، تولید دارایی و تحلیل پاداش‌ها قابل شناسایی باشد")]
 [SBVR(SBVRModality.Recommended, "مدیریت پاداش‌ها", "پاداش‌ها باید برای تحلیل اثربخشی، محاسبه ROI و بهینه‌سازی کاتالوگ سازماندهی شوند")]
-[OldDbMap("Awards")]
-public class Reward : ClubBaseCoreAuditableEntity<int>
+public class Reward : ClubBaseCoreAuditableEntity<int>, ISubOfTenant
 {
-    /// <summary>
-    /// شناسه سازمان بهره‌بردار
-    /// </summary>
-    [DisplayName("شناسه سازمان بهره‌بردار")]
-    [SBVR(SBVRModality.Obligatory, "چندین سازمان", "هر پاداش باید به یک سازمان مشخص تعلق داشته باشد تا از تداخل داده‌ها جلوگیری شود")]
     public int TenantId { get; set; }
-
-    /// <summary>
-    /// سازمان بهره‌بردار
-    /// </summary>
-    [DisplayName("سازمان بهره‌بردار")]
-    [SBVR(SBVRModality.Obligatory, "چندین سازمان", "هر پاداش باید به یک سازمان مشخص تعلق داشته باشد تا از تداخل داده‌ها جلوگیری شود")]
+    [DisplayName("اکوسیستم")]
+    [SBVR(SBVRModality.Obligatory, "چندین اکوسیستم", "هر پاداش باید به یک اکوسیستم مشخص تعلق داشته باشد تا از تداخل داده‌ها جلوگیری شود")]
     public Tenant Tenant { get; set; } = null!;
 
     /// <summary>
@@ -35,9 +25,6 @@ public class Reward : ClubBaseCoreAuditableEntity<int>
     [SBVR(SBVRModality.Permitted, "دسترسی محدود", "جامعه مشتریان برای محدود کردن دسترسی پاداش به گروه‌های خاص مشتریان استفاده می‌شود")]
     public CustomerSegment? CustomerSegment { get; set; }
 
-    /// <summary>
-    /// عنوان پاداش
-    /// </summary>
     [DisplayName("عنوان پاداش")]
     [InDisplayString]
     [MaxLength(41)]
@@ -45,35 +32,18 @@ public class Reward : ClubBaseCoreAuditableEntity<int>
     [SBVR(SBVRModality.Recommended, "بازاریابی پاداش‌ها", "عنوان پاداش باید جذاب و واضح باشد تا مشتریان را به خرید ترغیب کند")]
     public string Title { get; set; } = null!;
 
-    public int CategoryId { get; set; }
-
-    /// <summary>
-    /// دسته‌بندی پاداش
-    /// </summary>
+    [OldDbMap("CategoryId")]
+    public int RewardCategoryId { get; set; }
     [DisplayName("دسته‌بندی پاداش")]
     [SBVR(SBVRModality.Obligatory, "دسته‌بندی پاداش‌ها", "هر پاداش باید در یک دسته‌بندی قرار گیرد تا تحلیل فروش و مدیریت موجودی امکان‌پذیر باشد")]
-    public RewardCategory Category { get; set; } = null!;
+    public RewardCategory RewardCategory { get; set; } = null!;
 
-    /// <summary>
-    /// شناسه ارائه‌دهنده
-    /// </summary>
-    [DisplayName("شناسه ارائه‌دهنده")]
-    [SBVR(SBVRModality.Obligatory, "مدیریت ارائه‌دهندگان", "هر پاداش باید یک ارائه‌دهنده مشخص داشته باشد تا محاسبه کمیسیون و مدیریت روابط امکان‌پذیر باشد")]
     public int MerchantId { get; set; }
-
-    /// <summary>
-    /// ارائه‌دهنده پاداش
-    /// </summary>
     [DisplayName("ارائه‌دهنده پاداش")]
     [SBVR(SBVRModality.Obligatory, "مدیریت ارائه‌دهندگان", "هر پاداش باید یک ارائه‌دهنده مشخص داشته باشد تا محاسبه کمیسیون و مدیریت روابط امکان‌پذیر باشد")]
     public RewardMerchant Merchant { get; set; } = null!;
 
-    /// <summary>
-    /// شناسه سطح امتیاز
-    /// </summary>
-    [DisplayName("شناسه سطح امتیاز")]
     public int? PointLevelId { get; set; }
-
     [DisplayName("سطح امتیاز پاداش")]
     [SBVR(SBVRModality.Prohibited, "انعطاف‌پذیری امتیازدهی", "پاداش‌ها نباید مستقیماً به سطح امتیاز خاصی وابسته باشند تا قوانین امتیازدهی انعطاف‌پذیر باقی بمانند")]
     public PointLevel? PointLevel { get; set; } = null!;
@@ -86,6 +56,15 @@ public class Reward : ClubBaseCoreAuditableEntity<int>
     [SBVR(SBVRModality.Obligatory, "مدیریت موجودی فیزیکی", "کنترل دارایی برای پاداش‌های فیزیکی باید فعال باشد تا از فروش بیش از حد موجودی جلوگیری شود")]
     [SBVR(SBVRModality.Recommended, "کارایی سیستم", "کنترل دارایی برای پاداش‌های دیجیتالی یا پاداش‌های نامحدود می‌تواند غیرفعال باشد")]
     public bool? ControlAsset { get; set; }
+
+    /// <summary>
+    /// فقط برای قرعه‌کشی - تعیین می‌کند که آیا این پاداش فقط برای قرعه‌کشی است
+    /// اگر true باشد، این پاداش در کاتالوگ باشگاه (Club) نمایش داده نمی‌شود
+    /// </summary>
+    [DisplayName("فقط برای قرعه‌کشی")]
+    [SBVR(SBVRModality.Permitted, "مدیریت پاداش‌های قرعه‌کشی", "فقط برای قرعه‌کشی برای تعریف پاداش‌های ویژه که فقط از طریق قرعه‌کشی قابل دسترسی هستند")]
+    [SBVR(SBVRModality.Recommended, "مدیریت کاتالوگ", "پاداش‌های قرعه‌کشی باید از کاتالوگ باشگاه جدا نگه داشته شوند تا تجربه کاربری واضح باشد")]
+    public bool IsLotteryOnly { get; set; } = false;
 
     /// <summary>
     /// ارزش پاداش - ارزش امتیازی پاداش
@@ -182,19 +161,20 @@ Use special characters **inside brackets** `{ }` to generate dynamic parts.
     public bool? Visible { get; set; }
 
     /// <summary>
-    /// شناسه سفارش
+    /// ترتیب نمایش
     /// </summary>
-    [DisplayName("شناسه سفارش")]
-    [SBVR(SBVRModality.Permitted, "مدیریت سفارشات", "شناسه سفارش برای مرتب‌سازی و اولویت‌بندی پاداش‌ها در سفارشات استفاده می‌شود")]
+    [DisplayName("ترتیب نمایش")]
+    [SBVR(SBVRModality.Permitted, "مدیریت نمایش", "ترتیب نمایش برای مرتب‌سازی و اولویت‌بندی پاداش‌ها در سفارشات استفاده می‌شود")]
     public int? OrderId { get; set; }
+
+    public int? PictureId { get; set; }
 
     /// <summary>
     /// تصویر پاداش
     /// </summary>
     [DisplayName("تصویر پاداش")]
-    [MaxLength(500)]
     [SBVR(SBVRModality.Permitted, "نمایش بصری", "تصویر پاداش برای بهبود تجربه کاربری و افزایش نرخ تبدیل در فروشگاه آنلاین استفاده می‌شود")]
-    public string? Picture { get; set; }
+    public Document? Picture { get; set; }
 
     // =====================================================
     // Analytics & Performance Fields

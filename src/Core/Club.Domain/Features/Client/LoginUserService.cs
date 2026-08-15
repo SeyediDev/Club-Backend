@@ -1,4 +1,4 @@
-﻿using Neo.Domain.Entities;
+using Neo.Domain.Entities;
 using Neo.Domain.Features.Client;
 using Club.Domain.Repository;
 using User = Club.Domain.Entities.Common.User;
@@ -7,15 +7,15 @@ namespace Club.Domain.Features.Client;
 
 internal class LoginUserService(
     IIdpService idpService, IRequesterUser requesterUser,
-    IUserQueryRepository userRepository, ICommandRepository<User, int> userCommandRepo
-    ) : ILoginUserService<int>
+    IUserQueryRepository userRepository, ICommandRepository<User, UserId> userCommandRepo
+    ) : ILoginUserService<UserId>
 {
-    public async Task<IUser<int>?> FindUser(string mobile, int countryCode, CancellationToken cancellationToken)
+    public async Task<IUser<UserId>?> FindUser(string mobile, int countryCode, CancellationToken cancellationToken)
     {
         return await userRepository.GetByMobileAsync(long.Parse(mobile), countryCode, cancellationToken);
     }
-    public async Task<IUser<int>> RegisterUser(string mobile, int countryCode, byte[] otpSeed,
-        Func<IUser<int>, Task>? SetUseParametersInRegistration, CancellationToken cancellationToken)
+    public async Task<IUser<UserId>> RegisterUser(string mobile, int countryCode, byte[] otpSeed,
+        Func<IUser<UserId>, Task>? SetUseParametersInRegistration, CancellationToken cancellationToken)
     {
         User user = new()
         {

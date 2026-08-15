@@ -19,11 +19,11 @@ public class RewardAsset : ClubBaseCoreAuditableEntity<int>
     [SBVR(SBVRModality.Recommended, "رابطه پاداش-دارایی", "رابطه پاداش-دارایی برای ردیابی موجودی، تحلیل فروش و بهینه‌سازی کاتالوگ استفاده می‌شود")]
     public Reward Reward { get; set; } = null!;
     
-    public int? CustomerId { get; set; }
+    public int? CustomerTenantId { get; set; }
     [DisplayName("مشتری")]
     [SBVR(SBVRModality.Permitted, "تخصیص دارایی", "مشتری برای تخصیص دارایی به مشتریان پس از خرید پاداش استفاده می‌شود")]
     [SBVR(SBVRModality.Calculated, "تخصیص دارایی", "اگر مشتری مشخص باشد، دارایی به آن مشتری تخصیص داده شده است")]
-    public Customer? Customer { get; set; }
+    public CustomerTenant? CustomerTenant { get; set; }
     
     [DisplayName("سریال")] 
     [MaxLength(61)]
@@ -47,13 +47,15 @@ public class RewardAsset : ClubBaseCoreAuditableEntity<int>
     [SBVR(SBVRModality.Calculated, "ردیابی ایجاد", "لاگ رویداد برای ردیابی زمان و نحوه ایجاد دارایی استفاده می‌شود")]
     public EventLog? EventLog { get; set; }
 
-    public int? ScoringRuleId { get; set; }
-    [DisplayName("قانون‌امتیازدهی")]
-    [SBVR(SBVRModality.Permitted, "منبع قانون", "قانون امتیازدهی برای ردیابی قانونی که این پاداش از طریق آن بدست آمده استفاده می‌شود")]
-    public ScoringRule? ScoringRule { get; set; }
+    [OldDbMap("ScoringRuleId")]
+    public int? PromotionId { get; set; }
+    [DisplayName("پویش")]
+    [SBVR(SBVRModality.Permitted, "منبع پویش", "پویش برای ردیابی پویشی که این پاداش از طریق آن بدست آمده استفاده می‌شود")]
+    public Promotion? Promotion { get; set; }
 
-    public int? ScoringRuleActionId { get; set; }
-    [DisplayName("عملیات قانون‌امتیازدهی")]
-    [SBVR(SBVRModality.Permitted, "عملیات قانون", "عملیات قانون امتیازدهی برای ردیابی عملیات خاصی که این پاداش را ایجاد کرده استفاده می‌شود")]
-    public ScoringRuleAction? ScoringRuleAction { get; set; }
+    [OldDbMap("ScoringRuleActionId")]
+    public int? PromotionActionId { get; set; }
+    [DisplayName("عملیات پویش")]
+    [SBVR(SBVRModality.Permitted, "عملیات پویش", "عملیات پویش برای ردیابی عملیات خاصی که این پاداش را ایجاد کرده استفاده می‌شود")]
+    public PromotionAction? PromotionAction { get; set; }
 }

@@ -1,9 +1,11 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn;
-using Neo.Bpms.Domain.Entities.Cmmn.Entities;
-using Neo.Bpms.Domain.Entities.Cmmn.Fields;
+using System.Reflection;
+using Microsoft.Extensions.Options;
 using Neo.Bpms.Domain.Expressions.Model.ExpressionNodes;
 using Neo.Bpms.Domain.Expressions.Parsers;
-using Neo.Bpms.Domain.Modeling.MetaDefinitions.ProjectDefinitions;
+using Neo.Bpms.Domain.Features.MetaDefinitions.ProjectDefinitions;
+using Neo.Bpms.Domain.Models.Cmmn;
+using Neo.Bpms.Domain.Models.Cmmn.Entities;
+using Neo.Bpms.Domain.Models.Cmmn.Fields;
 using Neo.Bpms.Infrastructure.Features.Cmmn.Dashboards;
 using Neo.Bpms.Infrastructure.Features.Cmmn.Forms;
 using Neo.Bpms.Infrastructure.Features.Cmmn.Reports;
@@ -13,22 +15,21 @@ using Neo.Bpms.UI.MVC.Controllers.Public;
 using Neo.Bpms.UI.MVC.Features;
 using Neo.Common.Extensions;
 using Neo.Domain.Entities.Base;
-using Neo.Domain.Repository;
-using Club.Domain.Repository;
-using Microsoft.Extensions.Options;
-using static Neo.Bpms.Domain.Entities.Cmmn.AutoCalc;
+using static Neo.Bpms.Domain.Models.Cmmn.AutoCalc;
 
 namespace Club.AdminPanel.Web.Controllers;
 
 public class HomeController : DesktopController
 {
-    private static bool IsFirst = true;
-    public HomeController(IClubUnitOfWorkCommand commandClubUnitOfWork, ILogger<HomeController> logger,
+    private static int _initializationRequested;
+    private static Task? _modelMappingInitializationTask;
+    public HomeController(ILogger<HomeController> logger,
         DashboardStructRoutines dashboardStructRoutines, DashboardConfigManager dashboardConfigManager,
         FormStructRoutines formStructRoutines, ControllerMethods controllerMethods,
         ReportConfigManager reportConfigManager, 
         FilterConfigBackupRestore filterConfigBackupRestore, 
-        FilterManager filterController, IOptions<CmmnSettings> cmmnSettings) :
+        FilterManager filterController, IOptions<CmmnSettings> cmmnSettings,
+        IServiceScopeFactory serviceScopeFactory) :
         base(dashboardStructRoutines,
             dashboardConfigManager,
             formStructRoutines,
@@ -38,10 +39,36 @@ public class HomeController : DesktopController
             filterController, cmmnSettings)
     {
         DashboardStructRoutines = dashboardStructRoutines;
-        if (IsFirst)
+        //EnsureModelMappingInitialized(serviceScopeFactory, logger);
+    }
+
+    private static void EnsureModelMappingInitialized(IServiceScopeFactory serviceScopeFactory, ILogger<HomeController> logger)
+    {
+        if (Volatile.Read(ref _initializationRequested) == 1)
         {
-            UpdateModelMapping(commandClubUnitOfWork, logger);
-            IsFirst = false;
+            return;
+        }
+
+        if (Interlocked.CompareExchange(ref _initializationRequested, 1, 0) != 0)
+        {
+            return;
+        }
+
+        _modelMappingInitializationTask = Task.Run(() => InitializeModelMappingInBackground(serviceScopeFactory, logger));
+    }
+
+    private static void InitializeModelMappingInBackground(IServiceScopeFactory serviceScopeFactory, ILogger<HomeController> logger)
+    {
+        try
+        {
+            using IServiceScope scope = serviceScopeFactory.CreateScope();
+            IClubUnitOfWorkCommand scopedUnitOfWork = scope.ServiceProvider.GetRequiredService<IClubUnitOfWorkCommand>();
+            UpdateModelMapping(scopedUnitOfWork, logger);
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "Failed to update model mapping using background scope");
+            Interlocked.Exchange(ref _initializationRequested, 0);
         }
     }
 
@@ -54,7 +81,9 @@ public class HomeController : DesktopController
                 entity.Provider = nameof(DomainProvider.Domain);
             }
             if (entity.EntityType is not null && ReflectionTools.IsInBaseInterface<IDomainEventEntity>(entity.EntityType))
+            {
                 UpdateModelMapping(commandClubUnitOfWork, logger, entity);
+            }
         }
     }
 
@@ -64,7 +93,7 @@ public class HomeController : DesktopController
         {
             return;
         }
-        EntityTableInfo tableInfo = commandClubUnitOfWork.GetEntityTableInfo(entity.EntityType);
+        EntityTableInfo tableInfo = commandClubUnitOfWork.GetEntityTableInfo(entity.EntityType)!;
         if (tableInfo == null)
         {
             return;
@@ -74,29 +103,42 @@ public class HomeController : DesktopController
             entity.Schema = tableInfo.Schema;
         }
         entity.DbTableNameMap = tableInfo.TableName;
+        Dictionary<string, EntityField> keyFieldsById = entity.KeyFields?
+            .Where(keyField => keyField != null)
+            .ToDictionary(keyField => keyField.Id) ?? [];
+
+        bool autoCalcsInitialized = false;
+        ExpressionTree? autoIncrementFormula = null;
+
         foreach (EntityFieldColumnInfo pkInfo in tableInfo.PrimaryKeys)
         {
-            EntityField entityField = entity.GetField(pkInfo.Id);
-            if (entityField == null)
+            if (!entity.entityFields.TryGetValue(pkInfo.Id, out EntityField? entityField) || entityField == null)
             {
                 logger.LogError("In class {className} Have pk {pk} that not exists in class", entity.Id, pkInfo.Id);
                 continue;
             }
-            EntityField keyField = entity.KeyFields.FirstOrDefault(k => k.Id == pkInfo.Id);
-            if (keyField == null)
+            if (!keyFieldsById.TryGetValue(pkInfo.Id, out EntityField? keyField) || keyField == null)
             {
                 logger.LogError("In class {className} Have pk {pk} that not map in class", entity.Id, pkInfo.Id);
                 continue;
             }
-            if (pkInfo.IsIdentity)
+            if (pkInfo.IsIdentity &&
+                !entity.AutoCalcs.Calculations.Any(
+                    a=> a.GenerationType== AutoCalc.eGenerationType.DBInsert &&
+                        a.FieldId== pkInfo.Id
+                    ))
             {
-                entity.InitAutoCalcs();
-                ExpressionTree formulaEx = Parser.ParseTree("AutoIncrement()");
+                if (!autoCalcsInitialized)
+                {
+                    entity.InitAutoCalcs();
+                    autoCalcsInitialized = true;
+                    autoIncrementFormula = Parser.ParseTree("AutoIncrement()");
+                }
                 entity.AutoCalcs.AddAutoCalc(new AutoCalc
                 {
                     FieldId = pkInfo.Id,
                     GenerationType = AutoCalc.eGenerationType.DBInsert,
-                    Formula = formulaEx,
+                    Formula = autoIncrementFormula!,
                     Condition = null,
                     Loaction = AutoCalcLocation.BeforeValidation,
                     IfNull = false,
@@ -110,7 +152,11 @@ public class HomeController : DesktopController
             {
                 continue;
             }
-            if (tableInfo.Properties.TryGetValue(entityField.Id, out EntityFieldColumnInfo fieldInfo) && fieldInfo != null)
+            if(!string.IsNullOrEmpty(entityField.GetSetDBFieldNameMap()))
+            {
+                continue;
+            }
+            if (tableInfo.Properties.TryGetValue(entityField.Id, out EntityFieldColumnInfo? fieldInfo) && fieldInfo != null)
             {
                 if (fieldInfo.Name is not null)
                 {
@@ -128,7 +174,7 @@ public class HomeController : DesktopController
         }
         foreach (EntityFieldColumnInfo fieldInfo in tableInfo.Properties.Values)
         {
-            if (entity.entityFields.TryGetValue(fieldInfo.Id, out EntityField entityField)&& entityField is null)
+            if (!entity.entityFields.ContainsKey(fieldInfo.Id))
             {
                 logger.LogError("In class {className} Have db column {column} that not exists in class ", entity.Id, fieldInfo.Id);
             }

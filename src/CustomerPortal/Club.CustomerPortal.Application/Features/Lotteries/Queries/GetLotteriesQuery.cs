@@ -1,3 +1,5 @@
+using Club.CustomerPortal.Application.Interfaces;
+
 namespace Club.CustomerPortal.Application.Features.Lotteries.Queries;
 
 public record GetLotteriesQuery : IRequest<GetLotteriesQueryResponse>
@@ -41,18 +43,11 @@ public record LotteryPrizeDto
     public int Rank { get; set; }
 }
 
-public class GetLotteriesQueryHandler : IRequestHandler<GetLotteriesQuery, GetLotteriesQueryResponse>
+public class GetLotteriesQueryHandler(ILotteryService lotteryService) : IRequestHandler<GetLotteriesQuery, GetLotteriesQueryResponse>
 {
-    private readonly ILotteryService _lotteryService;
-
-    public GetLotteriesQueryHandler(ILotteryService lotteryService)
-    {
-        _lotteryService = lotteryService;
-    }
-
     public async Task<GetLotteriesQueryResponse> Handle(GetLotteriesQuery request, CancellationToken cancellationToken)
     {
-        var result = await _lotteryService.GetActiveLotteriesAsync(request.PageNumber, request.PageSize, cancellationToken);
+        var result = await lotteryService.GetActiveLotteriesAsync(request.PageNumber, request.PageSize, cancellationToken);
         
         var lotteries = result.Items.Select(l => new LotteryDto
         {

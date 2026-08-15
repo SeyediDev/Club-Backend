@@ -1,3 +1,5 @@
+using Club.CustomerPortal.Application.Interfaces;
+
 namespace Club.CustomerPortal.Application.Features.Points.Queries;
 
 public record GetConversionRatesQuery : IRequest<GetConversionRatesQueryResponse>
@@ -17,18 +19,12 @@ public record ConversionRateDto
     public decimal Rate { get; set; }
 }
 
-public class GetConversionRatesQueryHandler : IRequestHandler<GetConversionRatesQuery, GetConversionRatesQueryResponse>
+public class GetConversionRatesQueryHandler(IPointService pointService)
+    : IRequestHandler<GetConversionRatesQuery, GetConversionRatesQueryResponse>
 {
-    private readonly IPointService _pointService;
-
-    public GetConversionRatesQueryHandler(IPointService pointService)
-    {
-        _pointService = pointService;
-    }
-
     public async Task<GetConversionRatesQueryResponse> Handle(GetConversionRatesQuery request, CancellationToken cancellationToken)
     {
-        var conversionRates = await _pointService.GetConversionRatesAsync(cancellationToken);
+        var conversionRates = await pointService.GetConversionRatesAsync(cancellationToken);
         
         var conversions = conversionRates.Select(cr => new ConversionRateDto
         {
@@ -41,7 +37,8 @@ public class GetConversionRatesQueryHandler : IRequestHandler<GetConversionRates
                 Icon = "star",
                 IsConvertible = true,
                 IsTransferable = true,
-                ExpirationDays = null
+                ExpirationDays = null,
+                ShowInLeaderboard = true
             },
             Rate = cr.Rate
         }).ToList();
@@ -57,7 +54,8 @@ public class GetConversionRatesQueryHandler : IRequestHandler<GetConversionRates
                 Icon = "star",
                 IsConvertible = true,
                 IsTransferable = true,
-                ExpirationDays = 365
+                ExpirationDays = 365,
+                ShowInLeaderboard = true
             },
             Conversions = conversions
         };

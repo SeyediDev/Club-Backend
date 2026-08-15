@@ -1,4 +1,6 @@
-﻿namespace Club.CustomerPortal.Application.Features.Promotions.Queries;
+using Club.CustomerPortal.Application.Interfaces;
+
+namespace Club.CustomerPortal.Application.Features.Promotions.Queries;
 
 public record GetMyParticipationsQuery : IRequest<GetMyParticipationsQueryResponse>
 {
@@ -20,40 +22,28 @@ public record PromotionParticipationDto
     public DateTime? CompletedDate { get; set; }
 }
 
-public class GetMyParticipationsQueryHandler : IRequestHandler<GetMyParticipationsQuery, GetMyParticipationsQueryResponse>
+public class GetMyParticipationsQueryHandler(
+    IPromotionService promotionService,
+    ICustomerRequesterUser requesterUser) : IRequestHandler<GetMyParticipationsQuery, GetMyParticipationsQueryResponse>
 {
-    private readonly IPromotionService _promotionService;
-    private readonly IRequesterUser _requesterUser;
-
-    public GetMyParticipationsQueryHandler(
-        IPromotionService promotionService,
-        IRequesterUser requesterUser)
-    {
-        _promotionService = promotionService;
-        _requesterUser = requesterUser;
-    }
-
     public async Task<GetMyParticipationsQueryResponse> Handle(GetMyParticipationsQuery request, CancellationToken cancellationToken)
     {
-        var customerId = _requesterUser.Id ?? throw new UnauthorizedAccessException("User ID not found");
-        var result = await _promotionService.GetMyParticipationsAsync(customerId, request.PageNumber, request.PageSize, cancellationToken);
+        var customerId = requesterUser.CustomerId;
+        var result = await promotionService.GetMyParticipationsAsync(customerId, request.PageNumber, request.PageSize, cancellationToken);
         
         var participations = result.Items.Select(p => new PromotionParticipationDto
         {
             Promotion = new PromotionDto
             {
-                Id = p.PromotionId.ToString(),
-                Name = p.PromotionTitle,
+                Id = p.PromotionId,
+                Title = p.PromotionTitle,
+                Category = p.PromotionCategorty.ToString(),
                 Description = string.Empty,
-                CategoryId = null,
-                CategoryName = null,
-                ImageUrl = null,
                 StartDate = DateTime.UtcNow,
                 EndDate = DateTime.UtcNow.AddDays(30),
+                DaysUntilEnd = 30,
                 IsActive = true,
-                PromotionType = "Campaign",
-                TermsAndConditions = null,
-                ParticipationStatus = p.Status
+                CanParticipate = false
             },
             Status = p.Status,
             ParticipatedDate = p.ParticipatedAt,

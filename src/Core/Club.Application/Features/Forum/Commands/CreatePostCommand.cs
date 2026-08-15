@@ -11,7 +11,7 @@ public record CreatePostCommand : IRequest<int>
     public int TopicId { get; set; }
     
     [Required]
-    public int CustomerId { get; set; }
+    public int CustomerTenantId { get; set; }
     
     [Required]
     [MaxLength(10000)]
@@ -25,7 +25,7 @@ public class CreatePostCommandValidator : AbstractValidator<CreatePostCommand>
     public CreatePostCommandValidator(IMultiLingualService multiLingual)
     {
         RuleFor(x => x.TopicId).NotEmpty();
-        RuleFor(x => x.CustomerId).NotEmpty();
+        RuleFor(x => x.CustomerTenantId).NotEmpty();
         RuleFor(x => x.Content).NotEmpty().MaximumLength(10000);
     }
 }
@@ -47,10 +47,22 @@ public class CreatePostCommandHandler(
         if (topic.IsLocked)
             throw new System.ComponentModel.DataAnnotations.ValidationException("موضوع قفل شده است");
 
+		// اعطای امتیاز برای مشتری در اکوسیستم مربوط به موضوع
+		var customerTenantRepo = unitOfWork.Repository<CustomerTenant, int>();
+        CustomerTenant? customerTenant = await customerTenantRepo.FirstOrDefaultAsync(
+            ct => ct.Id == request.CustomerTenantId,
+            cancellationToken) ?? throw new System.ComponentModel.DataAnnotations.ValidationException("رابطه مشتری-اکوسیستم یافت نشد");
+
+        if (customerTenant.TenantId != topic.TenantId)
+        {
+            throw new System.ComponentModel.DataAnnotations.ValidationException("مشتری متعلق به این انجمن نیست");
+        }
+
         var post = new ForumPost
         {
             TopicId = request.TopicId,
-            CustomerId = request.CustomerId,
+            CustomerTenantId = customerTenant.Id,
+            CustomerTenant = customerTenant,
             Content = request.Content,
             ParentPostId = request.ParentPostId,
             PointsEarned = postPoints,
@@ -64,15 +76,9 @@ public class CreatePostCommandHandler(
         topic.PostsCount++;
         topicRepo.Update(topic);
 
-        // اعطای امتیاز
-        var customerRepo = unitOfWork.Repository<Customer, int>();
-        var customer = await customerRepo.GetAsync(request.CustomerId, cancellationToken);
-        if (customer != null)
-        {
-            customer.CurrentPointsBalance = (customer.CurrentPointsBalance ?? 0) + postPoints;
-            customer.TotalPointsEarned = (customer.TotalPointsEarned ?? 0) + postPoints;
-            customerRepo.Update(customer);
-        }
+        customerTenant.CurrentPointsBalance = (customerTenant.CurrentPointsBalance ?? 0) + postPoints;
+        customerTenant.TotalPointsEarned = (customerTenant.TotalPointsEarned ?? 0) + postPoints;
+        customerTenantRepo.Update(customerTenant);
 
         await unitOfWork.SaveChangesAsync(cancellationToken);
 

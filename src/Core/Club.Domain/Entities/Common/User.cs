@@ -1,4 +1,4 @@
-﻿namespace Club.Domain.Entities.Common;
+namespace Club.Domain.Entities.Common;
 
 [DisplayName("کاربر")]
 [SBVR(SBVRModality.Obligatory, "مدیریت کاربران", "هر کاربر باید برای دسترسی به سیستم، مدیریت مجوزها و ردیابی فعالیت‌ها قابل شناسایی باشد")]
@@ -29,6 +29,13 @@ public partial class User : BaseUser
     [DisplayName("کد ملی")]
     [SBVR(SBVRModality.Recommended, "شناسایی یکتا", "کد ملی برای جلوگیری از ثبت تکراری و احراز هویت کاربران استفاده می‌شود")]
     public long? NationalCode { get; set; }
+
+    /// <summary>
+    /// تم رنگی
+    /// </summary>
+    [DisplayName("تم رنگی")]
+    [SBVR(SBVRModality.Recommended, "شخصی‌سازی رابط کاربری", "تم رنگی برای بهبود تجربه کاربری و شخصی‌سازی رابط کاربری استفاده می‌شود")]
+    public ThemePreference ThemePreference { get; set; } = ThemePreference.Simotek;
 
     public virtual ICollection<Notification> Notifications { get; set; } = [];
 }

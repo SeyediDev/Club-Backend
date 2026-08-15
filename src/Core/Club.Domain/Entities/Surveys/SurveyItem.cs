@@ -67,7 +67,7 @@ public class SurveyItem : ClubBaseCoreAuditableEntity<int>
     /// انتخاب‌های مشتریان
     /// </summary>
     [DisplayName("انتخاب‌ها")]
-    public ICollection<SurveyParticipation> Participations { get; set; } = new List<SurveyParticipation>();
+    public ICollection<SurveyParticipation> Participations { get; set; } = [];
 }
 
 

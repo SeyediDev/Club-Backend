@@ -7,9 +7,7 @@
             hasSomething = true;
         }
         if (window.tetaConfigs.version) {
-            bottomContent += "<div class='d-inline-block version-display' style='color: #db4d4e;" +
-                (hasSomething ? '' : 'margin-top: 12px;') +
-                "'>" +
+            bottomContent += "<div class='version-display'>" +
                 window.tetaI18n.t('Version') +
                 " : " +
                 window.tetaConfigs.version +

@@ -1,4 +1,4 @@
-﻿using Neo.Common.Extensions;
+using Neo.Common.Extensions;
 using Neo.Domain.Features.Client;
 using Microsoft.Extensions.Primitives;
 using System.Security.Claims;
@@ -6,14 +6,14 @@ using System.Security.Claims;
 namespace Club.Channel.Api;
 
 public class RequesterUser(IHttpContextAccessor httpContextAccessor,
-    IQueryRepository<Language, int> languageRepository) : IRequesterUser
+    IQueryRepository<Language, LanguageId> languageRepository) : IRequesterUser
 {
-    private int? _id = null;
-    public int? Id
+    private UserId? _id = null;
+    public UserId? Id
     {
         get
         {
-            _id ??= httpContextAccessor.HttpContext?.User?.FindFirstValue("userId").ToNullableInt32();
+            _id ??= (UserId?)(httpContextAccessor.HttpContext?.User?.FindFirstValue("userId").ToNullableInt32());
             return _id;
         }
         set
@@ -61,15 +61,15 @@ public class RequesterUser(IHttpContextAccessor httpContextAccessor,
         }
     }
 
-    private int? _langId = null;
-    public async Task<int> GetLangIdAsync(CancellationToken cancellationToken=default)
+    private LanguageId? _langId = null;
+    public async Task<LanguageId> GetLangIdAsync(CancellationToken cancellationToken=default)
     {
         if (_langId == null)
         {
             var lang = await languageRepository.FirstOrDefaultAsync(l => l.Name == Lang, cancellationToken);
             _langId = lang?.Id;
         }
-        return _langId??0;
+        return _langId??new(0);
     }
 
     private string? _correlationId = null;

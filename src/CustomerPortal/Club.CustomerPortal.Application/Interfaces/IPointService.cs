@@ -70,6 +70,9 @@ public record PointTransactionDto
     public string Type { get; init; } = null!;
     public DateTime CreatedAt { get; init; }
     public string? Description { get; init; }
+    public DateTime? ExpirationDate { get; init; }
+    public bool IsExpired { get; init; }
+    public bool IsSpent { get; init; }
 }
 
 public record ConvertPointsResultDto

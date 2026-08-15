@@ -1,4 +1,6 @@
-﻿namespace Club.CustomerPortal.Application.Features.Referrals.Commands;
+using Club.CustomerPortal.Application.Interfaces;
+
+namespace Club.CustomerPortal.Application.Features.Referrals.Commands;
 
 public record SetReferrerCommand : IRequest
 {
@@ -13,24 +15,17 @@ public class SetReferrerCommandValidator : AbstractValidator<SetReferrerCommand>
     }
 }
 
-public class SetReferrerCommandHandler : IRequestHandler<SetReferrerCommand>
+public class SetReferrerCommandHandler(
+    IReferralService referralService,
+    ICustomerRequesterUser requesterUser,
+    ILogger<SetReferrerCommandHandler> logger)
+    : IRequestHandler<SetReferrerCommand>
 {
-    private readonly IReferralService _referralService;
-    private readonly IRequesterUser _requesterUser;
-    private readonly ILogger<SetReferrerCommandHandler> _logger;
-
-    public SetReferrerCommandHandler(IReferralService referralService, IRequesterUser requesterUser, ILogger<SetReferrerCommandHandler> logger)
-    {
-        _referralService = referralService;
-        _requesterUser = requesterUser;
-        _logger = logger;
-    }
-
     public async Task Handle(SetReferrerCommand request, CancellationToken cancellationToken)
     {
-        var customerId = _requesterUser.GetUserId();
-        await _referralService.SetReferrerAsync(customerId, request.ReferrerCode, cancellationToken);
-        _logger.LogInformation("Referrer set for customer {CustomerId}: {Code}", customerId, request.ReferrerCode);
+        var customerId = requesterUser.CustomerId;
+        await referralService.SetReferrerAsync(customerId, request.ReferrerCode, cancellationToken);
+        logger.LogInformation("Referrer set for customer {CustomerId}: {Code}", customerId, request.ReferrerCode);
     }
 }
 

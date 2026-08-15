@@ -1,4 +1,6 @@
-﻿namespace Club.CustomerPortal.Application.Features.Dashboard.Queries;
+using Club.CustomerPortal.Application.Interfaces;
+
+namespace Club.CustomerPortal.Application.Features.Dashboard.Queries;
 
 public record GetDashboardStatsQuery : IRequest<GetDashboardStatsQueryResponse>;
 
@@ -36,21 +38,12 @@ public record RecentTransactionDto
     public string Type { get; set; } = null!;
 }
 
-public class GetDashboardStatsQueryHandler : IRequestHandler<GetDashboardStatsQuery, GetDashboardStatsQueryResponse>
+public class GetDashboardStatsQueryHandler(IDashboardService dashboardService, ICustomerRequesterUser requesterUser) : IRequestHandler<GetDashboardStatsQuery, GetDashboardStatsQueryResponse>
 {
-    private readonly IDashboardService _dashboardService;
-    private readonly IRequesterUser _requesterUser;
-
-    public GetDashboardStatsQueryHandler(IDashboardService dashboardService, IRequesterUser requesterUser)
-    {
-        _dashboardService = dashboardService;
-        _requesterUser = requesterUser;
-    }
-
     public async Task<GetDashboardStatsQueryResponse> Handle(GetDashboardStatsQuery request, CancellationToken cancellationToken)
     {
-        var customerId = _requesterUser.GetUserId();
-        var stats = await _dashboardService.GetDashboardStatsAsync(customerId, cancellationToken);
+        var customerId = requesterUser.CustomerId;
+        var stats = await dashboardService.GetDashboardStatsAsync(customerId, cancellationToken);
         
         return new GetDashboardStatsQueryResponse
         {

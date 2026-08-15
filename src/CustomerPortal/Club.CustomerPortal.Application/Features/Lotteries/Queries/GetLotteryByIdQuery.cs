@@ -1,3 +1,5 @@
+using Club.CustomerPortal.Application.Interfaces;
+
 namespace Club.CustomerPortal.Application.Features.Lotteries.Queries;
 
 public record GetLotteryByIdQuery : IRequest<GetLotteryByIdQueryResponse>
@@ -10,18 +12,11 @@ public record GetLotteryByIdQueryResponse
     public LotteryDto Lottery { get; set; } = null!;
 }
 
-public class GetLotteryByIdQueryHandler : IRequestHandler<GetLotteryByIdQuery, GetLotteryByIdQueryResponse>
+public class GetLotteryByIdQueryHandler(ILotteryService lotteryService) : IRequestHandler<GetLotteryByIdQuery, GetLotteryByIdQueryResponse>
 {
-    private readonly ILotteryService _lotteryService;
-
-    public GetLotteryByIdQueryHandler(ILotteryService lotteryService)
-    {
-        _lotteryService = lotteryService;
-    }
-
     public async Task<GetLotteryByIdQueryResponse> Handle(GetLotteryByIdQuery request, CancellationToken cancellationToken)
     {
-        var lottery = await _lotteryService.GetLotteryByIdAsync(int.Parse(request.Id), cancellationToken);
+        var lottery = await lotteryService.GetLotteryByIdAsync(int.Parse(request.Id), cancellationToken);
         
         if (lottery == null)
         {

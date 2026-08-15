@@ -1,15 +1,17 @@
-﻿namespace Club.AdminPanel.Domain.UiDefinitions.Events;
+using Club.Domain.Entities.Channels;
 
-public class EventChannelValidEventTypeUiDefinitions : SubCRUDDefinition<EventChannelValidEventType>
+namespace Club.AdminPanel.Domain.UiDefinitions.Events;
+
+public class EventChannelValidEventTypeUiDefinitions : SubCRUDDefinition<EventChannelValidEvent>
 {
     public override string SubjectId => "Sub";
-    public override void SubIndexViewModel(FormDefinition form)
+    public override void SubIndexViewModel()
     {
-        form.AddColumns(nameof(EventChannelValidEventType.EventType));
+        AddColumns(nameof(EventChannelValidEvent.EventType));
     }
 
-    public override void SubViewModel(FormDefinition form)
+    public override void SubViewModel()
     {
-        form.AddFields(nameof(EventChannelValidEventType.EventType));
+        AddFields(nameof(EventChannelValidEvent.EventType));
     }
 }

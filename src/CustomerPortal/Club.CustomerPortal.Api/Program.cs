@@ -2,25 +2,28 @@
 using Neo.Endpoint.Infrastructure;
 using Neo.Infrastructure.Features.Client;
 using Neo.Infrastructure.Features.Telementry;
-using Club.CustomerPortal.Application;
-using Club.Infrastructure;
 using Club.CustomerPortal.Api;
+using Club.CustomerPortal.Api.Infrastructure;
 using Club.CustomerPortal.Api.Middlewares;
 using Microsoft.AspNetCore.HttpOverrides;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.Configure<TelemetryOptions>(builder.Configuration.GetSection(nameof(TelemetryOptions)));
-// Note: CustomerPortal uses Club.Infrastructure but has its own Application layer
-builder.Services.AddClubInfrastructureServices(builder.Configuration, builder.Environment);
+// Use CustomerPortal-specific infrastructure services
+builder.Services.AddCustomerPortalInfrastructureServices(builder.Configuration, builder.Environment);
 builder.Services.AddCustomerPortalApplicationServices(builder.Configuration);
 
-builder.Host.AddCandoSerilog();
-builder.Services.AddCandoOpenTelementry(builder.Configuration);
-builder.Services.AddCandoAuthentication(builder.Configuration);
-builder.Services.AddCandoAuthorization(builder.Configuration);
+builder.Host.AddNeoSerilog();
+builder.Services.AddNeoOpenTelementry(builder.Configuration);
+builder.Services.AddNeoAuthentication(builder.Configuration);
+builder.Services.AddNeoAuthorization(builder.Configuration);
 
-builder.Services.AddWebServices(builder.Configuration);
+builder.Services.AddWebServices(builder.Configuration, builder.Environment);
+
+// سوگر ساده
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
@@ -32,6 +35,28 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
 if (app.Environment.IsDevelopment())
 {
     app.UseDeveloperExceptionPage();
+    app.UseSwagger();
+    app.UseSwaggerUI(c =>
+    {
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Club Customer Portal API v1");
+        c.RoutePrefix = "api"; // دسترسی از /api
+        c.DisplayRequestDuration();
+        
+        // اضافه کردن لینک مانیتورینگ
+        c.HeadContent = @"
+            <script>
+                window.addEventListener('load', function() {
+                    var monitoringLink = document.createElement('a');
+                    monitoringLink.href = '/monitoring';
+                    monitoringLink.target = '_blank';
+                    monitoringLink.className = 'btn';
+                    monitoringLink.style.cssText = 'position: fixed; top: 10px; right: 10px; z-index: 9999; background: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; font-weight: bold;';
+                    monitoringLink.textContent = '📊 مانیتورینگ';
+                    document.body.appendChild(monitoringLink);
+                });
+            </script>
+        ";
+    });
 }
 else
 {
@@ -46,12 +71,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 app.UseRecuringJobs();
 
-app.UseSwaggerUi(settings =>
-{
-    settings.Path = "/api";
-    settings.DocumentPath = "/api/specification.json";
-});
-
 app.UseMiddleware<CorrelationIdMiddleware>();
 app.UseMiddleware<UserAgentLoggingMiddleware>();
 
@@ -61,5 +80,8 @@ app.MapControllers();
 
 app.Run();
 
-public partial class Program { }
+namespace Club.CustomerPortal.Api
+{
+    public partial class Program { }
+}
 

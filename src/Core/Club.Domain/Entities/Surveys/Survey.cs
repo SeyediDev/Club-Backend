@@ -9,16 +9,16 @@ namespace Club.Domain.Entities.Surveys;
 public class Survey : ClubBaseCoreAuditableEntity<int>
 {
     /// <summary>
-    /// شناسه سازمان بهره‌بردار
+    /// شناسه اکوسیستم
     /// </summary>
-    [DisplayName("شناسه سازمان بهره‌بردار")]
-    [SBVR(SBVRModality.Obligatory, "چندین سازمان", "هر نظرسنجی باید به یک سازمان مشخص تعلق داشته باشد")]
+    [DisplayName("شناسه اکوسیستم")]
+    [SBVR(SBVRModality.Obligatory, "چندین اکوسیستم", "هر نظرسنجی باید به یک اکوسیستم مشخص تعلق داشته باشد")]
     public int TenantId { get; set; }
 
     /// <summary>
-    /// سازمان بهره‌بردار
+    /// اکوسیستم
     /// </summary>
-    [DisplayName("سازمان بهره‌بردار")]
+    [DisplayName("اکوسیستم")]
     public Tenant Tenant { get; set; } = null!;
 
     /// <summary>
@@ -118,13 +118,13 @@ public class Survey : ClubBaseCoreAuditableEntity<int>
     /// آیتم‌های نظرسنجی
     /// </summary>
     [DisplayName("آیتم‌ها")]
-    public ICollection<SurveyItem> Items { get; set; } = new List<SurveyItem>();
+    public ICollection<SurveyItem> Items { get; set; } = [];
 
     /// <summary>
     /// شرکت‌کنندگان در نظرسنجی
     /// </summary>
     [DisplayName("شرکت‌کنندگان")]
-    public ICollection<SurveyParticipation> Participations { get; set; } = new List<SurveyParticipation>();
+    public ICollection<SurveyParticipation> Participations { get; set; } = [];
 }
 
 

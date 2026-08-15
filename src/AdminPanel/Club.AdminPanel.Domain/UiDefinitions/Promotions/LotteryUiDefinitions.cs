@@ -1,9 +1,18 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.UI.Reports;
+using Club.Domain.Entities.Lotteries;
 
 namespace Club.AdminPanel.Domain.UiDefinitions.Promotions;
 
 public partial class LotteryUiDefinitions : CRUDDefinition<Lottery>
 {
+    private static readonly List<string> DefaultRoles =
+    [
+        Neo.Domain.Constants.Roles.Admin,
+        ClubRoles.Manager,
+        ClubRoles.MarketingManager
+    ];
+
+    public override List<string>? Roles => DefaultRoles;
+
     protected override void IndexFormViewModel(FormDefinition form)
     {
         form.AddColumns(nameof(Lottery.Title),
@@ -14,6 +23,7 @@ public partial class LotteryUiDefinitions : CRUDDefinition<Lottery>
                         nameof(Lottery.Tenant),
                         nameof(Lottery.CustomerSegment)
                         );
+        form.AddSubjectColumn<LotteryRelations>();
     }
     
     protected override void CUDFormsViewModel(CUDForm form)
@@ -35,13 +45,21 @@ public partial class LotteryUiDefinitions : CRUDDefinition<Lottery>
                        );
     }
     
-    protected override void EditFormSubTables(CUDForm form)
+    public class LotteryRelations : EditForm, ISubjectFormDefinition
     {
-        form.AddSubTable(nameof(LotteryReward), nameof(LotteryReward.Lottery), "Sub",
-            "پاداش‌ها", null, true, eControlTypeId.MultiTab);
-        
-        form.AddSubTable(nameof(LotteryParticipant), nameof(LotteryParticipant.Lottery), "Sub",
-            "شرکت‌کنندگان", null, false, eControlTypeId.MultiTab);
+        public override string SubjectId => nameof(LotteryRelations);
+        public override string Name => "پاداش‌ها و شرکت‌کنندگان";
+        public override List<string>? Roles => DefaultRoles;
+
+        protected override void ViewModel()
+        {
+            AddField(nameof(Lottery.Title), eControlPropertyId.ReadOnly);
+            AddSubTable(nameof(LotteryReward), nameof(LotteryReward.Lottery), "Sub",
+                "پاداش‌ها", null, true, eControlTypeId.MultiTab);
+
+            AddSubTable(nameof(LotteryParticipant), nameof(LotteryParticipant.Lottery), "Sub",
+                "شرکت‌کنندگان", null, false, eControlTypeId.MultiTab);
+        }
     }
 
     // =====================================================
@@ -50,22 +68,17 @@ public partial class LotteryUiDefinitions : CRUDDefinition<Lottery>
 
     public new partial class PublicReport : CRUDDefinition.PublicReport
     {
-        // =====================================================
-        // Lottery Reports
-        // =====================================================
+        public override List<string>? Roles => DefaultRoles;
 
         /// <summary>
         /// گزارش قرعه‌کشی‌های فعال
         /// </summary>
         public partial class ActiveLotteriesConfig : ReportConfigDefinition
         {
-            protected override List<string> Roles { get => [Neo.Domain.Constants.Roles.Admin, ClubRoles.Manager]; }
+            protected override List<string> Roles => [Neo.Domain.Constants.Roles.Admin, ClubRoles.Manager];
             protected override string WhereCondition => $"{nameof(Lottery.ToDate)} >= DateTime.Now";
+            protected override string Name => "قرعه‌کشی‌های فعال";
             
-            protected override void Identify()
-            {
-                DefineConfig("قرعه‌کشی‌های فعال", ReportViewType.List);
-            }
 
             protected override void DefineColumns()
             {
@@ -73,7 +86,6 @@ public partial class LotteryUiDefinitions : CRUDDefinition<Lottery>
                 DisplayColumn(nameof(Lottery.LotteryType), "نوع");
                 DisplayColumn(nameof(Lottery.FromDate), "از تاریخ");
                 DisplayColumn(nameof(Lottery.ToDate), "تا تاریخ");
-                
                 OrderByDesc(nameof(Lottery.FromDate)); // نزولی - جدیدترین
             }
         }
@@ -81,16 +93,12 @@ public partial class LotteryUiDefinitions : CRUDDefinition<Lottery>
         /// <summary>
         /// گزارش مشارکت در قرعه‌کشی‌ها
         /// </summary>
-        public partial class LotteryParticipationStatsConfig : ReportConfigDefinition
+        public partial class LotteryParticipationStatsConfig() : ChartConfigDefinition(ChartType.Bar)
         {
-            protected override List<string> Roles { get => [Neo.Domain.Constants.Roles.Admin, ClubRoles.Analyst]; }
-            
-            protected override void Identify()
-            {
-                DefineConfig("آمار مشارکت در قرعه‌کشی", ReportViewType.Chart, Report.ChartType.Bar);
-            }
+            protected override List<string> Roles => [Neo.Domain.Constants.Roles.Admin, ClubRoles.Analyst];
+            protected override string Name => "آمار مشارکت در قرعه‌کشی";
 
-            protected override void DefineColumns()
+            protected override void DefineGroupBy()
             {
                 GroupBy(nameof(Lottery.Title), "قرعه‌کشی");
                 Count(null, "تعداد شرکت‌کنندگان");
@@ -100,16 +108,12 @@ public partial class LotteryUiDefinitions : CRUDDefinition<Lottery>
         /// <summary>
         /// گزارش قرعه‌کشی‌ها به تفکیک نوع
         /// </summary>
-        public partial class LotteriesByTypeConfig : ReportConfigDefinition
+        public partial class LotteriesByTypeConfig() : ChartConfigDefinition(ChartType.Pie)
         {
-            protected override List<string> Roles { get => [Neo.Domain.Constants.Roles.Admin, ClubRoles.Manager]; }
-            
-            protected override void Identify()
-            {
-                DefineConfig("قرعه‌کشی‌ها به تفکیک نوع", ReportViewType.Chart, Report.ChartType.Pie);
-            }
+            protected override List<string> Roles => [Neo.Domain.Constants.Roles.Admin, ClubRoles.Manager];
+            protected override string Name => "قرعه‌کشی‌ها به تفکیک نوع";
 
-            protected override void DefineColumns()
+            protected override void DefineGroupBy()
             {
                 GroupBy(nameof(Lottery.LotteryType), "نوع قرعه‌کشی");
                 Count(null, "تعداد");

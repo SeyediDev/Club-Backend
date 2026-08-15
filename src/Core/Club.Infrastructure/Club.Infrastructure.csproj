@@ -31,8 +31,11 @@
 	<PackageReference Include="Serilog.AspNetCore" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\..\..\Projects\Neo\src\Neo.Infrastructure\Neo.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\..\..\..\Neo\src\Neo.Infrastructure\Neo.Infrastructure.csproj" />
     <ProjectReference Include="..\Club.Domain\Club.Domain.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Data\Interceptors\" />
   </ItemGroup>
 
 </Project>

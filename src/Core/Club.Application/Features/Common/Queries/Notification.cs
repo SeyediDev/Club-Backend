@@ -1,6 +1,4 @@
-﻿using Neo.Domain.Features.Client;
-using Neo.Domain.Repository;
-using System.Linq.Expressions;
+﻿using System.Linq.Expressions;
 
 namespace Club.Application.Features.Common.Queries;
 

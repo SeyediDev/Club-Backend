@@ -1,7 +1,7 @@
-using Club.CustomerPortal.Application.Interfaces;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Club.CustomerPortal.Application.Interfaces;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Club.CustomerPortal.Application.Services;
@@ -9,15 +9,9 @@ namespace Club.CustomerPortal.Application.Services;
 /// <summary>
 /// Mock implementation برای تست - باید با implementation واقعی جایگزین شود
 /// </summary>
-public class MockAuthenticationService : IAuthenticationService
+public class MockAuthenticationService(ILogger<MockAuthenticationService> logger) : IAuthenticationService
 {
-    private readonly ILogger<MockAuthenticationService> _logger;
-    private static readonly Dictionary<string, string> _refreshTokens = new();
-
-    public MockAuthenticationService(ILogger<MockAuthenticationService> logger)
-    {
-        _logger = logger;
-    }
+    private static readonly Dictionary<string, string> _refreshTokens = [];
 
     public Task<TokenResult> GenerateTokenAsync(int customerId, string phoneNumber, CancellationToken cancellationToken = default)
     {
@@ -27,12 +21,12 @@ public class MockAuthenticationService : IAuthenticationService
         
         var tokenDescriptor = new SecurityTokenDescriptor
         {
-            Subject = new ClaimsIdentity(new[]
-            {
+            Subject = new ClaimsIdentity(
+            [
                 new Claim(ClaimTypes.NameIdentifier, customerId.ToString()),
                 new Claim(ClaimTypes.MobilePhone, phoneNumber),
                 new Claim("CustomerId", customerId.ToString())
-            }),
+            ]),
             Expires = DateTime.UtcNow.AddHours(1),
             SigningCredentials = new SigningCredentials(
                 new SymmetricSecurityKey(key),
@@ -45,7 +39,7 @@ public class MockAuthenticationService : IAuthenticationService
 
         _refreshTokens[refreshToken] = customerId.ToString();
         
-        _logger.LogInformation("Mock: Generated token for customer {CustomerId}", customerId);
+        logger.LogInformation("Mock: Generated token for customer {CustomerId}", customerId);
 
         return Task.FromResult(new TokenResult
         {
@@ -63,7 +57,7 @@ public class MockAuthenticationService : IAuthenticationService
         }
 
         var customerId = int.Parse(customerIdStr);
-        _logger.LogInformation("Mock: Refreshed token for customer {CustomerId}", customerId);
+        logger.LogInformation("Mock: Refreshed token for customer {CustomerId}", customerId);
 
         // Generate new tokens
         return GenerateTokenAsync(customerId, string.Empty, cancellationToken);
@@ -72,7 +66,7 @@ public class MockAuthenticationService : IAuthenticationService
     public Task RevokeTokenAsync(string refreshToken, CancellationToken cancellationToken = default)
     {
         _refreshTokens.Remove(refreshToken);
-        _logger.LogInformation("Mock: Revoked refresh token");
+        logger.LogInformation("Mock: Revoked refresh token");
         return Task.CompletedTask;
     }
 }

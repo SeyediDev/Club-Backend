@@ -1,263 +1,228 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.Common;
-using Club.Domain.Entities.Analytics;
-using Club.Domain.Entities.Rewards;
+using Club.AdminPanel.Domain.UiDefinitions.HomePage;
+using Club.Domain.Entities.Channels;
+using Club.Domain.Entities.CustomerSegments.Data;
+using Club.Domain.Entities.Events.Data;
+using Club.Domain.Entities.Metrics.Data;
+using Club.Domain.Entities.Promotions.Lotteries;
+using Club.Domain.Entities.Promotions.Plans.Data;
+using Club.Domain.Entities.Promotions.Surveys.Data;
 
 namespace Club.AdminPanel.Domain.Domain;
 
 /// <summary>
 /// Club platform menu definitions with modern, colorful icons
-/// Icons are defined in /Content/club-icons/club-sprite.svg
+/// Icons are defined in /Content/custom-icons/custom-sprite.svg
 /// </summary>
 public partial class ClubMenuDefinitions : MenuDefinition
 {
     private void AddMenu_Club()
     {
-        // Dashboard
-        AddMenu("داشبورد", "home-dashboard", "Dashboards", "");
+        AddMenu("بینش و داشبوردها", "home-dashboard", "Insights & Dashboards", "");
         {
             StartSubMenus();
-            AddDashboard<HomePageEntity>("داشبورد کلی", "home-dashboard");
-            AddReport<CustomerTransaction>("گزارش تراکنشات مشتریان", "wallet-money");
+            AddMenu<HomePageEntity, HomePageEntityUiDefinitions.HomePageDashboard>("داشبورد کلان", "home-dashboard");
+            AddMenu<HomePageEntity, HomePageEntityUiDefinitions.CustomerIntelligenceDashboard>("بینش مشتری", "users-group");
+            AddMenu<HomePageEntity, HomePageEntityUiDefinitions.MarketingPerformanceDashboard>("تحلیل بازاریابی", "gift-present");
+            AddMenu<HomePageEntity, HomePageEntityUiDefinitions.HomePageDashboard.CommunityMarketDashboard>("جامعه/بازار", "users-group");
+            AddMenu<HomePageEntity, HomePageEntityUiDefinitions.OperationsCommandDashboard>("کنترل عملیات", "list-checklist");
+            AddMenuDivider();
+            AddReport<CustomerTransaction>("گزارش تراکنش‌های مشتریان", "wallet-money");
             AddReport<EventLog>("گزارش فعالیت‌های سیستم", "list-checklist");
-            AddReport<RewardAsset>("گزارش دارایی‌های مشتریان", "cube-3d");
-            // AddDashboard<HomePageEntity, HomePageEntityUiDefinitions.HomePageDashboard.SurveyAnalyticsDashboard>("تحلیل نظرسنجی‌ها", "survey-poll");
-            // AddDashboard<HomePageEntity, HomePageEntity.HomePageDashboard.FeedbackDashboard>("بازخورد مشتریان", "message-feedback");
-            // AddDashboard<HomePageEntity, HomePageEntity.HomePageDashboard.ForumDashboard>("انجمن مشتریان", "forum-community");
+            AddReport<Promotion>("گزارش کمپین‌ها", "gift-present");
+            AddReport<CustomerAnalytics>("گزارش تحلیل مشتریان", "chart-bar");
+            AddReport<MarketAnalysis>("گزارش تحلیل بازار", "chart-bar");
             EndSubMenus();
         }
-
-        // Customer Management
-        AddMenu("مدیریت مشتریان", "users-group", "Customer Management", "");
+		AddMenu("اکوسیستم", "calendar-event", "Tenants", "");
+		{
+			StartSubMenus();
+			AddMenu<Tenant>("اکوسیستم", "building-organization");
+			AddMenu<EventChannel>("کانال‌های اکوسیستم", "rss-signal");
+            AddMenu<TenantAttribute>("ویژگی‌های اکوسیستم", "user-settings");
+            AddMenu<MetricDefinition>("تعریف شاخص‌ها", "chart-bar");
+			AddMenuDivider();
+			AddMenu<EventType>("رویدادها", "calendar-event");
+			AddMenuDivider();
+			AddMenu("گزارشات", "chart-bar", "Engagement Reports", "");
+			{
+				StartSubMenus();
+				AddReport<EventLog>("گزارش رویدادها", "list-checklist");
+				AddReport<EventChannel>("گزارش کانال‌ها", "rss-signal");
+                AddReport<TenantAttribute>("ویژگی‌های اکوسیستم", "user-settings");
+                AddReport<MetricDefinition>("گزارش تعریف شاخص‌ها", "chart-bar");
+				AddReport<MetricValue>("گزارش مقادیر شاخص‌ها", "chart-bar");
+                AddMenu("انجمن مشتریان", "users-group", "Community", "");
+				{
+					StartSubMenus();
+					AddMenu<ForumTopic>("موضوعات انجمن", "list-checklist");
+					AddMenu<ForumPost>("پست‌های انجمن", "list-checklist");
+					AddMenu<ForumTopicLike>("لایک‌های موضوع", "star-badge");
+					AddMenu<ForumPostLike>("لایک‌های پست", "star-badge");
+					EndSubMenus();
+				}
+				AddMenu("بازخورد مشتریان", "question-circle", "Feedback", "");
+				{
+					StartSubMenus();
+					AddMenu<CustomerFeedback>("بازخوردها", "question-circle");
+					AddMenu<FeedbackComment>("نظرات بازخورد", "question-circle");
+					AddMenu<FeedbackAttachment>("پیوست‌های بازخورد", "file-document");
+					AddMenu<FeedbackLike>("لایک‌های بازخورد", "star-badge");
+					EndSubMenus();
+				}
+				EndSubMenus();
+			}
+			EndSubMenus();
+		}
+		AddMenu("جامعه/بازار", "users-group", "Customer Segmentation", "");
+        {
+			StartSubMenus();
+			AddMenu<CustomerSegment>("جامعه/بازار مشتریان", "users-group");
+            AddMenu<CustomerSegmentMembership>("اعضاء", "user-badge");
+			AddMenuDivider();
+			AddMenu<CustomerAnalytics>("تحلیل مشتریان (RFM)", "chart-bar");
+			AddMenu<MarketAnalysis>("تحلیل بازار", "chart-bar");
+			AddMenu("گزارش‌های جامعه/بازار", "chart-bar", "Customer Reports", "");
+			{
+				StartSubMenus();
+				AddReport<Tenant>("گزارش اکوسیستم", "building-organization");
+				AddReport<CustomerSegment>("گزارش جامعه/بازار", "users-group");
+                AddReport<CustomerSegmentMembership>("گزارش اعضاء", "user-badge");
+                AddMenuDivider();
+				AddReport<CustomerAnalytics>("تحلیل مشتریان (RFM)", "chart-bar");
+				AddReport<MarketAnalysis>("تحلیل بازار", "chart-bar");
+				EndSubMenus();
+			}
+			EndSubMenus();
+		}
+        AddMenu("اطلاعات مشتریان", "users-info", "Customer Information", "");
         {
             StartSubMenus();
-            AddMenu<Tenant>("سازمان بهره‌بردار", "building-organization");
+            AddMenu<CustomerTenant>("مشتریان اکوسیستم", "users-network");
             AddMenu<Customer>("مشتریان", "user-circle");
-            AddMenu<CustomerParameter>("پارامترهای مشتریان", "user-settings");
-            AddMenu("اطلاعات مشتریان", "user-badge", "Customer Information", "");
+            AddMenu<TenantAttributeValue>("مقادیر پارامترهای مشتریان", "sliders-h");
+            AddMenu<CustomerTransaction>("تراکنش‌های امتیازی", "wallet-money");
+            AddMenu<CustomerPointLevel>("سطوح وفاداری", "trophy-star");
+			AddMenuDivider("Engagments", "تعاملات");
+            AddMenu<RewardAsset>("خریدهای پاداش", "cube-3d");
+            AddMenuDivider("Metrics", "شاخص ها");
+            AddMenu<MetricValue>("مقادیر شاخص‌ها", "chart-bar");
+            AddMenu<CustomerProductMetrics>("معیارهای مشتری-محصول", "chart-bar");
+            AddMenu("معرفی", "users-group", "Referal Information", "");
             {
                 StartSubMenus();
-                AddMenu<CustomerSegmentMembership>("عضویت جامعه مشتریان", "user-badge");
-                AddMenu<CustomerParameterValue>("مقادیر پارامترهای مشتریان", "sliders-h");
-                AddMenu<CustomerTransaction>("حساب‌های مشتریان", "wallet-money");
-                AddMenu<CustomerPointLevel>("سطوح امتیاز مشتریان", "trophy-star");
+                AddMenu<CustomerReferrer>("معرفی‌های مشتری", "users-group");
+                AddMenu<ReferrerCode>("کدهای معرف", "users-group");
+                AddReport<CustomerReferrer>("گزارشات معرفی‌های مشتری", "users-group");
+                AddReport<ReferrerCode>("گزارشات کدهای معرف", "users-group");
                 EndSubMenus();
             }
-
-            AddMenu("گزارشات مدیریت مشتریان", "chart-bar", "Customer Reports", "");
+            AddMenu("گزارش‌های اطلاعات مشتری", "chart-bar", "Customer Information Reports", "");
             {
                 StartSubMenus();
-                AddReport<Tenant>("گزارش سازمان بهره‌بردار", "building-organization");
-                AddReport<CustomerParameter>("گزارش پارامترهای مشتریان", "user-settings");
                 AddReport<Customer>("گزارش مشتریان", "user-circle");
-                AddReport<CustomerTransaction>("گزارش تراکنشات", "wallet-money");
-                AddReport<CustomerPointLevel>("گزارش سطوح امتیاز", "trophy-star");
-                AddReport<CustomerParameterValue>("گزارش پارامترها", "sliders-h");
-                AddReport<RewardAsset>("گزارش دارایی‌های مشتریان", "cube-3d");
-                EndSubMenus();
-            }
-            EndSubMenus();
-        }
-
-        // Awards
-        AddMenu("پاداش‌ها", "box-package", "Awards", "");
-        {
-            StartSubMenus();
-            AddMenu<Reward>("پاداش‌ها", "box-package");
-            AddMenu<RewardCost>("هزینه‌های پاداش‌ها", "coins-money");
-            AddMenu<RewardAsset>("دارایی‌های پاداش‌ها", "cube-3d");
-
-            AddMenu("گزارشات پاداش‌ها", "chart-bar", "Award Reports", "");
-            {
-                StartSubMenus();
-                AddReport<Reward>("گزارش پاداش‌ها", "box-package");
-                AddReport<RewardCost>("گزارش هزینه‌ها", "coins-money");
+                AddReport<CustomerTenant>("گزارش تحلیل مشتریان اکوسیستم", "users-network");
+                AddReport<CustomerTransaction>("گزارش تراکنش‌ها", "wallet-money");
+                AddReport<CustomerProductMetrics>("گزارش معیارهای مشتری-محصول", "chart-bar");
+                AddReport<CustomerPointLevel>("گزارش سطوح وفاداری", "trophy-star");
                 AddReport<RewardAsset>("گزارش دارایی‌ها", "cube-3d");
                 EndSubMenus();
             }
             EndSubMenus();
         }
-
-        // Organization Products
-        AddMenu("محصولات سازمان", "grid-layout", "Organization Products", "");
+        AddMenu("پاداش‌ها", "box-package", "Rewards", "");
         {
             StartSubMenus();
-            AddMenu<Product>("محصولات سازمان", "grid-layout");
-
-            AddMenu("گزارشات محصولات سازمان", "chart-bar", "Product & Service Reports", "");
+            AddMenu<Reward>("پاداش‌ها", "box-package");
+            AddMenu<RewardCategory>("طبقه بندی پاداش‌ها", "grid-layout");
+            AddMenu<RewardCost>("قیمت‌گذاری پاداش‌ها", "coins-money");
+			AddMenuDivider();
+            AddMenu("گزارش‌های پاداش", "chart-bar", "Catalog Reports", "");
             {
                 StartSubMenus();
-                AddReport<Product>("گزارش محصولات سازمان", "grid-layout");
+                AddReport<Reward>("گزارش پاداش‌ها", "box-package");
+                AddReport<RewardCategory>("طبقه بندی پاداش‌ها", "grid-layout");
+                AddReport<RewardCost>("گزارش هزینه‌ها", "coins-money");
+                AddReport<Plan>("گزارش طرح‌های اشتراک", "piggy-bank");
                 EndSubMenus();
             }
             EndSubMenus();
         }
-
-        // Scoring System
-        AddMenu("سیستم امتیازدهی", "star-badge", "Scoring System", "");
+        AddMenu("محصولات", "grid-layout", "Products", "");
+        {
+            StartSubMenus();
+            AddMenu<Product>("محصولات", "grid-layout");
+            AddMenu<ProductCategory>("دسته‌بندی محصول", "grid-layout");
+            AddMenu<ProductFitAnalysis>("تناسب محصول", "grid-layout");
+            AddMenuDivider();
+            AddMenu("گزارش‌های محصول", "chart-bar", "Product Reports", "");
+            {
+                StartSubMenus();
+                AddReport<Product>("گزارش محصولات", "grid-layout");
+                AddReport<ProductCategory>("گزارش دسته‌بندی محصولات", "grid-layout");
+                AddReport<ProductFitAnalysis>("تناسب محصول", "grid-layout");
+                EndSubMenus();
+            }
+            EndSubMenus();
+        }
+        AddMenu("امتیازات", "star-badge", "Points", "");
         {
             StartSubMenus();
             AddMenu<Point>("انواع امتیازات", "star-badge");
-            AddMenu<PointLevel>("سطوح امتیاز", "medal-award");
-            AddMenu<PointBudget>("بودجه‌های امتیازدهی", "piggy-bank");
-            AddMenu<PointConversionRate>("نرخ تبدیل امتیاز", "exchange-transfer");
-            
-            AddMenu<ScoringRule>("قوانین", "rule-checklist");
-            AddMenu<ScoringRuleTriggerCondition>("شرایط فعال‌سازی قوانین", "flag-trigger");
-            AddMenu<ScoringRuleAction>("عملیات قوانین", "bolt-lightning");
-
-            AddMenu("گزارشات سیستم امتیازدهی", "chart-bar", "Scoring Reports", "");
+            AddMenu<PointLevel>("سطوح امتیاز", "medal-reward");
+            AddMenu<PointConversionRate>("نرخ تبدیل امتیاز", "coins-money");
+            AddMenuDivider();
+            AddMenu("گزارش‌های سیستم امتیازدهی", "chart-bar", "Scoring Reports", "");
             {
                 StartSubMenus();
                 AddReport<Point>("گزارش امتیازات", "star-badge");
-                AddReport<PointLevel>("گزارش سطوح‌امتیازی", "medal-award");
-                AddReport<PointBudget>("گزارش بودجه‌ها", "piggy-bank");
-                AddReport<ScoringRule>("گزارش قوانین", "rule-checklist");
+                AddReport<PointLevel>("گزارش سطوح‌امتیازی", "medal-reward");
                 EndSubMenus();
             }
             EndSubMenus();
         }
-
-        // Event Management
-        AddMenu("مدیریت رویدادها", "calendar-event", "Event Management", "");
+        AddMenu("پویش‌ها و کمپین‌ها", "gift-present", "Promotion", "");
         {
             StartSubMenus();
-            AddMenu<EventType>("رویدادها", "calendar-event");
-            AddMenu<EventTypeParameter>("پارامترهای رویدادها", "cog-settings");
-            AddMenu<EventChannel>("منابع رویدادها", "rss-signal");
-            AddMenu<EventLog>("لاگ رویدادها", "list-checklist");
-            
-            AddMenu("گزارشات مدیریت رویدادها", "chart-bar", "Event Reports", "");
+            AddMenu<Promotion>("پویش و کمپین", "gift-present");
+            AddMenu<PromotionTrigger>("محرک", "gift-present");
+            AddMenu<PromotionAction>("عملیات", "gift-present");
+            AddMenu<PromotionCustomerSegment>("جامعه/بازار", "gift-present");
+            AddMenu<PromotionBudget>("بودجه", "piggy-bank");
+            AddMenu<PromotionCostAllocation>("تسهیم زمانی هزینه", "gift-present");
+            AddMenu<Plan>("طرح اشتراک", "piggy-bank");
+			AddMenu<Lottery>("قرعه‌کشی و چرخونه", "ticket-lottery");
+            AddMenu<Survey>("مسابقه و نظرسنجی", "question-circle");
+            AddMenu<PromotionMessage>("پیام", "gift-present");
+            AddMenu("گزارش‌های پویش‌ها و کمپین‌ها", "chart-bar", "Engagement Reports", "");
             {
                 StartSubMenus();
-                AddReport<EventType>("گزارش رویدادها", "calendar-event");
-                AddReport<EventLog>("گزارش لاگ رویدادها", "list-checklist");
-                AddReport<EventChannel>("گزارش منابع رویدادها", "rss-signal");
-                EndSubMenus();
-            }
-            EndSubMenus();
-        }
-
-        // Promotion Management
-        AddMenu("مدیریت پویش‌ها", "gift-present", "Promotion Management", "");
-        {
-            StartSubMenus();
-            AddMenu<Promotion>("پویش‌ها", "gift-present");
-            AddMenu<Lottery>("قرعه‌کشی", "ticket-lottery");
-            AddMenu<LotteryReward>("پاداش‌های قرعه‌کشی", "gift-box");
-            AddMenu<LotteryParticipant>("شرکت‌کنندگان", "users-group");
-            AddMenu("گزارشات مدیریت پویش‌ها", "chart-bar", "Promotion Reports", "");
-            {
-                StartSubMenus();
-                AddReport<Promotion>("گزارش پویش‌ها", "gift-present");
+                AddReport<Promotion>("گزارش پویش‌ها و کمپین‌ها", "gift-present");
+                AddReport<PromotionCustomerSegment>("جامعه/بازار", "gift-present");
                 AddReport<Lottery>("گزارش قرعه‌کشی", "ticket-lottery");
-                AddReport<LotteryReward>("گزارش پاداش‌ها", "gift-box");
-                AddReport<LotteryParticipant>("گزارش شرکت‌کنندگان", "users-group");
+                AddReport<LotteryReward>("گزارش جوایز قرعه‌کشی", "box-package");
+                AddReport<PromotionMessage>("گزارش پیام‌های کمپین", "gift-present");
+				AddReport<Survey>("گزارش مسابقه و نظرسنجی", "question-circle");
+                AddReport<PromotionBudget>("گزارش بودجه‌ها", "piggy-bank");
                 EndSubMenus();
             }
             EndSubMenus();
         }
-
-        // Survey & Contest Management
-        AddMenu("مدیریت نظرسنجی و مسابقات", "survey-poll", "Survey Management", "");
+        AddMenu("اطلاعات پویش‌ها", "gift-present", "Promotion", "");
         {
             StartSubMenus();
-            AddMenu<Survey>("نظرسنجی‌ها و مسابقات", "survey-poll");
-            AddMenu<SurveyParticipation>("شرکت‌کنندگان", "users-group");
-            
-            AddMenu("گزارشات نظرسنجی", "chart-bar", "Survey Reports", "");
+            AddMenu<CustomerPlan>("طرح‌های فعال مشتریان", "wallet-money");
+            AddMenu<LotteryParticipant>("شرکت‌کنندگان قرعه‌کشی/چرخونه", "users-group");
+            AddMenu<SurveyParticipation>("شرکت‌کنندگان نظرسنجی", "users-group");
+            AddMenu<PromotionRecipient>("گیرندگان کمپین", "users-group");
+            AddMenu("گزارش‌های اطلاعات پویش‌ها", "chart-bar", "Engagement Reports", "");
             {
                 StartSubMenus();
-                AddReport<Survey>("گزارش نظرسنجی‌ها", "survey-poll");
-                AddReport<SurveyParticipation>("گزارش شرکت‌کنندگان", "users-group");
+                AddReport<CustomerPlan>("گزارش طرح‌های مشتری", "piggy-bank");
+                AddReport<LotteryParticipant>("گزارش شرکت‌کنندگان قرعه‌کشی/چرخونه", "users-group");
+                AddReport<SurveyParticipation>("گزارش شرکت‌کنندگان در مسابقه و نظرسنجی", "users-group");
+                AddReport<PromotionRecipient>("گزارش گیرندگان کمپین", "users-group");
                 EndSubMenus();
             }
-            EndSubMenus();
-        }
-
-        // Customer Feedback Management - temporarily disabled
-        // AddMenu("مدیریت بازخورد مشتریان", "message-feedback", "Feedback Management", "");
-        // {
-        //     StartSubMenus();
-        //     AddMenu<CustomerFeedback>("بازخوردها (پیشنهادات و انتقادات)", "message-feedback");
-        //     AddMenu<FeedbackComment>("نظرات بازخورد", "message-chat");
-        //     AddMenu<FeedbackAttachment>("پیوست‌ها", "file-attach");
-        //     
-        //     AddMenu("گزارشات بازخورد", "chart-bar", "Feedback Reports", "");
-        //     {
-        //         StartSubMenus();
-        //         AddReport<CustomerFeedback>("گزارش بازخوردها", "message-feedback");
-        //         AddReport<FeedbackComment>("گزارش نظرات", "message-chat");
-        //         EndSubMenus();
-        //     }
-        //     EndSubMenus();
-        // }
-
-        // Forum Management - temporarily disabled
-        // AddMenu("مدیریت انجمن", "forum-community", "Forum Management", "");
-        // {
-        //     StartSubMenus();
-        //     AddMenu<ForumTopic>("موضوعات انجمن", "forum-community");
-        //     AddMenu<ForumPost>("پست‌های انجمن", "message-reply");
-        //     
-        //     AddMenu("گزارشات انجمن", "chart-bar", "Forum Reports", "");
-        //     {
-        //         StartSubMenus();
-        //         AddReport<ForumTopic>("گزارش موضوعات", "forum-community");
-        //         AddReport<ForumPost>("گزارش پست‌ها", "message-reply");
-        //         EndSubMenus();
-        //     }
-        //     EndSubMenus();
-        // }
-
-        // eCRM & Marketing Analytics
-        AddMenu("مدیریت ارتباط با مشتریان (eCRM)", "users-group", "eCRM & Marketing", "");
-        {
-            StartSubMenus();
-            
-            // Customer Analytics
-            AddMenu("تحلیل مشتریان", "chart-line", "Customer Analytics", "");
-            {
-                StartSubMenus();
-                AddMenu<CustomerAnalytics>("تحلیل RFM", "chart-radar");
-                AddMenu<CustomerSegment>("جامعه مشتریان", "users-group");
-                AddMenu<CustomerSegmentKindCondition>("شرط‌های جامعه‌سازی", "filter-funnel");
-                AddReport<CustomerAnalytics>("گزارش تحلیل مشتریان", "chart-line");
-                EndSubMenus();
-            }
-            
-            // Marketing Campaigns
-            AddMenu("کمپین‌های بازاریابی", "megaphone-speaker", "Marketing Campaigns", "");
-            {
-                StartSubMenus();
-                AddMenu<PromotionMessage>("پیام‌های کمپین", "message-chat");
-                AddMenu<PromotionRecipient>("گیرندگان کمپین", "user-check");
-                AddReport<PromotionMessage>("گزارش پیام‌ها", "message-chat");
-                AddReport<PromotionRecipient>("گزارش گیرندگان", "user-check");
-                EndSubMenus();
-            }
-            
-            // Market Analysis
-            AddMenu("تحلیل بازار", "chart-pie", "Market Analysis", "");
-            {
-                StartSubMenus();
-                AddMenu<MarketAnalysis>("تحلیل TAM/SAM/SOM", "chart-pie");
-                AddMenu<ProductFitAnalysis>("تحلیل تناسب محصول", "target-bullseye");
-                AddReport<MarketAnalysis>("گزارش تحلیل بازار", "chart-pie");
-                AddReport<ProductFitAnalysis>("گزارش تناسب محصول", "target-bullseye");
-                EndSubMenus();
-            }
-            
-            // Advanced Reports
-            AddMenu("گزارشات پیشرفته", "chart-bar", "Advanced Reports", "");
-            {
-                StartSubMenus();
-                AddReport<CustomerAnalytics>("گزارش RFM", "chart-radar");
-                AddReport<CustomerSegment>("گزارش جامعه‌سازی", "users-group");
-                AddReport<Promotion>("گزارش اثربخشی کمپین", "megaphone-speaker");
-                AddReport<MarketAnalysis>("گزارش سهم بازار", "chart-pie");
-                EndSubMenus();
-            }
-            
             EndSubMenus();
         }
 
@@ -269,8 +234,8 @@ public partial class ClubMenuDefinitions : MenuDefinition
             AddMenu<Faq>("سوالات متداول", "question-circle");
             AddMenu<Help>("راهنمای سیستم", "info-circle");
             AddMenu<Document>("مستندات", "file-document");
-            
-            AddMenu("گزارشات تنظیمات سامانه", "chart-bar", "System Reports", "");
+            AddMenuDivider();
+            AddMenu("گزارش‌های تنظیمات سامانه", "chart-bar", "System Reports", "");
             {
                 StartSubMenus();
                 AddReport<User>("گزارش کاربران", "user-admin");

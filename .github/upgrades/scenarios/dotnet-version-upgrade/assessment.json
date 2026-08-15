@@ -1,0 +1,3218 @@
+{
+  "settings": {
+    "components": {
+      "code": true,
+      "binaries": false
+    },
+    "targetId": "net10.0",
+    "targetDisplayName": ".NETCoreApp,Version=v10.0"
+  },
+  "analysisStartTime": "2026-08-01T17:46:47.6997873Z",
+  "analysisEndTime": "2026-08-01T17:47:18.546572Z",
+  "privacyModeHelpUrl": "https://go.microsoft.com/fwlink/?linkid=2270980",
+  "stats": {
+    "summary": {
+      "projects": 29,
+      "issues": 10,
+      "incidents": 94,
+      "effort": 94
+    },
+    "charts": {
+      "severity": {
+        "Mandatory": 34,
+        "Optional": 11,
+        "Potential": 49,
+        "Information": 0
+      },
+      "category": {
+        "NuGet": 45,
+        "Project": 13,
+        "Api": 36
+      }
+    }
+  },
+  "projects": [
+    {
+      "path": "src\\AdminPanel\\Club.AdminPanel.Domain\\Club.AdminPanel.Domain.csproj",
+      "startingProject": true,
+      "issues": 1,
+      "storyPoints": 1,
+      "properties": {
+        "appName": "Club.AdminPanel.Domain",
+        "projectKind": "ClassLibrary",
+        "frameworks": [
+          "net10.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 76,
+        "numberOfCodeFiles": 76,
+        "linesTotal": 6907,
+        "linesOfCode": 6907,
+        "totalApiScanned": 197,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "bec7054d-4afe-4d6f-becc-014a09150e5f",
+          "ruleId": "Project.0002",
+          "projectPath": "src\\AdminPanel\\Club.AdminPanel.Domain\\Club.AdminPanel.Domain.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Current target framework: net10.0\nRecommended target framework: net10.0",
+              "protected": "Current target framework: net10.0\nRecommended target framework: net10.0"
+            },
+            "kind": "File",
+            "path": "src\\AdminPanel\\Club.AdminPanel.Domain\\Club.AdminPanel.Domain.csproj",
+            "snippet": "Current target framework: net10.0\nRecommended target framework: net10.0",
+            "protectedSnippet": "Current target framework: net10.0\nRecommended target framework: net10.0",
+            "properties": {
+              "CurrentTargetFramework": "net10.0",
+              "RecommendedTargetFramework": "net10.0"
+            }
+          }
+        }
+      ],
+      "features": []
+    },
+    {
+      "path": "src\\AdminPanel\\Club.AdminPanel.Web\\Club.AdminPanel.Web.csproj",
+      "startingProject": true,
+      "issues": 7,
+      "storyPoints": 34,
+      "properties": {
+        "appName": "Club.AdminPanel.Web",
+        "projectKind": "AspNetCore",
+        "frameworks": [
+          "net10.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 1041,
+        "numberOfCodeFiles": 34,
+        "linesTotal": 513375,
+        "linesOfCode": 4646,
+        "totalApiScanned": 2439,
+        "minLinesOfCodeToChange": 17,
+        "maxLinesOfCodeToChange": 17
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "f7cb7718-231c-4800-adcc-6a02fd5c7535",
+          "ruleId": "NuGet.0002",
+          "projectPath": "src\\AdminPanel\\Club.AdminPanel.Web\\Club.AdminPanel.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.EntityFrameworkCore, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.EntityFrameworkCore, and replace with new package Microsoft.EntityFrameworkCore 10.0.10",
+              "protected": "Microsoft.EntityFrameworkCore, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.EntityFrameworkCore, and replace with new package Microsoft.EntityFrameworkCore 10.0.10"
+            },
+            "kind": "File",
+            "path": "src\\AdminPanel\\Club.AdminPanel.Web\\Club.AdminPanel.Web.csproj",
+            "snippet": "Microsoft.EntityFrameworkCore, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.EntityFrameworkCore, and replace with new package Microsoft.EntityFrameworkCore 10.0.10",
+            "protectedSnippet": "Microsoft.EntityFrameworkCore, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.EntityFrameworkCore, and replace with new package Microsoft.EntityFrameworkCore 10.0.10",
+            "label": "Microsoft.EntityFrameworkCore 8.0.15",
+            "properties": {
+              "PackageId": "Microsoft.EntityFrameworkCore",
+              "PackageVersion": "8.0.15",
+              "PackageNewVersion": "10.0.10",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "52c2f203-4e0f-45a1-8150-b12454120f35",
+          "ruleId": "NuGet.0002",
+          "projectPath": "src\\AdminPanel\\Club.AdminPanel.Web\\Club.AdminPanel.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.EntityFrameworkCore.Relational, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.EntityFrameworkCore.Relational, and replace with new package Microsoft.EntityFrameworkCore.Relational 10.0.10",
+              "protected": "Microsoft.EntityFrameworkCore.Relational, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.EntityFrameworkCore.Relational, and replace with new package Microsoft.EntityFrameworkCore.Relational 10.0.10"
+            },
+            "kind": "File",
+            "path": "src\\AdminPanel\\Club.AdminPanel.Web\\Club.AdminPanel.Web.csproj",
+            "snippet": "Microsoft.EntityFrameworkCore.Relational, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.EntityFrameworkCore.Relational, and replace with new package Microsoft.EntityFrameworkCore.Relational 10.0.10",
+            "protectedSnippet": "Microsoft.EntityFrameworkCore.Relational, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.EntityFrameworkCore.Relational, and replace with new package Microsoft.EntityFrameworkCore.Relational 10.0.10",
+            "label": "Microsoft.EntityFrameworkCore.Relational 8.0.15",
+            "properties": {
+              "PackageId": "Microsoft.EntityFrameworkCore.Relational",
+              "PackageVersion": "8.0.15",
+              "PackageNewVersion": "10.0.10",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "1c094d08-728e-45c5-9db2-1f551fea6f46",
+          "ruleId": "NuGet.0002",
+          "projectPath": "src\\AdminPanel\\Club.AdminPanel.Web\\Club.AdminPanel.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.AspNetCore.OpenApi, 8.0.8\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.OpenApi, and replace with new package Microsoft.AspNetCore.OpenApi 10.0.10",
+              "protected": "Microsoft.AspNetCore.OpenApi, 8.0.8\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.OpenApi, and replace with new package Microsoft.AspNetCore.OpenApi 10.0.10"
+            },
+            "kind": "File",
+            "path": "src\\AdminPanel\\Club.AdminPanel.Web\\Club.AdminPanel.Web.csproj",
+            "snippet": "Microsoft.AspNetCore.OpenApi, 8.0.8\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.OpenApi, and replace with new package Microsoft.AspNetCore.OpenApi 10.0.10",
+            "protectedSnippet": "Microsoft.AspNetCore.OpenApi, 8.0.8\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.OpenApi, and replace with new package Microsoft.AspNetCore.OpenApi 10.0.10",
+            "label": "Microsoft.AspNetCore.OpenApi 8.0.8",
+            "properties": {
+              "PackageId": "Microsoft.AspNetCore.OpenApi",
+              "PackageVersion": "8.0.8",
+              "PackageNewVersion": "10.0.10",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "6d7382a3-9566-4baa-9926-30fc6947fe10",
+          "ruleId": "NuGet.0001",
+          "projectPath": "src\\AdminPanel\\Club.AdminPanel.Web\\Club.AdminPanel.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.VisualStudio.Azure.Containers.Tools.Targets, 1.21.0\n\nRecommendation:\n\nNo supported version found",
+              "protected": "Microsoft.VisualStudio.Azure.Containers.Tools.Targets, 1.21.0\n\nRecommendation:\n\nNo supported version found"
+            },
+            "kind": "File",
+            "path": "src\\AdminPanel\\Club.AdminPanel.Web\\Club.AdminPanel.Web.csproj",
+            "snippet": "Microsoft.VisualStudio.Azure.Containers.Tools.Targets, 1.21.0\n\nRecommendation:\n\nNo supported version found",
+            "protectedSnippet": "Microsoft.VisualStudio.Azure.Containers.Tools.Targets, 1.21.0\n\nRecommendation:\n\nNo supported version found",
+            "label": "Microsoft.VisualStudio.Azure.Containers.Tools.Targets 1.21.0",
+            "properties": {
+              "PackageId": "Microsoft.VisualStudio.Azure.Containers.Tools.Targets",
+              "PackageVersion": "1.21.0",
+              "PackageNewVersion": null,
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "9082f754-1716-4b70-b97b-1b60b1e1eb5d",
+          "ruleId": "NuGet.0002",
+          "projectPath": "src\\AdminPanel\\Club.AdminPanel.Web\\Club.AdminPanel.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.AspNetCore.Authentication.JwtBearer, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.Authentication.JwtBearer, and replace with new package Microsoft.AspNetCore.Authentication.JwtBearer 10.0.10",
+              "protected": "Microsoft.AspNetCore.Authentication.JwtBearer, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.Authentication.JwtBearer, and replace with new package Microsoft.AspNetCore.Authentication.JwtBearer 10.0.10"
+            },
+            "kind": "File",
+            "path": "src\\AdminPanel\\Club.AdminPanel.Web\\Club.AdminPanel.Web.csproj",
+            "snippet": "Microsoft.AspNetCore.Authentication.JwtBearer, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.Authentication.JwtBearer, and replace with new package Microsoft.AspNetCore.Authentication.JwtBearer 10.0.10",
+            "protectedSnippet": "Microsoft.AspNetCore.Authentication.JwtBearer, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.Authentication.JwtBearer, and replace with new package Microsoft.AspNetCore.Authentication.JwtBearer 10.0.10",
+            "label": "Microsoft.AspNetCore.Authentication.JwtBearer 8.0.15",
+            "properties": {
+              "PackageId": "Microsoft.AspNetCore.Authentication.JwtBearer",
+              "PackageVersion": "8.0.15",
+              "PackageNewVersion": "10.0.10",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "588c0f40-b5c1-4ccb-b4fa-b98ab447d9b7",
+          "ruleId": "NuGet.0002",
+          "projectPath": "src\\AdminPanel\\Club.AdminPanel.Web\\Club.AdminPanel.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore, and replace with new package Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore 10.0.10",
+              "protected": "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore, and replace with new package Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore 10.0.10"
+            },
+            "kind": "File",
+            "path": "src\\AdminPanel\\Club.AdminPanel.Web\\Club.AdminPanel.Web.csproj",
+            "snippet": "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore, and replace with new package Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore 10.0.10",
+            "protectedSnippet": "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore, and replace with new package Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore 10.0.10",
+            "label": "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore 8.0.15",
+            "properties": {
+              "PackageId": "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore",
+              "PackageVersion": "8.0.15",
+              "PackageNewVersion": "10.0.10",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "993c4fe1-eb53-40b6-a017-8730ef6967ba",
+          "ruleId": "NuGet.0002",
+          "projectPath": "src\\AdminPanel\\Club.AdminPanel.Web\\Club.AdminPanel.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.EntityFrameworkCore.SqlServer, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.EntityFrameworkCore.SqlServer, and replace with new package Microsoft.EntityFrameworkCore.SqlServer 10.0.10",
+              "protected": "Microsoft.EntityFrameworkCore.SqlServer, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.EntityFrameworkCore.SqlServer, and replace with new package Microsoft.EntityFrameworkCore.SqlServer 10.0.10"
+            },
+            "kind": "File",
+            "path": "src\\AdminPanel\\Club.AdminPanel.Web\\Club.AdminPanel.Web.csproj",
+            "snippet": "Microsoft.EntityFrameworkCore.SqlServer, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.EntityFrameworkCore.SqlServer, and replace with new package Microsoft.EntityFrameworkCore.SqlServer 10.0.10",
+            "protectedSnippet": "Microsoft.EntityFrameworkCore.SqlServer, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.EntityFrameworkCore.SqlServer, and replace with new package Microsoft.EntityFrameworkCore.SqlServer 10.0.10",
+            "label": "Microsoft.EntityFrameworkCore.SqlServer 8.0.15",
+            "properties": {
+              "PackageId": "Microsoft.EntityFrameworkCore.SqlServer",
+              "PackageVersion": "8.0.15",
+              "PackageNewVersion": "10.0.10",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "4b22e89b-8da2-4737-8981-f69a1e311f66",
+          "ruleId": "NuGet.0002",
+          "projectPath": "src\\AdminPanel\\Club.AdminPanel.Web\\Club.AdminPanel.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.EntityFrameworkCore.Tools, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.EntityFrameworkCore.Tools, and replace with new package Microsoft.EntityFrameworkCore.Tools 10.0.10",
+              "protected": "Microsoft.EntityFrameworkCore.Tools, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.EntityFrameworkCore.Tools, and replace with new package Microsoft.EntityFrameworkCore.Tools 10.0.10"
+            },
+            "kind": "File",
+            "path": "src\\AdminPanel\\Club.AdminPanel.Web\\Club.AdminPanel.Web.csproj",
+            "snippet": "Microsoft.EntityFrameworkCore.Tools, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.EntityFrameworkCore.Tools, and replace with new package Microsoft.EntityFrameworkCore.Tools 10.0.10",
+            "protectedSnippet": "Microsoft.EntityFrameworkCore.Tools, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.EntityFrameworkCore.Tools, and replace with new package Microsoft.EntityFrameworkCore.Tools 10.0.10",
+            "label": "Microsoft.EntityFrameworkCore.Tools 8.0.15",
+            "properties": {
+              "PackageId": "Microsoft.EntityFrameworkCore.Tools",
+              "PackageVersion": "8.0.15",
+              "PackageNewVersion": "10.0.10",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "cafb30d2-c610-4e18-869a-85e95af425a0",
+          "ruleId": "NuGet.0002",
+          "projectPath": "src\\AdminPanel\\Club.AdminPanel.Web\\Club.AdminPanel.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "System.Drawing.Common, 8.0.15\n\nRecommendation:\n\nRemove System.Drawing.Common, and replace with new package System.Drawing.Common 10.0.10",
+              "protected": "System.Drawing.Common, 8.0.15\n\nRecommendation:\n\nRemove System.Drawing.Common, and replace with new package System.Drawing.Common 10.0.10"
+            },
+            "kind": "File",
+            "path": "src\\AdminPanel\\Club.AdminPanel.Web\\Club.AdminPanel.Web.csproj",
+            "snippet": "System.Drawing.Common, 8.0.15\n\nRecommendation:\n\nRemove System.Drawing.Common, and replace with new package System.Drawing.Common 10.0.10",
+            "protectedSnippet": "System.Drawing.Common, 8.0.15\n\nRecommendation:\n\nRemove System.Drawing.Common, and replace with new package System.Drawing.Common 10.0.10",
+            "label": "System.Drawing.Common 8.0.15",
+            "properties": {
+              "PackageId": "System.Drawing.Common",
+              "PackageVersion": "8.0.15",
+              "PackageNewVersion": "10.0.10",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "c035bc0d-0eff-4130-a7ca-6d047b2267a1",
+          "ruleId": "NuGet.0002",
+          "projectPath": "src\\AdminPanel\\Club.AdminPanel.Web\\Club.AdminPanel.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "System.Formats.Asn1, 8.0.2\n\nRecommendation:\n\nRemove System.Formats.Asn1, and replace with new package System.Formats.Asn1 10.0.10",
+              "protected": "System.Formats.Asn1, 8.0.2\n\nRecommendation:\n\nRemove System.Formats.Asn1, and replace with new package System.Formats.Asn1 10.0.10"
+            },
+            "kind": "File",
+            "path": "src\\AdminPanel\\Club.AdminPanel.Web\\Club.AdminPanel.Web.csproj",
+            "snippet": "System.Formats.Asn1, 8.0.2\n\nRecommendation:\n\nRemove System.Formats.Asn1, and replace with new package System.Formats.Asn1 10.0.10",
+            "protectedSnippet": "System.Formats.Asn1, 8.0.2\n\nRecommendation:\n\nRemove System.Formats.Asn1, and replace with new package System.Formats.Asn1 10.0.10",
+            "label": "System.Formats.Asn1 8.0.2",
+            "properties": {
+              "PackageId": "System.Formats.Asn1",
+              "PackageVersion": "8.0.2",
+              "PackageNewVersion": "10.0.10",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "54535947-a1d9-465b-acd2-e148869b835d",
+          "ruleId": "NuGet.0002",
+          "projectPath": "src\\AdminPanel\\Club.AdminPanel.Web\\Club.AdminPanel.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "System.Security.Cryptography.Pkcs, 8.0.1\n\nRecommendation:\n\nRemove System.Security.Cryptography.Pkcs, and replace with new package System.Security.Cryptography.Pkcs 10.0.10",
+              "protected": "System.Security.Cryptography.Pkcs, 8.0.1\n\nRecommendation:\n\nRemove System.Security.Cryptography.Pkcs, and replace with new package System.Security.Cryptography.Pkcs 10.0.10"
+            },
+            "kind": "File",
+            "path": "src\\AdminPanel\\Club.AdminPanel.Web\\Club.AdminPanel.Web.csproj",
+            "snippet": "System.Security.Cryptography.Pkcs, 8.0.1\n\nRecommendation:\n\nRemove System.Security.Cryptography.Pkcs, and replace with new package System.Security.Cryptography.Pkcs 10.0.10",
+            "protectedSnippet": "System.Security.Cryptography.Pkcs, 8.0.1\n\nRecommendation:\n\nRemove System.Security.Cryptography.Pkcs, and replace with new package System.Security.Cryptography.Pkcs 10.0.10",
+            "label": "System.Security.Cryptography.Pkcs 8.0.1",
+            "properties": {
+              "PackageId": "System.Security.Cryptography.Pkcs",
+              "PackageVersion": "8.0.1",
+              "PackageNewVersion": "10.0.10",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "1470911f-33a6-4084-b71b-ce98119b212b",
+          "ruleId": "NuGet.0003",
+          "projectPath": "src\\AdminPanel\\Club.AdminPanel.Web\\Club.AdminPanel.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "System.Text.RegularExpressions, 4.3.1\n\nRecommendation:\n\nPackage functionality included with new framework reference",
+              "protected": "System.Text.RegularExpressions, 4.3.1\n\nRecommendation:\n\nPackage functionality included with new framework reference"
+            },
+            "kind": "File",
+            "path": "src\\AdminPanel\\Club.AdminPanel.Web\\Club.AdminPanel.Web.csproj",
+            "snippet": "System.Text.RegularExpressions, 4.3.1\n\nRecommendation:\n\nPackage functionality included with new framework reference",
+            "protectedSnippet": "System.Text.RegularExpressions, 4.3.1\n\nRecommendation:\n\nPackage functionality included with new framework reference",
+            "label": "System.Text.RegularExpressions 4.3.1",
+            "properties": {
+              "PackageId": "System.Text.RegularExpressions",
+              "PackageVersion": "4.3.1",
+              "PackageNewVersion": null,
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "69c6a28b-d36a-497b-8ef5-dbd4391da37f",
+          "ruleId": "NuGet.0002",
+          "projectPath": "src\\AdminPanel\\Club.AdminPanel.Web\\Club.AdminPanel.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.Extensions.Caching.Abstractions, 8.0.0\n\nRecommendation:\n\nRemove Microsoft.Extensions.Caching.Abstractions, and replace with new package Microsoft.Extensions.Caching.Abstractions 10.0.10",
+              "protected": "Microsoft.Extensions.Caching.Abstractions, 8.0.0\n\nRecommendation:\n\nRemove Microsoft.Extensions.Caching.Abstractions, and replace with new package Microsoft.Extensions.Caching.Abstractions 10.0.10"
+            },
+            "kind": "File",
+            "path": "src\\AdminPanel\\Club.AdminPanel.Web\\Club.AdminPanel.Web.csproj",
+            "snippet": "Microsoft.Extensions.Caching.Abstractions, 8.0.0\n\nRecommendation:\n\nRemove Microsoft.Extensions.Caching.Abstractions, and replace with new package Microsoft.Extensions.Caching.Abstractions 10.0.10",
+            "protectedSnippet": "Microsoft.Extensions.Caching.Abstractions, 8.0.0\n\nRecommendation:\n\nRemove Microsoft.Extensions.Caching.Abstractions, and replace with new package Microsoft.Extensions.Caching.Abstractions 10.0.10",
+            "label": "Microsoft.Extensions.Caching.Abstractions 8.0.0",
+            "properties": {
+              "PackageId": "Microsoft.Extensions.Caching.Abstractions",
+              "PackageVersion": "8.0.0",
+              "PackageNewVersion": "10.0.10",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "8f676e38-8d8d-41de-af0e-5ae8124b2119",
+          "ruleId": "NuGet.0002",
+          "projectPath": "src\\AdminPanel\\Club.AdminPanel.Web\\Club.AdminPanel.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.Extensions.Caching.Memory, 8.0.1\n\nRecommendation:\n\nRemove Microsoft.Extensions.Caching.Memory, and replace with new package Microsoft.Extensions.Caching.Memory 10.0.10",
+              "protected": "Microsoft.Extensions.Caching.Memory, 8.0.1\n\nRecommendation:\n\nRemove Microsoft.Extensions.Caching.Memory, and replace with new package Microsoft.Extensions.Caching.Memory 10.0.10"
+            },
+            "kind": "File",
+            "path": "src\\AdminPanel\\Club.AdminPanel.Web\\Club.AdminPanel.Web.csproj",
+            "snippet": "Microsoft.Extensions.Caching.Memory, 8.0.1\n\nRecommendation:\n\nRemove Microsoft.Extensions.Caching.Memory, and replace with new package Microsoft.Extensions.Caching.Memory 10.0.10",
+            "protectedSnippet": "Microsoft.Extensions.Caching.Memory, 8.0.1\n\nRecommendation:\n\nRemove Microsoft.Extensions.Caching.Memory, and replace with new package Microsoft.Extensions.Caching.Memory 10.0.10",
+            "label": "Microsoft.Extensions.Caching.Memory 8.0.1",
+            "properties": {
+              "PackageId": "Microsoft.Extensions.Caching.Memory",
+              "PackageVersion": "8.0.1",
+              "PackageNewVersion": "10.0.10",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "4f4c8a76-7a40-41ca-b6bb-955054b0c094",
+          "ruleId": "NuGet.0002",
+          "projectPath": "src\\AdminPanel\\Club.AdminPanel.Web\\Club.AdminPanel.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.Extensions.Caching.StackExchangeRedis, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.Extensions.Caching.StackExchangeRedis, and replace with new package Microsoft.Extensions.Caching.StackExchangeRedis 10.0.10",
+              "protected": "Microsoft.Extensions.Caching.StackExchangeRedis, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.Extensions.Caching.StackExchangeRedis, and replace with new package Microsoft.Extensions.Caching.StackExchangeRedis 10.0.10"
+            },
+            "kind": "File",
+            "path": "src\\AdminPanel\\Club.AdminPanel.Web\\Club.AdminPanel.Web.csproj",
+            "snippet": "Microsoft.Extensions.Caching.StackExchangeRedis, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.Extensions.Caching.StackExchangeRedis, and replace with new package Microsoft.Extensions.Caching.StackExchangeRedis 10.0.10",
+            "protectedSnippet": "Microsoft.Extensions.Caching.StackExchangeRedis, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.Extensions.Caching.StackExchangeRedis, and replace with new package Microsoft.Extensions.Caching.StackExchangeRedis 10.0.10",
+            "label": "Microsoft.Extensions.Caching.StackExchangeRedis 8.0.15",
+            "properties": {
+              "PackageId": "Microsoft.Extensions.Caching.StackExchangeRedis",
+              "PackageVersion": "8.0.15",
+              "PackageNewVersion": "10.0.10",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "9afd962d-eb70-4ca4-b4a9-0a7ea37df4e5",
+          "ruleId": "NuGet.0004",
+          "projectPath": "src\\AdminPanel\\Club.AdminPanel.Web\\Club.AdminPanel.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "AutoMapper, 14.0.0\n\nRecommendation:\n\nAutoMapper, 16.2.0",
+              "protected": "AutoMapper, 14.0.0\n\nRecommendation:\n\nAutoMapper, 16.2.0"
+            },
+            "kind": "File",
+            "path": "src\\AdminPanel\\Club.AdminPanel.Web\\Club.AdminPanel.Web.csproj",
+            "snippet": "AutoMapper, 14.0.0\n\nRecommendation:\n\nAutoMapper, 16.2.0",
+            "protectedSnippet": "AutoMapper, 14.0.0\n\nRecommendation:\n\nAutoMapper, 16.2.0",
+            "label": "AutoMapper 14.0.0",
+            "properties": {
+              "PackageId": "AutoMapper",
+              "PackageVersion": "14.0.0",
+              "PackageNewVersion": "16.2.0",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "ae186cca-a52b-466c-8774-7be69065a717",
+          "ruleId": "Project.0002",
+          "projectPath": "src\\AdminPanel\\Club.AdminPanel.Web\\Club.AdminPanel.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Current target framework: net10.0\nRecommended target framework: net10.0",
+              "protected": "Current target framework: net10.0\nRecommended target framework: net10.0"
+            },
+            "kind": "File",
+            "path": "src\\AdminPanel\\Club.AdminPanel.Web\\Club.AdminPanel.Web.csproj",
+            "snippet": "Current target framework: net10.0\nRecommended target framework: net10.0",
+            "protectedSnippet": "Current target framework: net10.0\nRecommended target framework: net10.0",
+            "properties": {
+              "CurrentTargetFramework": "net10.0",
+              "RecommendedTargetFramework": "net10.0"
+            }
+          }
+        },
+        {
+          "incidentId": "374ad1c5-f8ad-426f-8695-076c248bf042",
+          "ruleId": "Api.0002",
+          "description": "Breaking change: New TimeSpan.From*() overloads that take integers ",
+          "projectPath": "src\\AdminPanel\\Club.AdminPanel.Web\\Club.AdminPanel.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "cacheOptions.SetSlidingExpiration(TimeSpan.FromMinutes(30));",
+              "protected": "M:System.TimeSpan.FromMinutes(System.Double)"
+            },
+            "kind": "File",
+            "path": "src\\AdminPanel\\Club.AdminPanel.Web\\Infrastructure\\DatabaseCaching.cs",
+            "snippet": "cacheOptions.SetSlidingExpiration(TimeSpan.FromMinutes(30));",
+            "protectedSnippet": "M:System.TimeSpan.FromMinutes(System.Double)",
+            "label": "M:System.TimeSpan.FromMinutes(System.Double)",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/core-libraries/9.0/timespan-from-overloads.md",
+                "isCustom": false
+              }
+            ],
+            "line": 99,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "5a3f8245-6203-4b3d-84b0-f5e95204c0ca",
+          "ruleId": "Api.0002",
+          "description": "Breaking change: New TimeSpan.From*() overloads that take integers ",
+          "projectPath": "src\\AdminPanel\\Club.AdminPanel.Web\\Club.AdminPanel.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var cacheMaxAge = environment.IsDevelopment() ? TimeSpan.FromMinutes(10) : TimeSpan.FromDays(365);",
+              "protected": "M:System.TimeSpan.FromDays(System.Double)"
+            },
+            "kind": "File",
+            "path": "src\\AdminPanel\\Club.AdminPanel.Web\\Infrastructure\\PerformanceOptimization.cs",
+            "snippet": "var cacheMaxAge = environment.IsDevelopment() ? TimeSpan.FromMinutes(10) : TimeSpan.FromDays(365);",
+            "protectedSnippet": "M:System.TimeSpan.FromDays(System.Double)",
+            "label": "M:System.TimeSpan.FromDays(System.Double)",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/core-libraries/9.0/timespan-from-overloads.md",
+                "isCustom": false
+              }
+            ],
+            "line": 54,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "dae398af-5723-493f-b669-a90642e2db78",
+          "ruleId": "Api.0002",
+          "description": "Breaking change: New TimeSpan.From*() overloads that take integers ",
+          "projectPath": "src\\AdminPanel\\Club.AdminPanel.Web\\Club.AdminPanel.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var cacheMaxAge = environment.IsDevelopment() ? TimeSpan.FromMinutes(10) : TimeSpan.FromDays(365);",
+              "protected": "M:System.TimeSpan.FromMinutes(System.Double)"
+            },
+            "kind": "File",
+            "path": "src\\AdminPanel\\Club.AdminPanel.Web\\Infrastructure\\PerformanceOptimization.cs",
+            "snippet": "var cacheMaxAge = environment.IsDevelopment() ? TimeSpan.FromMinutes(10) : TimeSpan.FromDays(365);",
+            "protectedSnippet": "M:System.TimeSpan.FromMinutes(System.Double)",
+            "label": "M:System.TimeSpan.FromMinutes(System.Double)",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/core-libraries/9.0/timespan-from-overloads.md",
+                "isCustom": false
+              }
+            ],
+            "line": 54,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "9536415a-b4e0-47be-a37e-3374054b554e",
+          "ruleId": "Api.0002",
+          "description": "Breaking change: New TimeSpan.From*() overloads that take integers ",
+          "projectPath": "src\\AdminPanel\\Club.AdminPanel.Web\\Club.AdminPanel.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "distCacheOptions.SetSlidingExpiration(TimeSpan.FromMinutes(30));",
+              "protected": "M:System.TimeSpan.FromMinutes(System.Double)"
+            },
+            "kind": "File",
+            "path": "src\\AdminPanel\\Club.AdminPanel.Web\\Infrastructure\\DistributedDatabaseCache.cs",
+            "snippet": "distCacheOptions.SetSlidingExpiration(TimeSpan.FromMinutes(30));",
+            "protectedSnippet": "M:System.TimeSpan.FromMinutes(System.Double)",
+            "label": "M:System.TimeSpan.FromMinutes(System.Double)",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/core-libraries/9.0/timespan-from-overloads.md",
+                "isCustom": false
+              }
+            ],
+            "line": 227,
+            "column": 16
+          }
+        },
+        {
+          "incidentId": "e992bac6-994f-42e2-9421-5e1556a4e0d2",
+          "ruleId": "Api.0002",
+          "description": "Breaking change: New TimeSpan.From*() overloads that take integers ",
+          "projectPath": "src\\AdminPanel\\Club.AdminPanel.Web\\Club.AdminPanel.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var memCacheOptions = new MemoryCacheEntryOptions()\r\n            .SetSlidingExpiration(slidingExpiration ?? TimeSpan.FromMinutes(5));",
+              "protected": "M:System.TimeSpan.FromMinutes(System.Double)"
+            },
+            "kind": "File",
+            "path": "src\\AdminPanel\\Club.AdminPanel.Web\\Infrastructure\\DistributedDatabaseCache.cs",
+            "snippet": "var memCacheOptions = new MemoryCacheEntryOptions()\r\n            .SetSlidingExpiration(slidingExpiration ?? TimeSpan.FromMinutes(5));",
+            "protectedSnippet": "M:System.TimeSpan.FromMinutes(System.Double)",
+            "label": "M:System.TimeSpan.FromMinutes(System.Double)",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/core-libraries/9.0/timespan-from-overloads.md",
+                "isCustom": false
+              }
+            ],
+            "line": 214,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "153504df-1840-4e4d-b7d1-5fe829ad6efe",
+          "ruleId": "Api.0002",
+          "description": "Breaking change: New TimeSpan.From*() overloads that take integers ",
+          "projectPath": "src\\AdminPanel\\Club.AdminPanel.Web\\Club.AdminPanel.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var memOptions = new MemoryCacheEntryOptions()\r\n                        .SetSlidingExpiration(TimeSpan.FromMinutes(5));",
+              "protected": "M:System.TimeSpan.FromMinutes(System.Double)"
+            },
+            "kind": "File",
+            "path": "src\\AdminPanel\\Club.AdminPanel.Web\\Infrastructure\\DistributedDatabaseCache.cs",
+            "snippet": "var memOptions = new MemoryCacheEntryOptions()\r\n                        .SetSlidingExpiration(TimeSpan.FromMinutes(5));",
+            "protectedSnippet": "M:System.TimeSpan.FromMinutes(System.Double)",
+            "label": "M:System.TimeSpan.FromMinutes(System.Double)",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/core-libraries/9.0/timespan-from-overloads.md",
+                "isCustom": false
+              }
+            ],
+            "line": 186,
+            "column": 20
+          }
+        },
+        {
+          "incidentId": "6bae0859-b636-4d3a-9ccb-49c1c307df56",
+          "ruleId": "Api.0002",
+          "description": "Breaking change: New TimeSpan.From*() overloads that take integers ",
+          "projectPath": "src\\AdminPanel\\Club.AdminPanel.Web\\Club.AdminPanel.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "cacheOptions.SetSlidingExpiration(TimeSpan.FromMinutes(30));",
+              "protected": "M:System.TimeSpan.FromMinutes(System.Double)"
+            },
+            "kind": "File",
+            "path": "src\\AdminPanel\\Club.AdminPanel.Web\\Infrastructure\\DistributedDatabaseCache.cs",
+            "snippet": "cacheOptions.SetSlidingExpiration(TimeSpan.FromMinutes(30));",
+            "protectedSnippet": "M:System.TimeSpan.FromMinutes(System.Double)",
+            "label": "M:System.TimeSpan.FromMinutes(System.Double)",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/core-libraries/9.0/timespan-from-overloads.md",
+                "isCustom": false
+              }
+            ],
+            "line": 76,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "5f401d36-5043-4c42-8b0b-ed63b87cdb54",
+          "ruleId": "Api.0001",
+          "description": "API is unavailable in net10.0 ",
+          "projectPath": "src\\AdminPanel\\Club.AdminPanel.Web\\Club.AdminPanel.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "return new JwtSecurityTokenHandler().WriteToken(token);",
+              "protected": "T:System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler"
+            },
+            "kind": "File",
+            "path": "src\\AdminPanel\\Club.AdminPanel.Web\\Controllers\\AccountController\\InternalAccountController.cs",
+            "snippet": "return new JwtSecurityTokenHandler().WriteToken(token);",
+            "protectedSnippet": "T:System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler",
+            "label": "T:System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler",
+            "line": 263,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "72e9b07b-467c-4d0c-ade9-31b5f3f90a37",
+          "ruleId": "Api.0001",
+          "description": "API is unavailable in net10.0 ",
+          "projectPath": "src\\AdminPanel\\Club.AdminPanel.Web\\Club.AdminPanel.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "return new JwtSecurityTokenHandler().WriteToken(token);",
+              "protected": "M:System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler.#ctor"
+            },
+            "kind": "File",
+            "path": "src\\AdminPanel\\Club.AdminPanel.Web\\Controllers\\AccountController\\InternalAccountController.cs",
+            "snippet": "return new JwtSecurityTokenHandler().WriteToken(token);",
+            "protectedSnippet": "M:System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler.#ctor",
+            "label": "M:System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler.#ctor",
+            "line": 263,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "78652e35-b1e3-4fd9-8884-746a12ee71e0",
+          "ruleId": "Api.0001",
+          "description": "API is unavailable in net10.0 ",
+          "projectPath": "src\\AdminPanel\\Club.AdminPanel.Web\\Club.AdminPanel.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "return new JwtSecurityTokenHandler().WriteToken(token);",
+              "protected": "M:System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler.WriteToken(Microsoft.IdentityModel.Tokens.SecurityToken)"
+            },
+            "kind": "File",
+            "path": "src\\AdminPanel\\Club.AdminPanel.Web\\Controllers\\AccountController\\InternalAccountController.cs",
+            "snippet": "return new JwtSecurityTokenHandler().WriteToken(token);",
+            "protectedSnippet": "M:System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler.WriteToken(Microsoft.IdentityModel.Tokens.SecurityToken)",
+            "label": "M:System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler.WriteToken(Microsoft.IdentityModel.Tokens.SecurityToken)",
+            "line": 263,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "b18dcd94-66cf-4482-8bb8-eb005557700e",
+          "ruleId": "Api.0001",
+          "description": "API is unavailable in net10.0 ",
+          "projectPath": "src\\AdminPanel\\Club.AdminPanel.Web\\Club.AdminPanel.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "JwtSecurityToken token = new(\r\n            issuer: \u0022InMemoryIssuer\u0022,\r\n            audience: \u0022InMemoryAudience\u0022,\r\n            claims: claims,\r\n            expires: DateTime.Now.AddHours(1),\r\n            signingCredentials: creds);",
+              "protected": "T:System.IdentityModel.Tokens.Jwt.JwtSecurityToken"
+            },
+            "kind": "File",
+            "path": "src\\AdminPanel\\Club.AdminPanel.Web\\Controllers\\AccountController\\InternalAccountController.cs",
+            "snippet": "JwtSecurityToken token = new(\r\n            issuer: \u0022InMemoryIssuer\u0022,\r\n            audience: \u0022InMemoryAudience\u0022,\r\n            claims: claims,\r\n            expires: DateTime.Now.AddHours(1),\r\n            signingCredentials: creds);",
+            "protectedSnippet": "T:System.IdentityModel.Tokens.Jwt.JwtSecurityToken",
+            "label": "T:System.IdentityModel.Tokens.Jwt.JwtSecurityToken",
+            "line": 256,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "a91d1947-fcbf-4e6c-95d8-5a455dd9f527",
+          "ruleId": "Api.0001",
+          "description": "API is unavailable in net10.0 ",
+          "projectPath": "src\\AdminPanel\\Club.AdminPanel.Web\\Club.AdminPanel.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "JwtSecurityToken token = new(\r\n            issuer: \u0022InMemoryIssuer\u0022,\r\n            audience: \u0022InMemoryAudience\u0022,\r\n            claims: claims,\r\n            expires: DateTime.Now.AddHours(1),\r\n            signingCredentials: creds);",
+              "protected": "M:System.IdentityModel.Tokens.Jwt.JwtSecurityToken.#ctor(System.String,System.String,System.Collections.Generic.IEnumerable{System.Security.Claims.Claim},System.Nullable{System.DateTime},System.Nullable{System.DateTime},Microsoft.IdentityModel.Tokens.SigningCredentials)"
+            },
+            "kind": "File",
+            "path": "src\\AdminPanel\\Club.AdminPanel.Web\\Controllers\\AccountController\\InternalAccountController.cs",
+            "snippet": "JwtSecurityToken token = new(\r\n            issuer: \u0022InMemoryIssuer\u0022,\r\n            audience: \u0022InMemoryAudience\u0022,\r\n            claims: claims,\r\n            expires: DateTime.Now.AddHours(1),\r\n            signingCredentials: creds);",
+            "protectedSnippet": "M:System.IdentityModel.Tokens.Jwt.JwtSecurityToken.#ctor(System.String,System.String,System.Collections.Generic.IEnumerable{System.Security.Claims.Claim},System.Nullable{System.DateTime},System.Nullable{System.DateTime},Microsoft.IdentityModel.Tokens.SigningCredentials)",
+            "label": "M:System.IdentityModel.Tokens.Jwt.JwtSecurityToken.#ctor(System.String,System.String,System.Collections.Generic.IEnumerable{System.Security.Claims.Claim},System.Nullable{System.DateTime},System.Nullable{System.DateTime},Microsoft.IdentityModel.Tokens.SigningCredentials)",
+            "line": 256,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "f71de61d-89e5-495f-85f0-e508145caaf4",
+          "ruleId": "Api.0001",
+          "description": "API is unavailable in net10.0 ",
+          "projectPath": "src\\AdminPanel\\Club.AdminPanel.Web\\Club.AdminPanel.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Claim[] claims = new[]\r\n        {\r\n        new Claim(JwtRegisteredClaimNames.Sub, username),\r\n        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),\r\n        // \u0633\u0627\u06CC\u0631 claims \u0645\u0648\u0631\u062F \u0646\u06CC\u0627\u0632\r\n    };",
+              "protected": "T:System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames"
+            },
+            "kind": "File",
+            "path": "src\\AdminPanel\\Club.AdminPanel.Web\\Controllers\\AccountController\\InternalAccountController.cs",
+            "snippet": "Claim[] claims = new[]\r\n        {\r\n        new Claim(JwtRegisteredClaimNames.Sub, username),\r\n        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),\r\n        // \u0633\u0627\u06CC\u0631 claims \u0645\u0648\u0631\u062F \u0646\u06CC\u0627\u0632\r\n    };",
+            "protectedSnippet": "T:System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames",
+            "label": "T:System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames",
+            "line": 244,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "ad74fd37-3aa6-429a-af72-413da974967c",
+          "ruleId": "Api.0001",
+          "description": "API is unavailable in net10.0 ",
+          "projectPath": "src\\AdminPanel\\Club.AdminPanel.Web\\Club.AdminPanel.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Claim[] claims = new[]\r\n        {\r\n        new Claim(JwtRegisteredClaimNames.Sub, username),\r\n        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),\r\n        // \u0633\u0627\u06CC\u0631 claims \u0645\u0648\u0631\u062F \u0646\u06CC\u0627\u0632\r\n    };",
+              "protected": "F:System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Jti"
+            },
+            "kind": "File",
+            "path": "src\\AdminPanel\\Club.AdminPanel.Web\\Controllers\\AccountController\\InternalAccountController.cs",
+            "snippet": "Claim[] claims = new[]\r\n        {\r\n        new Claim(JwtRegisteredClaimNames.Sub, username),\r\n        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),\r\n        // \u0633\u0627\u06CC\u0631 claims \u0645\u0648\u0631\u062F \u0646\u06CC\u0627\u0632\r\n    };",
+            "protectedSnippet": "F:System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Jti",
+            "label": "F:System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Jti",
+            "line": 244,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "66aa6598-f343-4ee1-b28e-81a9f815ee5f",
+          "ruleId": "Api.0001",
+          "description": "API is unavailable in net10.0 ",
+          "projectPath": "src\\AdminPanel\\Club.AdminPanel.Web\\Club.AdminPanel.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Claim[] claims = new[]\r\n        {\r\n        new Claim(JwtRegisteredClaimNames.Sub, username),\r\n        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),\r\n        // \u0633\u0627\u06CC\u0631 claims \u0645\u0648\u0631\u062F \u0646\u06CC\u0627\u0632\r\n    };",
+              "protected": "T:System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames"
+            },
+            "kind": "File",
+            "path": "src\\AdminPanel\\Club.AdminPanel.Web\\Controllers\\AccountController\\InternalAccountController.cs",
+            "snippet": "Claim[] claims = new[]\r\n        {\r\n        new Claim(JwtRegisteredClaimNames.Sub, username),\r\n        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),\r\n        // \u0633\u0627\u06CC\u0631 claims \u0645\u0648\u0631\u062F \u0646\u06CC\u0627\u0632\r\n    };",
+            "protectedSnippet": "T:System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames",
+            "label": "T:System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames",
+            "line": 244,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "af40f32b-25bd-4b78-b83f-363c662028ca",
+          "ruleId": "Api.0001",
+          "description": "API is unavailable in net10.0 ",
+          "projectPath": "src\\AdminPanel\\Club.AdminPanel.Web\\Club.AdminPanel.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Claim[] claims = new[]\r\n        {\r\n        new Claim(JwtRegisteredClaimNames.Sub, username),\r\n        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),\r\n        // \u0633\u0627\u06CC\u0631 claims \u0645\u0648\u0631\u062F \u0646\u06CC\u0627\u0632\r\n    };",
+              "protected": "F:System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub"
+            },
+            "kind": "File",
+            "path": "src\\AdminPanel\\Club.AdminPanel.Web\\Controllers\\AccountController\\InternalAccountController.cs",
+            "snippet": "Claim[] claims = new[]\r\n        {\r\n        new Claim(JwtRegisteredClaimNames.Sub, username),\r\n        new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),\r\n        // \u0633\u0627\u06CC\u0631 claims \u0645\u0648\u0631\u062F \u0646\u06CC\u0627\u0632\r\n    };",
+            "protectedSnippet": "F:System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub",
+            "label": "F:System.IdentityModel.Tokens.Jwt.JwtRegisteredClaimNames.Sub",
+            "line": 244,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "0e947428-f0e7-467b-863a-5f9ad8d4b393",
+          "ruleId": "Api.0001",
+          "description": "Breaking change: DynamicallyAccessedMembers annotation removed from trim-unsafe configuration APIs ",
+          "projectPath": "src\\AdminPanel\\Club.AdminPanel.Web\\Club.AdminPanel.Web.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "builder.Services.Configure\u003CTelemetryOptions\u003E(builder.Configuration.GetSection(nameof(TelemetryOptions)));",
+              "protected": "M:Microsoft.Extensions.DependencyInjection.OptionsConfigurationServiceCollectionExtensions.Configure\u0060\u00601(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)"
+            },
+            "kind": "File",
+            "path": "src\\AdminPanel\\Club.AdminPanel.Web\\Program.cs",
+            "snippet": "builder.Services.Configure\u003CTelemetryOptions\u003E(builder.Configuration.GetSection(nameof(TelemetryOptions)));",
+            "protectedSnippet": "M:Microsoft.Extensions.DependencyInjection.OptionsConfigurationServiceCollectionExtensions.Configure\u0060\u00601(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)",
+            "label": "M:Microsoft.Extensions.DependencyInjection.OptionsConfigurationServiceCollectionExtensions.Configure\u0060\u00601(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/extensions/10.0/dynamically-accessed-members-configuration.md",
+                "isCustom": false
+              }
+            ],
+            "line": 7,
+            "column": 0
+          }
+        }
+      ],
+      "features": [
+        {
+          "featureId": "IdentityModel",
+          "incidents": [
+            "af40f32b-25bd-4b78-b83f-363c662028ca",
+            "66aa6598-f343-4ee1-b28e-81a9f815ee5f",
+            "ad74fd37-3aa6-429a-af72-413da974967c",
+            "f71de61d-89e5-495f-85f0-e508145caaf4",
+            "a91d1947-fcbf-4e6c-95d8-5a455dd9f527",
+            "b18dcd94-66cf-4482-8bb8-eb005557700e",
+            "78652e35-b1e3-4fd9-8884-746a12ee71e0",
+            "72e9b07b-467c-4d0c-ade9-31b5f3f90a37",
+            "5f401d36-5043-4c42-8b0b-ed63b87cdb54"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "src\\Core\\Club.Application\\Club.Application.csproj",
+      "startingProject": true,
+      "issues": 3,
+      "storyPoints": 3,
+      "properties": {
+        "appName": "Club.Application",
+        "projectKind": "ClassLibrary",
+        "frameworks": [
+          "net10.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 49,
+        "numberOfCodeFiles": 49,
+        "linesTotal": 3069,
+        "linesOfCode": 3069,
+        "totalApiScanned": 3551,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "11ed0c67-715b-42d6-9be0-c95f45004242",
+          "ruleId": "NuGet.0002",
+          "projectPath": "src\\Core\\Club.Application\\Club.Application.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.EntityFrameworkCore, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.EntityFrameworkCore, and replace with new package Microsoft.EntityFrameworkCore 10.0.10",
+              "protected": "Microsoft.EntityFrameworkCore, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.EntityFrameworkCore, and replace with new package Microsoft.EntityFrameworkCore 10.0.10"
+            },
+            "kind": "File",
+            "path": "src\\Core\\Club.Application\\Club.Application.csproj",
+            "snippet": "Microsoft.EntityFrameworkCore, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.EntityFrameworkCore, and replace with new package Microsoft.EntityFrameworkCore 10.0.10",
+            "protectedSnippet": "Microsoft.EntityFrameworkCore, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.EntityFrameworkCore, and replace with new package Microsoft.EntityFrameworkCore 10.0.10",
+            "label": "Microsoft.EntityFrameworkCore 8.0.15",
+            "properties": {
+              "PackageId": "Microsoft.EntityFrameworkCore",
+              "PackageVersion": "8.0.15",
+              "PackageNewVersion": "10.0.10",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "2fe2511e-6c97-4936-8f5b-bf42ba327b60",
+          "ruleId": "NuGet.0004",
+          "projectPath": "src\\Core\\Club.Application\\Club.Application.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "AutoMapper, 14.0.0\n\nRecommendation:\n\nAutoMapper, 16.2.0",
+              "protected": "AutoMapper, 14.0.0\n\nRecommendation:\n\nAutoMapper, 16.2.0"
+            },
+            "kind": "File",
+            "path": "src\\Core\\Club.Application\\Club.Application.csproj",
+            "snippet": "AutoMapper, 14.0.0\n\nRecommendation:\n\nAutoMapper, 16.2.0",
+            "protectedSnippet": "AutoMapper, 14.0.0\n\nRecommendation:\n\nAutoMapper, 16.2.0",
+            "label": "AutoMapper 14.0.0",
+            "properties": {
+              "PackageId": "AutoMapper",
+              "PackageVersion": "14.0.0",
+              "PackageNewVersion": "16.2.0",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "6a4de18d-c892-4ec0-b2e9-b79082af3474",
+          "ruleId": "Project.0002",
+          "projectPath": "src\\Core\\Club.Application\\Club.Application.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Current target framework: net10.0\nRecommended target framework: net10.0",
+              "protected": "Current target framework: net10.0\nRecommended target framework: net10.0"
+            },
+            "kind": "File",
+            "path": "src\\Core\\Club.Application\\Club.Application.csproj",
+            "snippet": "Current target framework: net10.0\nRecommended target framework: net10.0",
+            "protectedSnippet": "Current target framework: net10.0\nRecommended target framework: net10.0",
+            "properties": {
+              "CurrentTargetFramework": "net10.0",
+              "RecommendedTargetFramework": "net10.0"
+            }
+          }
+        }
+      ],
+      "features": []
+    },
+    {
+      "path": "src\\Channel\\Club.Channel.Api\\Club.Channel.Api.csproj",
+      "startingProject": true,
+      "issues": 7,
+      "storyPoints": 12,
+      "properties": {
+        "appName": "Club.Channel.Api",
+        "projectKind": "AspNetCore",
+        "frameworks": [
+          "net10.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 26,
+        "numberOfCodeFiles": 21,
+        "linesTotal": 1458,
+        "linesOfCode": 1121,
+        "totalApiScanned": 1033,
+        "minLinesOfCodeToChange": 6,
+        "maxLinesOfCodeToChange": 6
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "4338733e-3b78-44d2-ad3c-7318cd94c8af",
+          "ruleId": "NuGet.0002",
+          "projectPath": "src\\Channel\\Club.Channel.Api\\Club.Channel.Api.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore, and replace with new package Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore 10.0.10",
+              "protected": "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore, and replace with new package Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore 10.0.10"
+            },
+            "kind": "File",
+            "path": "src\\Channel\\Club.Channel.Api\\Club.Channel.Api.csproj",
+            "snippet": "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore, and replace with new package Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore 10.0.10",
+            "protectedSnippet": "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore, and replace with new package Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore 10.0.10",
+            "label": "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore 8.0.15",
+            "properties": {
+              "PackageId": "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore",
+              "PackageVersion": "8.0.15",
+              "PackageNewVersion": "10.0.10",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "30dd22c5-f54f-494d-853e-58966a529e68",
+          "ruleId": "NuGet.0002",
+          "projectPath": "src\\Channel\\Club.Channel.Api\\Club.Channel.Api.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.AspNetCore.OpenApi, 8.0.8\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.OpenApi, and replace with new package Microsoft.AspNetCore.OpenApi 10.0.10",
+              "protected": "Microsoft.AspNetCore.OpenApi, 8.0.8\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.OpenApi, and replace with new package Microsoft.AspNetCore.OpenApi 10.0.10"
+            },
+            "kind": "File",
+            "path": "src\\Channel\\Club.Channel.Api\\Club.Channel.Api.csproj",
+            "snippet": "Microsoft.AspNetCore.OpenApi, 8.0.8\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.OpenApi, and replace with new package Microsoft.AspNetCore.OpenApi 10.0.10",
+            "protectedSnippet": "Microsoft.AspNetCore.OpenApi, 8.0.8\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.OpenApi, and replace with new package Microsoft.AspNetCore.OpenApi 10.0.10",
+            "label": "Microsoft.AspNetCore.OpenApi 8.0.8",
+            "properties": {
+              "PackageId": "Microsoft.AspNetCore.OpenApi",
+              "PackageVersion": "8.0.8",
+              "PackageNewVersion": "10.0.10",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "39767370-8252-4741-8607-d7a62a493e85",
+          "ruleId": "NuGet.0002",
+          "projectPath": "src\\Channel\\Club.Channel.Api\\Club.Channel.Api.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore, 8.0.8\n\nRecommendation:\n\nRemove Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore, and replace with new package Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore 10.0.10",
+              "protected": "Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore, 8.0.8\n\nRecommendation:\n\nRemove Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore, and replace with new package Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore 10.0.10"
+            },
+            "kind": "File",
+            "path": "src\\Channel\\Club.Channel.Api\\Club.Channel.Api.csproj",
+            "snippet": "Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore, 8.0.8\n\nRecommendation:\n\nRemove Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore, and replace with new package Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore 10.0.10",
+            "protectedSnippet": "Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore, 8.0.8\n\nRecommendation:\n\nRemove Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore, and replace with new package Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore 10.0.10",
+            "label": "Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore 8.0.8",
+            "properties": {
+              "PackageId": "Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore",
+              "PackageVersion": "8.0.8",
+              "PackageNewVersion": "10.0.10",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "e9e54fd6-0dc6-4835-8df8-3a5ce7117943",
+          "ruleId": "NuGet.0001",
+          "projectPath": "src\\Channel\\Club.Channel.Api\\Club.Channel.Api.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.VisualStudio.Azure.Containers.Tools.Targets, 1.21.0\n\nRecommendation:\n\nNo supported version found",
+              "protected": "Microsoft.VisualStudio.Azure.Containers.Tools.Targets, 1.21.0\n\nRecommendation:\n\nNo supported version found"
+            },
+            "kind": "File",
+            "path": "src\\Channel\\Club.Channel.Api\\Club.Channel.Api.csproj",
+            "snippet": "Microsoft.VisualStudio.Azure.Containers.Tools.Targets, 1.21.0\n\nRecommendation:\n\nNo supported version found",
+            "protectedSnippet": "Microsoft.VisualStudio.Azure.Containers.Tools.Targets, 1.21.0\n\nRecommendation:\n\nNo supported version found",
+            "label": "Microsoft.VisualStudio.Azure.Containers.Tools.Targets 1.21.0",
+            "properties": {
+              "PackageId": "Microsoft.VisualStudio.Azure.Containers.Tools.Targets",
+              "PackageVersion": "1.21.0",
+              "PackageNewVersion": null,
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "de998718-c65a-4dd7-b6e2-fb04d39ecbba",
+          "ruleId": "NuGet.0005",
+          "projectPath": "src\\Channel\\Club.Channel.Api\\Club.Channel.Api.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "FluentValidation.AspNetCore, 11.3.0\n\nRecommendation:\n\nShould be replaced.\nRemove FluentValidation.AspNetCore, and replace with new package FluentValidation.AspNetCore, 11.3.1",
+              "protected": "FluentValidation.AspNetCore, 11.3.0\n\nRecommendation:\n\nShould be replaced.\nRemove FluentValidation.AspNetCore, and replace with new package FluentValidation.AspNetCore, 11.3.1"
+            },
+            "kind": "File",
+            "path": "src\\Channel\\Club.Channel.Api\\Club.Channel.Api.csproj",
+            "snippet": "FluentValidation.AspNetCore, 11.3.0\n\nRecommendation:\n\nShould be replaced.\nRemove FluentValidation.AspNetCore, and replace with new package FluentValidation.AspNetCore, 11.3.1",
+            "protectedSnippet": "FluentValidation.AspNetCore, 11.3.0\n\nRecommendation:\n\nShould be replaced.\nRemove FluentValidation.AspNetCore, and replace with new package FluentValidation.AspNetCore, 11.3.1",
+            "label": "FluentValidation.AspNetCore 11.3.0",
+            "properties": {
+              "PackageId": "FluentValidation.AspNetCore",
+              "PackageVersion": "11.3.0",
+              "PackageNewVersion": null,
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "26a48775-474e-4d16-810c-b652600a9cac",
+          "ruleId": "Project.0002",
+          "projectPath": "src\\Channel\\Club.Channel.Api\\Club.Channel.Api.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Current target framework: net10.0\nRecommended target framework: net10.0",
+              "protected": "Current target framework: net10.0\nRecommended target framework: net10.0"
+            },
+            "kind": "File",
+            "path": "src\\Channel\\Club.Channel.Api\\Club.Channel.Api.csproj",
+            "snippet": "Current target framework: net10.0\nRecommended target framework: net10.0",
+            "protectedSnippet": "Current target framework: net10.0\nRecommended target framework: net10.0",
+            "properties": {
+              "CurrentTargetFramework": "net10.0",
+              "RecommendedTargetFramework": "net10.0"
+            }
+          }
+        },
+        {
+          "incidentId": "c676d55e-cf06-40d0-bc83-707aa316232c",
+          "ruleId": "Api.0002",
+          "description": "API is available in package Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore, 8.0.6. Add package reference to Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore, 8.0.6",
+          "projectPath": "src\\Channel\\Club.Channel.Api\\Club.Channel.Api.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "services.AddDatabaseDeveloperPageExceptionFilter();",
+              "protected": "T:Microsoft.Extensions.DependencyInjection.DatabaseDeveloperPageExceptionFilterServiceExtensions"
+            },
+            "kind": "File",
+            "path": "src\\Channel\\Club.Channel.Api\\DependencyInjection.cs",
+            "snippet": "services.AddDatabaseDeveloperPageExceptionFilter();",
+            "protectedSnippet": "T:Microsoft.Extensions.DependencyInjection.DatabaseDeveloperPageExceptionFilterServiceExtensions",
+            "label": "T:Microsoft.Extensions.DependencyInjection.DatabaseDeveloperPageExceptionFilterServiceExtensions",
+            "properties": {
+              "PackageId": "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore",
+              "PackageNewVersion": "8.0.6"
+            },
+            "line": 14,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "201f53f5-dbab-4222-bd14-169a7b9e932c",
+          "ruleId": "Api.0002",
+          "description": "API is available in package Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore, 8.0.6. Add package reference to Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore, 8.0.6",
+          "projectPath": "src\\Channel\\Club.Channel.Api\\Club.Channel.Api.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "services.AddDatabaseDeveloperPageExceptionFilter();",
+              "protected": "M:Microsoft.Extensions.DependencyInjection.DatabaseDeveloperPageExceptionFilterServiceExtensions.AddDatabaseDeveloperPageExceptionFilter(Microsoft.Extensions.DependencyInjection.IServiceCollection)"
+            },
+            "kind": "File",
+            "path": "src\\Channel\\Club.Channel.Api\\DependencyInjection.cs",
+            "snippet": "services.AddDatabaseDeveloperPageExceptionFilter();",
+            "protectedSnippet": "M:Microsoft.Extensions.DependencyInjection.DatabaseDeveloperPageExceptionFilterServiceExtensions.AddDatabaseDeveloperPageExceptionFilter(Microsoft.Extensions.DependencyInjection.IServiceCollection)",
+            "label": "M:Microsoft.Extensions.DependencyInjection.DatabaseDeveloperPageExceptionFilterServiceExtensions.AddDatabaseDeveloperPageExceptionFilter(Microsoft.Extensions.DependencyInjection.IServiceCollection)",
+            "properties": {
+              "PackageId": "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore",
+              "PackageNewVersion": "8.0.6"
+            },
+            "line": 14,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "cd2366ee-6e9b-4008-81c6-e4000a389695",
+          "ruleId": "Api.0001",
+          "description": "Breaking change: DynamicallyAccessedMembers annotation removed from trim-unsafe configuration APIs ",
+          "projectPath": "src\\Channel\\Club.Channel.Api\\Club.Channel.Api.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "services.Configure\u003CTelemetryOptions\u003E(context.Configuration.GetSection(nameof(TelemetryOptions)));",
+              "protected": "M:Microsoft.Extensions.DependencyInjection.OptionsConfigurationServiceCollectionExtensions.Configure\u0060\u00601(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)"
+            },
+            "kind": "File",
+            "path": "src\\Channel\\Club.Channel.Api\\Program.cs",
+            "snippet": "services.Configure\u003CTelemetryOptions\u003E(context.Configuration.GetSection(nameof(TelemetryOptions)));",
+            "protectedSnippet": "M:Microsoft.Extensions.DependencyInjection.OptionsConfigurationServiceCollectionExtensions.Configure\u0060\u00601(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)",
+            "label": "M:Microsoft.Extensions.DependencyInjection.OptionsConfigurationServiceCollectionExtensions.Configure\u0060\u00601(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/extensions/10.0/dynamically-accessed-members-configuration.md",
+                "isCustom": false
+              }
+            ],
+            "line": 84,
+            "column": 20
+          }
+        },
+        {
+          "incidentId": "8c6cc0af-b889-4c41-ae7f-5d130167d576",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: Exception diagnostics are suppressed when IExceptionHandler.TryHandleAsync returns true ",
+          "projectPath": "src\\Channel\\Club.Channel.Api\\Club.Channel.Api.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "app.UseExceptionHandler(options =\u003E { });",
+              "protected": "M:Microsoft.AspNetCore.Builder.ExceptionHandlerExtensions.UseExceptionHandler(Microsoft.AspNetCore.Builder.IApplicationBuilder,System.Action{Microsoft.AspNetCore.Builder.IApplicationBuilder})"
+            },
+            "kind": "File",
+            "path": "src\\Channel\\Club.Channel.Api\\Program.cs",
+            "snippet": "app.UseExceptionHandler(options =\u003E { });",
+            "protectedSnippet": "M:Microsoft.AspNetCore.Builder.ExceptionHandlerExtensions.UseExceptionHandler(Microsoft.AspNetCore.Builder.IApplicationBuilder,System.Action{Microsoft.AspNetCore.Builder.IApplicationBuilder})",
+            "label": "M:Microsoft.AspNetCore.Builder.ExceptionHandlerExtensions.UseExceptionHandler(Microsoft.AspNetCore.Builder.IApplicationBuilder,System.Action{Microsoft.AspNetCore.Builder.IApplicationBuilder})",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/aspnet-core/10/exception-handler-diagnostics-suppressed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 67,
+            "column": 0
+          }
+        },
+        {
+          "incidentId": "3bdfc378-454e-4bc9-9452-1728c760a3ae",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: Forwarded Headers Middleware ignores X-Forwarded-* headers from unknown proxies ",
+          "projectPath": "src\\Channel\\Club.Channel.Api\\Club.Channel.Api.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "app.UseForwardedHeaders(new ForwardedHeadersOptions\r\n{\r\n    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto\r\n});",
+              "protected": "M:Microsoft.AspNetCore.Builder.ForwardedHeadersExtensions.UseForwardedHeaders(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Builder.ForwardedHeadersOptions)"
+            },
+            "kind": "File",
+            "path": "src\\Channel\\Club.Channel.Api\\Program.cs",
+            "snippet": "app.UseForwardedHeaders(new ForwardedHeadersOptions\r\n{\r\n    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto\r\n});",
+            "protectedSnippet": "M:Microsoft.AspNetCore.Builder.ForwardedHeadersExtensions.UseForwardedHeaders(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Builder.ForwardedHeadersOptions)",
+            "label": "M:Microsoft.AspNetCore.Builder.ForwardedHeadersExtensions.UseForwardedHeaders(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Builder.ForwardedHeadersOptions)",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/aspnet-core/8.0/forwarded-headers-unknown-proxies.md",
+                "isCustom": false
+              }
+            ],
+            "line": 27,
+            "column": 0
+          }
+        },
+        {
+          "incidentId": "a72a5cd8-c4c5-4afd-b3cb-8850bd4d979d",
+          "ruleId": "Api.0001",
+          "description": "Breaking change: DynamicallyAccessedMembers annotation removed from trim-unsafe configuration APIs ",
+          "projectPath": "src\\Channel\\Club.Channel.Api\\Club.Channel.Api.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "builder.Services.Configure\u003CTelemetryOptions\u003E(builder.Configuration.GetSection(nameof(TelemetryOptions)));",
+              "protected": "M:Microsoft.Extensions.DependencyInjection.OptionsConfigurationServiceCollectionExtensions.Configure\u0060\u00601(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)"
+            },
+            "kind": "File",
+            "path": "src\\Channel\\Club.Channel.Api\\Program.cs",
+            "snippet": "builder.Services.Configure\u003CTelemetryOptions\u003E(builder.Configuration.GetSection(nameof(TelemetryOptions)));",
+            "protectedSnippet": "M:Microsoft.Extensions.DependencyInjection.OptionsConfigurationServiceCollectionExtensions.Configure\u0060\u00601(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)",
+            "label": "M:Microsoft.Extensions.DependencyInjection.OptionsConfigurationServiceCollectionExtensions.Configure\u0060\u00601(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/extensions/10.0/dynamically-accessed-members-configuration.md",
+                "isCustom": false
+              }
+            ],
+            "line": 13,
+            "column": 0
+          }
+        }
+      ],
+      "features": []
+    },
+    {
+      "path": "src\\Channel\\Club.Channel.Application\\Club.Channel.Application.csproj",
+      "startingProject": true,
+      "issues": 3,
+      "storyPoints": 3,
+      "properties": {
+        "appName": "Club.Channel.Application",
+        "projectKind": "ClassLibrary",
+        "frameworks": [
+          "net10.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 5,
+        "numberOfCodeFiles": 5,
+        "linesTotal": 300,
+        "linesOfCode": 300,
+        "totalApiScanned": 410,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "fe6bb5bd-29e8-4eda-bcd0-83be8c1de71b",
+          "ruleId": "NuGet.0002",
+          "projectPath": "src\\Channel\\Club.Channel.Application\\Club.Channel.Application.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.EntityFrameworkCore, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.EntityFrameworkCore, and replace with new package Microsoft.EntityFrameworkCore 10.0.10",
+              "protected": "Microsoft.EntityFrameworkCore, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.EntityFrameworkCore, and replace with new package Microsoft.EntityFrameworkCore 10.0.10"
+            },
+            "kind": "File",
+            "path": "src\\Channel\\Club.Channel.Application\\Club.Channel.Application.csproj",
+            "snippet": "Microsoft.EntityFrameworkCore, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.EntityFrameworkCore, and replace with new package Microsoft.EntityFrameworkCore 10.0.10",
+            "protectedSnippet": "Microsoft.EntityFrameworkCore, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.EntityFrameworkCore, and replace with new package Microsoft.EntityFrameworkCore 10.0.10",
+            "label": "Microsoft.EntityFrameworkCore 8.0.15",
+            "properties": {
+              "PackageId": "Microsoft.EntityFrameworkCore",
+              "PackageVersion": "8.0.15",
+              "PackageNewVersion": "10.0.10",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "0ab1acea-9be5-4ac7-be13-88c1774dbaab",
+          "ruleId": "NuGet.0004",
+          "projectPath": "src\\Channel\\Club.Channel.Application\\Club.Channel.Application.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "AutoMapper, 14.0.0\n\nRecommendation:\n\nAutoMapper, 16.2.0",
+              "protected": "AutoMapper, 14.0.0\n\nRecommendation:\n\nAutoMapper, 16.2.0"
+            },
+            "kind": "File",
+            "path": "src\\Channel\\Club.Channel.Application\\Club.Channel.Application.csproj",
+            "snippet": "AutoMapper, 14.0.0\n\nRecommendation:\n\nAutoMapper, 16.2.0",
+            "protectedSnippet": "AutoMapper, 14.0.0\n\nRecommendation:\n\nAutoMapper, 16.2.0",
+            "label": "AutoMapper 14.0.0",
+            "properties": {
+              "PackageId": "AutoMapper",
+              "PackageVersion": "14.0.0",
+              "PackageNewVersion": "16.2.0",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "18d61ff2-00fb-47ea-8922-f64fc5255463",
+          "ruleId": "Project.0002",
+          "projectPath": "src\\Channel\\Club.Channel.Application\\Club.Channel.Application.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Current target framework: net10.0\nRecommended target framework: net10.0",
+              "protected": "Current target framework: net10.0\nRecommended target framework: net10.0"
+            },
+            "kind": "File",
+            "path": "src\\Channel\\Club.Channel.Application\\Club.Channel.Application.csproj",
+            "snippet": "Current target framework: net10.0\nRecommended target framework: net10.0",
+            "protectedSnippet": "Current target framework: net10.0\nRecommended target framework: net10.0",
+            "properties": {
+              "CurrentTargetFramework": "net10.0",
+              "RecommendedTargetFramework": "net10.0"
+            }
+          }
+        }
+      ],
+      "features": []
+    },
+    {
+      "path": "src\\CustomerPortal\\Club.CustomerPortal.Api\\Club.CustomerPortal.Api.csproj",
+      "startingProject": true,
+      "issues": 7,
+      "storyPoints": 11,
+      "properties": {
+        "appName": "Club.CustomerPortal.Api",
+        "projectKind": "AspNetCore",
+        "frameworks": [
+          "net10.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 16,
+        "numberOfCodeFiles": 15,
+        "linesTotal": 922,
+        "linesOfCode": 898,
+        "totalApiScanned": 829,
+        "minLinesOfCodeToChange": 5,
+        "maxLinesOfCodeToChange": 5
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "00d561e2-9fe3-45ec-8c42-6b9d002a15b1",
+          "ruleId": "NuGet.0002",
+          "projectPath": "src\\CustomerPortal\\Club.CustomerPortal.Api\\Club.CustomerPortal.Api.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore, and replace with new package Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore 10.0.10",
+              "protected": "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore, and replace with new package Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore 10.0.10"
+            },
+            "kind": "File",
+            "path": "src\\CustomerPortal\\Club.CustomerPortal.Api\\Club.CustomerPortal.Api.csproj",
+            "snippet": "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore, and replace with new package Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore 10.0.10",
+            "protectedSnippet": "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore, and replace with new package Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore 10.0.10",
+            "label": "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore 8.0.15",
+            "properties": {
+              "PackageId": "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore",
+              "PackageVersion": "8.0.15",
+              "PackageNewVersion": "10.0.10",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "d5fbb079-3e93-4344-b893-cec6a97f7d8c",
+          "ruleId": "NuGet.0002",
+          "projectPath": "src\\CustomerPortal\\Club.CustomerPortal.Api\\Club.CustomerPortal.Api.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.AspNetCore.OpenApi, 8.0.8\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.OpenApi, and replace with new package Microsoft.AspNetCore.OpenApi 10.0.10",
+              "protected": "Microsoft.AspNetCore.OpenApi, 8.0.8\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.OpenApi, and replace with new package Microsoft.AspNetCore.OpenApi 10.0.10"
+            },
+            "kind": "File",
+            "path": "src\\CustomerPortal\\Club.CustomerPortal.Api\\Club.CustomerPortal.Api.csproj",
+            "snippet": "Microsoft.AspNetCore.OpenApi, 8.0.8\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.OpenApi, and replace with new package Microsoft.AspNetCore.OpenApi 10.0.10",
+            "protectedSnippet": "Microsoft.AspNetCore.OpenApi, 8.0.8\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.OpenApi, and replace with new package Microsoft.AspNetCore.OpenApi 10.0.10",
+            "label": "Microsoft.AspNetCore.OpenApi 8.0.8",
+            "properties": {
+              "PackageId": "Microsoft.AspNetCore.OpenApi",
+              "PackageVersion": "8.0.8",
+              "PackageNewVersion": "10.0.10",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "ce4e6889-6932-41bd-8545-1d26327e1a7e",
+          "ruleId": "NuGet.0002",
+          "projectPath": "src\\CustomerPortal\\Club.CustomerPortal.Api\\Club.CustomerPortal.Api.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore, 8.0.8\n\nRecommendation:\n\nRemove Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore, and replace with new package Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore 10.0.10",
+              "protected": "Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore, 8.0.8\n\nRecommendation:\n\nRemove Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore, and replace with new package Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore 10.0.10"
+            },
+            "kind": "File",
+            "path": "src\\CustomerPortal\\Club.CustomerPortal.Api\\Club.CustomerPortal.Api.csproj",
+            "snippet": "Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore, 8.0.8\n\nRecommendation:\n\nRemove Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore, and replace with new package Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore 10.0.10",
+            "protectedSnippet": "Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore, 8.0.8\n\nRecommendation:\n\nRemove Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore, and replace with new package Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore 10.0.10",
+            "label": "Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore 8.0.8",
+            "properties": {
+              "PackageId": "Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore",
+              "PackageVersion": "8.0.8",
+              "PackageNewVersion": "10.0.10",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "057abd8b-1262-42b2-9b6b-3ba7a03a583f",
+          "ruleId": "NuGet.0001",
+          "projectPath": "src\\CustomerPortal\\Club.CustomerPortal.Api\\Club.CustomerPortal.Api.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.VisualStudio.Azure.Containers.Tools.Targets, 1.21.0\n\nRecommendation:\n\nNo supported version found",
+              "protected": "Microsoft.VisualStudio.Azure.Containers.Tools.Targets, 1.21.0\n\nRecommendation:\n\nNo supported version found"
+            },
+            "kind": "File",
+            "path": "src\\CustomerPortal\\Club.CustomerPortal.Api\\Club.CustomerPortal.Api.csproj",
+            "snippet": "Microsoft.VisualStudio.Azure.Containers.Tools.Targets, 1.21.0\n\nRecommendation:\n\nNo supported version found",
+            "protectedSnippet": "Microsoft.VisualStudio.Azure.Containers.Tools.Targets, 1.21.0\n\nRecommendation:\n\nNo supported version found",
+            "label": "Microsoft.VisualStudio.Azure.Containers.Tools.Targets 1.21.0",
+            "properties": {
+              "PackageId": "Microsoft.VisualStudio.Azure.Containers.Tools.Targets",
+              "PackageVersion": "1.21.0",
+              "PackageNewVersion": null,
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "f6a5ac23-3602-4f28-ad4b-e0359cb86c6e",
+          "ruleId": "NuGet.0005",
+          "projectPath": "src\\CustomerPortal\\Club.CustomerPortal.Api\\Club.CustomerPortal.Api.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "FluentValidation.AspNetCore, 11.3.0\n\nRecommendation:\n\nShould be replaced.\nRemove FluentValidation.AspNetCore, and replace with new package FluentValidation.AspNetCore, 11.3.1",
+              "protected": "FluentValidation.AspNetCore, 11.3.0\n\nRecommendation:\n\nShould be replaced.\nRemove FluentValidation.AspNetCore, and replace with new package FluentValidation.AspNetCore, 11.3.1"
+            },
+            "kind": "File",
+            "path": "src\\CustomerPortal\\Club.CustomerPortal.Api\\Club.CustomerPortal.Api.csproj",
+            "snippet": "FluentValidation.AspNetCore, 11.3.0\n\nRecommendation:\n\nShould be replaced.\nRemove FluentValidation.AspNetCore, and replace with new package FluentValidation.AspNetCore, 11.3.1",
+            "protectedSnippet": "FluentValidation.AspNetCore, 11.3.0\n\nRecommendation:\n\nShould be replaced.\nRemove FluentValidation.AspNetCore, and replace with new package FluentValidation.AspNetCore, 11.3.1",
+            "label": "FluentValidation.AspNetCore 11.3.0",
+            "properties": {
+              "PackageId": "FluentValidation.AspNetCore",
+              "PackageVersion": "11.3.0",
+              "PackageNewVersion": null,
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "d544476e-e2c9-4f84-8eae-1e8e130f9857",
+          "ruleId": "Project.0002",
+          "projectPath": "src\\CustomerPortal\\Club.CustomerPortal.Api\\Club.CustomerPortal.Api.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Current target framework: net10.0\nRecommended target framework: net10.0",
+              "protected": "Current target framework: net10.0\nRecommended target framework: net10.0"
+            },
+            "kind": "File",
+            "path": "src\\CustomerPortal\\Club.CustomerPortal.Api\\Club.CustomerPortal.Api.csproj",
+            "snippet": "Current target framework: net10.0\nRecommended target framework: net10.0",
+            "protectedSnippet": "Current target framework: net10.0\nRecommended target framework: net10.0",
+            "properties": {
+              "CurrentTargetFramework": "net10.0",
+              "RecommendedTargetFramework": "net10.0"
+            }
+          }
+        },
+        {
+          "incidentId": "3854cc0a-25cf-45fb-9716-a52a345423e4",
+          "ruleId": "Api.0002",
+          "description": "API is available in package Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore, 8.0.6. Add package reference to Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore, 8.0.6",
+          "projectPath": "src\\CustomerPortal\\Club.CustomerPortal.Api\\Club.CustomerPortal.Api.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "services.AddDatabaseDeveloperPageExceptionFilter();",
+              "protected": "T:Microsoft.Extensions.DependencyInjection.DatabaseDeveloperPageExceptionFilterServiceExtensions"
+            },
+            "kind": "File",
+            "path": "src\\CustomerPortal\\Club.CustomerPortal.Api\\DependencyInjection.cs",
+            "snippet": "services.AddDatabaseDeveloperPageExceptionFilter();",
+            "protectedSnippet": "T:Microsoft.Extensions.DependencyInjection.DatabaseDeveloperPageExceptionFilterServiceExtensions",
+            "label": "T:Microsoft.Extensions.DependencyInjection.DatabaseDeveloperPageExceptionFilterServiceExtensions",
+            "properties": {
+              "PackageId": "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore",
+              "PackageNewVersion": "8.0.6"
+            },
+            "line": 20,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "88fad8a7-449f-4e10-97be-a512cc35a365",
+          "ruleId": "Api.0002",
+          "description": "API is available in package Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore, 8.0.6. Add package reference to Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore, 8.0.6",
+          "projectPath": "src\\CustomerPortal\\Club.CustomerPortal.Api\\Club.CustomerPortal.Api.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "services.AddDatabaseDeveloperPageExceptionFilter();",
+              "protected": "M:Microsoft.Extensions.DependencyInjection.DatabaseDeveloperPageExceptionFilterServiceExtensions.AddDatabaseDeveloperPageExceptionFilter(Microsoft.Extensions.DependencyInjection.IServiceCollection)"
+            },
+            "kind": "File",
+            "path": "src\\CustomerPortal\\Club.CustomerPortal.Api\\DependencyInjection.cs",
+            "snippet": "services.AddDatabaseDeveloperPageExceptionFilter();",
+            "protectedSnippet": "M:Microsoft.Extensions.DependencyInjection.DatabaseDeveloperPageExceptionFilterServiceExtensions.AddDatabaseDeveloperPageExceptionFilter(Microsoft.Extensions.DependencyInjection.IServiceCollection)",
+            "label": "M:Microsoft.Extensions.DependencyInjection.DatabaseDeveloperPageExceptionFilterServiceExtensions.AddDatabaseDeveloperPageExceptionFilter(Microsoft.Extensions.DependencyInjection.IServiceCollection)",
+            "properties": {
+              "PackageId": "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore",
+              "PackageNewVersion": "8.0.6"
+            },
+            "line": 20,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "686669d8-11c8-4d45-a54b-654440aeb0cd",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: Exception diagnostics are suppressed when IExceptionHandler.TryHandleAsync returns true ",
+          "projectPath": "src\\CustomerPortal\\Club.CustomerPortal.Api\\Club.CustomerPortal.Api.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "app.UseExceptionHandler(options =\u003E { });",
+              "protected": "M:Microsoft.AspNetCore.Builder.ExceptionHandlerExtensions.UseExceptionHandler(Microsoft.AspNetCore.Builder.IApplicationBuilder,System.Action{Microsoft.AspNetCore.Builder.IApplicationBuilder})"
+            },
+            "kind": "File",
+            "path": "src\\CustomerPortal\\Club.CustomerPortal.Api\\Program.cs",
+            "snippet": "app.UseExceptionHandler(options =\u003E { });",
+            "protectedSnippet": "M:Microsoft.AspNetCore.Builder.ExceptionHandlerExtensions.UseExceptionHandler(Microsoft.AspNetCore.Builder.IApplicationBuilder,System.Action{Microsoft.AspNetCore.Builder.IApplicationBuilder})",
+            "label": "M:Microsoft.AspNetCore.Builder.ExceptionHandlerExtensions.UseExceptionHandler(Microsoft.AspNetCore.Builder.IApplicationBuilder,System.Action{Microsoft.AspNetCore.Builder.IApplicationBuilder})",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/aspnet-core/10/exception-handler-diagnostics-suppressed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 57,
+            "column": 0
+          }
+        },
+        {
+          "incidentId": "16ba9175-4a08-4f26-a403-89edc423978c",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: Forwarded Headers Middleware ignores X-Forwarded-* headers from unknown proxies ",
+          "projectPath": "src\\CustomerPortal\\Club.CustomerPortal.Api\\Club.CustomerPortal.Api.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "app.UseForwardedHeaders(new ForwardedHeadersOptions\r\n{\r\n    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto\r\n});",
+              "protected": "M:Microsoft.AspNetCore.Builder.ForwardedHeadersExtensions.UseForwardedHeaders(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Builder.ForwardedHeadersOptions)"
+            },
+            "kind": "File",
+            "path": "src\\CustomerPortal\\Club.CustomerPortal.Api\\Program.cs",
+            "snippet": "app.UseForwardedHeaders(new ForwardedHeadersOptions\r\n{\r\n    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto\r\n});",
+            "protectedSnippet": "M:Microsoft.AspNetCore.Builder.ForwardedHeadersExtensions.UseForwardedHeaders(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Builder.ForwardedHeadersOptions)",
+            "label": "M:Microsoft.AspNetCore.Builder.ForwardedHeadersExtensions.UseForwardedHeaders(Microsoft.AspNetCore.Builder.IApplicationBuilder,Microsoft.AspNetCore.Builder.ForwardedHeadersOptions)",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/aspnet-core/8.0/forwarded-headers-unknown-proxies.md",
+                "isCustom": false
+              }
+            ],
+            "line": 26,
+            "column": 0
+          }
+        },
+        {
+          "incidentId": "07117fcc-7e15-4446-82e7-c4028048978e",
+          "ruleId": "Api.0001",
+          "description": "Breaking change: DynamicallyAccessedMembers annotation removed from trim-unsafe configuration APIs ",
+          "projectPath": "src\\CustomerPortal\\Club.CustomerPortal.Api\\Club.CustomerPortal.Api.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "builder.Services.Configure\u003CTelemetryOptions\u003E(builder.Configuration.GetSection(nameof(TelemetryOptions)));",
+              "protected": "M:Microsoft.Extensions.DependencyInjection.OptionsConfigurationServiceCollectionExtensions.Configure\u0060\u00601(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)"
+            },
+            "kind": "File",
+            "path": "src\\CustomerPortal\\Club.CustomerPortal.Api\\Program.cs",
+            "snippet": "builder.Services.Configure\u003CTelemetryOptions\u003E(builder.Configuration.GetSection(nameof(TelemetryOptions)));",
+            "protectedSnippet": "M:Microsoft.Extensions.DependencyInjection.OptionsConfigurationServiceCollectionExtensions.Configure\u0060\u00601(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)",
+            "label": "M:Microsoft.Extensions.DependencyInjection.OptionsConfigurationServiceCollectionExtensions.Configure\u0060\u00601(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/extensions/10.0/dynamically-accessed-members-configuration.md",
+                "isCustom": false
+              }
+            ],
+            "line": 12,
+            "column": 0
+          }
+        }
+      ],
+      "features": []
+    },
+    {
+      "path": "src\\CustomerPortal\\Club.CustomerPortal.Application\\Club.CustomerPortal.Application.csproj",
+      "startingProject": true,
+      "issues": 4,
+      "storyPoints": 7,
+      "properties": {
+        "appName": "Club.CustomerPortal.Application",
+        "projectKind": "ClassLibrary",
+        "frameworks": [
+          "net10.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 72,
+        "numberOfCodeFiles": 72,
+        "linesTotal": 4331,
+        "linesOfCode": 4331,
+        "totalApiScanned": 6241,
+        "minLinesOfCodeToChange": 4,
+        "maxLinesOfCodeToChange": 4
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "0697ac33-b657-4ddf-b062-c9946ebd10e4",
+          "ruleId": "NuGet.0002",
+          "projectPath": "src\\CustomerPortal\\Club.CustomerPortal.Application\\Club.CustomerPortal.Application.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.EntityFrameworkCore, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.EntityFrameworkCore, and replace with new package Microsoft.EntityFrameworkCore 10.0.10",
+              "protected": "Microsoft.EntityFrameworkCore, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.EntityFrameworkCore, and replace with new package Microsoft.EntityFrameworkCore 10.0.10"
+            },
+            "kind": "File",
+            "path": "src\\CustomerPortal\\Club.CustomerPortal.Application\\Club.CustomerPortal.Application.csproj",
+            "snippet": "Microsoft.EntityFrameworkCore, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.EntityFrameworkCore, and replace with new package Microsoft.EntityFrameworkCore 10.0.10",
+            "protectedSnippet": "Microsoft.EntityFrameworkCore, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.EntityFrameworkCore, and replace with new package Microsoft.EntityFrameworkCore 10.0.10",
+            "label": "Microsoft.EntityFrameworkCore 8.0.15",
+            "properties": {
+              "PackageId": "Microsoft.EntityFrameworkCore",
+              "PackageVersion": "8.0.15",
+              "PackageNewVersion": "10.0.10",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "a06ae52b-ad7b-4de5-87f6-842f3c460cd5",
+          "ruleId": "NuGet.0004",
+          "projectPath": "src\\CustomerPortal\\Club.CustomerPortal.Application\\Club.CustomerPortal.Application.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "AutoMapper, 14.0.0\n\nRecommendation:\n\nAutoMapper, 16.2.0",
+              "protected": "AutoMapper, 14.0.0\n\nRecommendation:\n\nAutoMapper, 16.2.0"
+            },
+            "kind": "File",
+            "path": "src\\CustomerPortal\\Club.CustomerPortal.Application\\Club.CustomerPortal.Application.csproj",
+            "snippet": "AutoMapper, 14.0.0\n\nRecommendation:\n\nAutoMapper, 16.2.0",
+            "protectedSnippet": "AutoMapper, 14.0.0\n\nRecommendation:\n\nAutoMapper, 16.2.0",
+            "label": "AutoMapper 14.0.0",
+            "properties": {
+              "PackageId": "AutoMapper",
+              "PackageVersion": "14.0.0",
+              "PackageNewVersion": "16.2.0",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "4b4f932a-78cd-407b-bac3-ae3501009f6a",
+          "ruleId": "Project.0002",
+          "projectPath": "src\\CustomerPortal\\Club.CustomerPortal.Application\\Club.CustomerPortal.Application.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Current target framework: net10.0\nRecommended target framework: net10.0",
+              "protected": "Current target framework: net10.0\nRecommended target framework: net10.0"
+            },
+            "kind": "File",
+            "path": "src\\CustomerPortal\\Club.CustomerPortal.Application\\Club.CustomerPortal.Application.csproj",
+            "snippet": "Current target framework: net10.0\nRecommended target framework: net10.0",
+            "protectedSnippet": "Current target framework: net10.0\nRecommended target framework: net10.0",
+            "properties": {
+              "CurrentTargetFramework": "net10.0",
+              "RecommendedTargetFramework": "net10.0"
+            }
+          }
+        },
+        {
+          "incidentId": "888ccd67-2f20-4791-8f62-d23a4d2d0874",
+          "ruleId": "Api.0001",
+          "description": "API is unavailable in net10.0 ",
+          "projectPath": "src\\CustomerPortal\\Club.CustomerPortal.Application\\Club.CustomerPortal.Application.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var accessToken = tokenHandler.WriteToken(token);",
+              "protected": "M:System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler.WriteToken(Microsoft.IdentityModel.Tokens.SecurityToken)"
+            },
+            "kind": "File",
+            "path": "src\\CustomerPortal\\Club.CustomerPortal.Application\\Services\\MockAuthenticationService.cs",
+            "snippet": "var accessToken = tokenHandler.WriteToken(token);",
+            "protectedSnippet": "M:System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler.WriteToken(Microsoft.IdentityModel.Tokens.SecurityToken)",
+            "label": "M:System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler.WriteToken(Microsoft.IdentityModel.Tokens.SecurityToken)",
+            "line": 42,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "ac055e66-d51c-41d9-a95c-ae43d232c370",
+          "ruleId": "Api.0001",
+          "description": "API is unavailable in net10.0 ",
+          "projectPath": "src\\CustomerPortal\\Club.CustomerPortal.Application\\Club.CustomerPortal.Application.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var token = tokenHandler.CreateToken(tokenDescriptor);",
+              "protected": "M:System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler.CreateToken(Microsoft.IdentityModel.Tokens.SecurityTokenDescriptor)"
+            },
+            "kind": "File",
+            "path": "src\\CustomerPortal\\Club.CustomerPortal.Application\\Services\\MockAuthenticationService.cs",
+            "snippet": "var token = tokenHandler.CreateToken(tokenDescriptor);",
+            "protectedSnippet": "M:System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler.CreateToken(Microsoft.IdentityModel.Tokens.SecurityTokenDescriptor)",
+            "label": "M:System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler.CreateToken(Microsoft.IdentityModel.Tokens.SecurityTokenDescriptor)",
+            "line": 41,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "f2b9383a-feb4-4155-a768-b85447c3cf9b",
+          "ruleId": "Api.0001",
+          "description": "API is unavailable in net10.0 ",
+          "projectPath": "src\\CustomerPortal\\Club.CustomerPortal.Application\\Club.CustomerPortal.Application.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var tokenHandler = new JwtSecurityTokenHandler();",
+              "protected": "T:System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler"
+            },
+            "kind": "File",
+            "path": "src\\CustomerPortal\\Club.CustomerPortal.Application\\Services\\MockAuthenticationService.cs",
+            "snippet": "var tokenHandler = new JwtSecurityTokenHandler();",
+            "protectedSnippet": "T:System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler",
+            "label": "T:System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler",
+            "line": 24,
+            "column": 8
+          }
+        },
+        {
+          "incidentId": "cd327b49-d7ed-4bda-9d28-47574e7c1f1e",
+          "ruleId": "Api.0001",
+          "description": "API is unavailable in net10.0 ",
+          "projectPath": "src\\CustomerPortal\\Club.CustomerPortal.Application\\Club.CustomerPortal.Application.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "var tokenHandler = new JwtSecurityTokenHandler();",
+              "protected": "M:System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler.#ctor"
+            },
+            "kind": "File",
+            "path": "src\\CustomerPortal\\Club.CustomerPortal.Application\\Services\\MockAuthenticationService.cs",
+            "snippet": "var tokenHandler = new JwtSecurityTokenHandler();",
+            "protectedSnippet": "M:System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler.#ctor",
+            "label": "M:System.IdentityModel.Tokens.Jwt.JwtSecurityTokenHandler.#ctor",
+            "line": 24,
+            "column": 8
+          }
+        }
+      ],
+      "features": [
+        {
+          "featureId": "IdentityModel",
+          "incidents": [
+            "cd327b49-d7ed-4bda-9d28-47574e7c1f1e",
+            "f2b9383a-feb4-4155-a768-b85447c3cf9b",
+            "ac055e66-d51c-41d9-a95c-ae43d232c370",
+            "888ccd67-2f20-4791-8f62-d23a4d2d0874"
+          ]
+        }
+      ]
+    },
+    {
+      "path": "src\\Core\\Club.Domain\\Club.Domain.csproj",
+      "startingProject": true,
+      "issues": 3,
+      "storyPoints": 4,
+      "properties": {
+        "appName": "Club.Domain",
+        "projectKind": "ClassLibrary",
+        "frameworks": [
+          "net10.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 128,
+        "numberOfCodeFiles": 128,
+        "linesTotal": 10362,
+        "linesOfCode": 10362,
+        "totalApiScanned": 0,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "e13e9ca7-68b0-4d7e-8d51-2053c9a76493",
+          "ruleId": "NuGet.0002",
+          "projectPath": "src\\Core\\Club.Domain\\Club.Domain.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.Extensions.Caching.Abstractions, 8.0.0\n\nRecommendation:\n\nRemove Microsoft.Extensions.Caching.Abstractions, and replace with new package Microsoft.Extensions.Caching.Abstractions 10.0.10",
+              "protected": "Microsoft.Extensions.Caching.Abstractions, 8.0.0\n\nRecommendation:\n\nRemove Microsoft.Extensions.Caching.Abstractions, and replace with new package Microsoft.Extensions.Caching.Abstractions 10.0.10"
+            },
+            "kind": "File",
+            "path": "src\\Core\\Club.Domain\\Club.Domain.csproj",
+            "snippet": "Microsoft.Extensions.Caching.Abstractions, 8.0.0\n\nRecommendation:\n\nRemove Microsoft.Extensions.Caching.Abstractions, and replace with new package Microsoft.Extensions.Caching.Abstractions 10.0.10",
+            "protectedSnippet": "Microsoft.Extensions.Caching.Abstractions, 8.0.0\n\nRecommendation:\n\nRemove Microsoft.Extensions.Caching.Abstractions, and replace with new package Microsoft.Extensions.Caching.Abstractions 10.0.10",
+            "label": "Microsoft.Extensions.Caching.Abstractions 8.0.0",
+            "properties": {
+              "PackageId": "Microsoft.Extensions.Caching.Abstractions",
+              "PackageVersion": "8.0.0",
+              "PackageNewVersion": "10.0.10",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "49e861e0-f928-480b-b1dd-d4e3522b4d3f",
+          "ruleId": "NuGet.0002",
+          "projectPath": "src\\Core\\Club.Domain\\Club.Domain.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.Extensions.Caching.Memory, 8.0.1\n\nRecommendation:\n\nRemove Microsoft.Extensions.Caching.Memory, and replace with new package Microsoft.Extensions.Caching.Memory 10.0.10",
+              "protected": "Microsoft.Extensions.Caching.Memory, 8.0.1\n\nRecommendation:\n\nRemove Microsoft.Extensions.Caching.Memory, and replace with new package Microsoft.Extensions.Caching.Memory 10.0.10"
+            },
+            "kind": "File",
+            "path": "src\\Core\\Club.Domain\\Club.Domain.csproj",
+            "snippet": "Microsoft.Extensions.Caching.Memory, 8.0.1\n\nRecommendation:\n\nRemove Microsoft.Extensions.Caching.Memory, and replace with new package Microsoft.Extensions.Caching.Memory 10.0.10",
+            "protectedSnippet": "Microsoft.Extensions.Caching.Memory, 8.0.1\n\nRecommendation:\n\nRemove Microsoft.Extensions.Caching.Memory, and replace with new package Microsoft.Extensions.Caching.Memory 10.0.10",
+            "label": "Microsoft.Extensions.Caching.Memory 8.0.1",
+            "properties": {
+              "PackageId": "Microsoft.Extensions.Caching.Memory",
+              "PackageVersion": "8.0.1",
+              "PackageNewVersion": "10.0.10",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "b24a9479-a647-43e2-b1e0-8f94eb8866f2",
+          "ruleId": "NuGet.0005",
+          "projectPath": "src\\Core\\Club.Domain\\Club.Domain.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "CoreCLR-NCalc, 3.1.253\n\nRecommendation:\n\nprojects were merged\nRemove CoreCLR-NCalc, and replace with new package CoreCLR-NCalc, 3.1.253",
+              "protected": "CoreCLR-NCalc, 3.1.253\n\nRecommendation:\n\nprojects were merged\nRemove CoreCLR-NCalc, and replace with new package CoreCLR-NCalc, 3.1.253"
+            },
+            "kind": "File",
+            "path": "src\\Core\\Club.Domain\\Club.Domain.csproj",
+            "snippet": "CoreCLR-NCalc, 3.1.253\n\nRecommendation:\n\nprojects were merged\nRemove CoreCLR-NCalc, and replace with new package CoreCLR-NCalc, 3.1.253",
+            "protectedSnippet": "CoreCLR-NCalc, 3.1.253\n\nRecommendation:\n\nprojects were merged\nRemove CoreCLR-NCalc, and replace with new package CoreCLR-NCalc, 3.1.253",
+            "label": "CoreCLR-NCalc 3.1.253",
+            "properties": {
+              "PackageId": "CoreCLR-NCalc",
+              "PackageVersion": "3.1.253",
+              "PackageNewVersion": null,
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "e95e8d7c-6508-4f0e-bba4-6be18acdcb40",
+          "ruleId": "Project.0002",
+          "projectPath": "src\\Core\\Club.Domain\\Club.Domain.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Current target framework: net10.0\nRecommended target framework: net10.0",
+              "protected": "Current target framework: net10.0\nRecommended target framework: net10.0"
+            },
+            "kind": "File",
+            "path": "src\\Core\\Club.Domain\\Club.Domain.csproj",
+            "snippet": "Current target framework: net10.0\nRecommended target framework: net10.0",
+            "protectedSnippet": "Current target framework: net10.0\nRecommended target framework: net10.0",
+            "properties": {
+              "CurrentTargetFramework": "net10.0",
+              "RecommendedTargetFramework": "net10.0"
+            }
+          }
+        }
+      ],
+      "features": []
+    },
+    {
+      "path": "src\\EventHandler\\Club.EventHandler.Api\\Club.EventHandler.Api.csproj",
+      "startingProject": true,
+      "issues": 2,
+      "storyPoints": 2,
+      "properties": {
+        "appName": "Club.EventHandler.Api",
+        "projectKind": "AspNetCore",
+        "frameworks": [
+          "net10.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 2,
+        "numberOfCodeFiles": 1,
+        "linesTotal": 53,
+        "linesOfCode": 44,
+        "totalApiScanned": 105,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "09c5debf-6d1e-4675-9df1-a1cba22f386a",
+          "ruleId": "NuGet.0002",
+          "projectPath": "src\\EventHandler\\Club.EventHandler.Api\\Club.EventHandler.Api.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.AspNetCore.OpenApi, 8.0.8\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.OpenApi, and replace with new package Microsoft.AspNetCore.OpenApi 10.0.10",
+              "protected": "Microsoft.AspNetCore.OpenApi, 8.0.8\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.OpenApi, and replace with new package Microsoft.AspNetCore.OpenApi 10.0.10"
+            },
+            "kind": "File",
+            "path": "src\\EventHandler\\Club.EventHandler.Api\\Club.EventHandler.Api.csproj",
+            "snippet": "Microsoft.AspNetCore.OpenApi, 8.0.8\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.OpenApi, and replace with new package Microsoft.AspNetCore.OpenApi 10.0.10",
+            "protectedSnippet": "Microsoft.AspNetCore.OpenApi, 8.0.8\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.OpenApi, and replace with new package Microsoft.AspNetCore.OpenApi 10.0.10",
+            "label": "Microsoft.AspNetCore.OpenApi 8.0.8",
+            "properties": {
+              "PackageId": "Microsoft.AspNetCore.OpenApi",
+              "PackageVersion": "8.0.8",
+              "PackageNewVersion": "10.0.10",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "89e28f6c-c4be-408d-be9a-fc47db161238",
+          "ruleId": "Project.0002",
+          "projectPath": "src\\EventHandler\\Club.EventHandler.Api\\Club.EventHandler.Api.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Current target framework: net10.0\nRecommended target framework: net10.0",
+              "protected": "Current target framework: net10.0\nRecommended target framework: net10.0"
+            },
+            "kind": "File",
+            "path": "src\\EventHandler\\Club.EventHandler.Api\\Club.EventHandler.Api.csproj",
+            "snippet": "Current target framework: net10.0\nRecommended target framework: net10.0",
+            "protectedSnippet": "Current target framework: net10.0\nRecommended target framework: net10.0",
+            "properties": {
+              "CurrentTargetFramework": "net10.0",
+              "RecommendedTargetFramework": "net10.0"
+            }
+          }
+        }
+      ],
+      "features": []
+    },
+    {
+      "path": "src\\EventHandler\\Club.EventHandler.Application\\Club.EventHandler.Application.csproj",
+      "startingProject": true,
+      "issues": 1,
+      "storyPoints": 1,
+      "properties": {
+        "appName": "Club.EventHandler.Application",
+        "projectKind": "ClassLibrary",
+        "frameworks": [
+          "net10.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 1,
+        "numberOfCodeFiles": 1,
+        "linesTotal": 6,
+        "linesOfCode": 6,
+        "totalApiScanned": 0,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "8e017a45-ecb0-410a-8839-7e378870b06e",
+          "ruleId": "Project.0002",
+          "projectPath": "src\\EventHandler\\Club.EventHandler.Application\\Club.EventHandler.Application.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Current target framework: net10.0\nRecommended target framework: net10.0",
+              "protected": "Current target framework: net10.0\nRecommended target framework: net10.0"
+            },
+            "kind": "File",
+            "path": "src\\EventHandler\\Club.EventHandler.Application\\Club.EventHandler.Application.csproj",
+            "snippet": "Current target framework: net10.0\nRecommended target framework: net10.0",
+            "protectedSnippet": "Current target framework: net10.0\nRecommended target framework: net10.0",
+            "properties": {
+              "CurrentTargetFramework": "net10.0",
+              "RecommendedTargetFramework": "net10.0"
+            }
+          }
+        }
+      ],
+      "features": []
+    },
+    {
+      "path": "src\\Core\\Club.Infrastructure\\Club.Infrastructure.csproj",
+      "startingProject": true,
+      "issues": 5,
+      "storyPoints": 13,
+      "properties": {
+        "appName": "Club.Infrastructure",
+        "projectKind": "ClassLibrary",
+        "frameworks": [
+          "net10.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 38,
+        "numberOfCodeFiles": 38,
+        "linesTotal": 1377,
+        "linesOfCode": 1377,
+        "totalApiScanned": 735,
+        "minLinesOfCodeToChange": 4,
+        "maxLinesOfCodeToChange": 4
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "98ae4a7e-de0b-4f87-9c86-3edd21defc01",
+          "ruleId": "NuGet.0002",
+          "projectPath": "src\\Core\\Club.Infrastructure\\Club.Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore, and replace with new package Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore 10.0.10",
+              "protected": "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore, and replace with new package Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore 10.0.10"
+            },
+            "kind": "File",
+            "path": "src\\Core\\Club.Infrastructure\\Club.Infrastructure.csproj",
+            "snippet": "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore, and replace with new package Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore 10.0.10",
+            "protectedSnippet": "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore, and replace with new package Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore 10.0.10",
+            "label": "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore 8.0.15",
+            "properties": {
+              "PackageId": "Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore",
+              "PackageVersion": "8.0.15",
+              "PackageNewVersion": "10.0.10",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "87503f91-e4ce-4d4f-a262-923521583fa5",
+          "ruleId": "NuGet.0002",
+          "projectPath": "src\\Core\\Club.Infrastructure\\Club.Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.EntityFrameworkCore.SqlServer, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.EntityFrameworkCore.SqlServer, and replace with new package Microsoft.EntityFrameworkCore.SqlServer 10.0.10",
+              "protected": "Microsoft.EntityFrameworkCore.SqlServer, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.EntityFrameworkCore.SqlServer, and replace with new package Microsoft.EntityFrameworkCore.SqlServer 10.0.10"
+            },
+            "kind": "File",
+            "path": "src\\Core\\Club.Infrastructure\\Club.Infrastructure.csproj",
+            "snippet": "Microsoft.EntityFrameworkCore.SqlServer, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.EntityFrameworkCore.SqlServer, and replace with new package Microsoft.EntityFrameworkCore.SqlServer 10.0.10",
+            "protectedSnippet": "Microsoft.EntityFrameworkCore.SqlServer, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.EntityFrameworkCore.SqlServer, and replace with new package Microsoft.EntityFrameworkCore.SqlServer 10.0.10",
+            "label": "Microsoft.EntityFrameworkCore.SqlServer 8.0.15",
+            "properties": {
+              "PackageId": "Microsoft.EntityFrameworkCore.SqlServer",
+              "PackageVersion": "8.0.15",
+              "PackageNewVersion": "10.0.10",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "dc930245-9024-4dd8-a57e-a8e0f75a6ca2",
+          "ruleId": "NuGet.0002",
+          "projectPath": "src\\Core\\Club.Infrastructure\\Club.Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.EntityFrameworkCore.Tools, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.EntityFrameworkCore.Tools, and replace with new package Microsoft.EntityFrameworkCore.Tools 10.0.10",
+              "protected": "Microsoft.EntityFrameworkCore.Tools, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.EntityFrameworkCore.Tools, and replace with new package Microsoft.EntityFrameworkCore.Tools 10.0.10"
+            },
+            "kind": "File",
+            "path": "src\\Core\\Club.Infrastructure\\Club.Infrastructure.csproj",
+            "snippet": "Microsoft.EntityFrameworkCore.Tools, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.EntityFrameworkCore.Tools, and replace with new package Microsoft.EntityFrameworkCore.Tools 10.0.10",
+            "protectedSnippet": "Microsoft.EntityFrameworkCore.Tools, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.EntityFrameworkCore.Tools, and replace with new package Microsoft.EntityFrameworkCore.Tools 10.0.10",
+            "label": "Microsoft.EntityFrameworkCore.Tools 8.0.15",
+            "properties": {
+              "PackageId": "Microsoft.EntityFrameworkCore.Tools",
+              "PackageVersion": "8.0.15",
+              "PackageNewVersion": "10.0.10",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "981a308c-014e-4911-8f72-d918479a4a87",
+          "ruleId": "NuGet.0002",
+          "projectPath": "src\\Core\\Club.Infrastructure\\Club.Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.Extensions.Caching.StackExchangeRedis, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.Extensions.Caching.StackExchangeRedis, and replace with new package Microsoft.Extensions.Caching.StackExchangeRedis 10.0.10",
+              "protected": "Microsoft.Extensions.Caching.StackExchangeRedis, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.Extensions.Caching.StackExchangeRedis, and replace with new package Microsoft.Extensions.Caching.StackExchangeRedis 10.0.10"
+            },
+            "kind": "File",
+            "path": "src\\Core\\Club.Infrastructure\\Club.Infrastructure.csproj",
+            "snippet": "Microsoft.Extensions.Caching.StackExchangeRedis, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.Extensions.Caching.StackExchangeRedis, and replace with new package Microsoft.Extensions.Caching.StackExchangeRedis 10.0.10",
+            "protectedSnippet": "Microsoft.Extensions.Caching.StackExchangeRedis, 8.0.15\n\nRecommendation:\n\nRemove Microsoft.Extensions.Caching.StackExchangeRedis, and replace with new package Microsoft.Extensions.Caching.StackExchangeRedis 10.0.10",
+            "label": "Microsoft.Extensions.Caching.StackExchangeRedis 8.0.15",
+            "properties": {
+              "PackageId": "Microsoft.Extensions.Caching.StackExchangeRedis",
+              "PackageVersion": "8.0.15",
+              "PackageNewVersion": "10.0.10",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "ce5f8d0a-0ff2-4f9a-bfb2-8342c9513cac",
+          "ruleId": "NuGet.0004",
+          "projectPath": "src\\Core\\Club.Infrastructure\\Club.Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "OpenTelemetry.Exporter.Jaeger, 1.5.1\n\nRecommendation:\n\nOpenTelemetry.Exporter.Jaeger, 1.5.1",
+              "protected": "OpenTelemetry.Exporter.Jaeger, 1.5.1\n\nRecommendation:\n\nOpenTelemetry.Exporter.Jaeger, 1.5.1"
+            },
+            "kind": "File",
+            "path": "src\\Core\\Club.Infrastructure\\Club.Infrastructure.csproj",
+            "snippet": "OpenTelemetry.Exporter.Jaeger, 1.5.1\n\nRecommendation:\n\nOpenTelemetry.Exporter.Jaeger, 1.5.1",
+            "protectedSnippet": "OpenTelemetry.Exporter.Jaeger, 1.5.1\n\nRecommendation:\n\nOpenTelemetry.Exporter.Jaeger, 1.5.1",
+            "label": "OpenTelemetry.Exporter.Jaeger 1.5.1",
+            "properties": {
+              "PackageId": "OpenTelemetry.Exporter.Jaeger",
+              "PackageVersion": "1.5.1",
+              "PackageNewVersion": "1.5.1",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "9ecf6b90-06bf-4c88-85f6-db514b162697",
+          "ruleId": "NuGet.0005",
+          "projectPath": "src\\Core\\Club.Infrastructure\\Club.Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "OpenTelemetry.Exporter.Jaeger, 1.5.1\n\nRecommendation:\n\nJaeger backends have added native support for ingesting traces in OTLP format. Please go through their doc for more details: https://www.jaegertracing.io/docs/1.48/apis/#opentelemetry-protocol-stable\n\nYou could refer to this example on how to send traces to Jaeger using OTLP Exporter: https://github.com/open-telemetry/opentelemetry-dotnet/tree/e330e57b04fa3e51fe5d63b52bfff891fb5b7961/docs/trace/getting-started-jaeger\nRemove OpenTelemetry.Exporter.Jaeger, and replace with new package OpenTelemetry.Exporter.Jaeger, 1.5.1",
+              "protected": "OpenTelemetry.Exporter.Jaeger, 1.5.1\n\nRecommendation:\n\nJaeger backends have added native support for ingesting traces in OTLP format. Please go through their doc for more details: https://www.jaegertracing.io/docs/1.48/apis/#opentelemetry-protocol-stable\n\nYou could refer to this example on how to send traces to Jaeger using OTLP Exporter: https://github.com/open-telemetry/opentelemetry-dotnet/tree/e330e57b04fa3e51fe5d63b52bfff891fb5b7961/docs/trace/getting-started-jaeger\nRemove OpenTelemetry.Exporter.Jaeger, and replace with new package OpenTelemetry.Exporter.Jaeger, 1.5.1"
+            },
+            "kind": "File",
+            "path": "src\\Core\\Club.Infrastructure\\Club.Infrastructure.csproj",
+            "snippet": "OpenTelemetry.Exporter.Jaeger, 1.5.1\n\nRecommendation:\n\nJaeger backends have added native support for ingesting traces in OTLP format. Please go through their doc for more details: https://www.jaegertracing.io/docs/1.48/apis/#opentelemetry-protocol-stable\n\nYou could refer to this example on how to send traces to Jaeger using OTLP Exporter: https://github.com/open-telemetry/opentelemetry-dotnet/tree/e330e57b04fa3e51fe5d63b52bfff891fb5b7961/docs/trace/getting-started-jaeger\nRemove OpenTelemetry.Exporter.Jaeger, and replace with new package OpenTelemetry.Exporter.Jaeger, 1.5.1",
+            "protectedSnippet": "OpenTelemetry.Exporter.Jaeger, 1.5.1\n\nRecommendation:\n\nJaeger backends have added native support for ingesting traces in OTLP format. Please go through their doc for more details: https://www.jaegertracing.io/docs/1.48/apis/#opentelemetry-protocol-stable\n\nYou could refer to this example on how to send traces to Jaeger using OTLP Exporter: https://github.com/open-telemetry/opentelemetry-dotnet/tree/e330e57b04fa3e51fe5d63b52bfff891fb5b7961/docs/trace/getting-started-jaeger\nRemove OpenTelemetry.Exporter.Jaeger, and replace with new package OpenTelemetry.Exporter.Jaeger, 1.5.1",
+            "label": "OpenTelemetry.Exporter.Jaeger 1.5.1",
+            "properties": {
+              "PackageId": "OpenTelemetry.Exporter.Jaeger",
+              "PackageVersion": "1.5.1",
+              "PackageNewVersion": null,
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "a372e6c1-5cc2-4f38-bdcc-8a521bc88440",
+          "ruleId": "NuGet.0004",
+          "projectPath": "src\\Core\\Club.Infrastructure\\Club.Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "OpenTelemetry.Exporter.Zipkin, 1.12.0\n\nRecommendation:\n\nOpenTelemetry.Exporter.Zipkin, 1.17.0",
+              "protected": "OpenTelemetry.Exporter.Zipkin, 1.12.0\n\nRecommendation:\n\nOpenTelemetry.Exporter.Zipkin, 1.17.0"
+            },
+            "kind": "File",
+            "path": "src\\Core\\Club.Infrastructure\\Club.Infrastructure.csproj",
+            "snippet": "OpenTelemetry.Exporter.Zipkin, 1.12.0\n\nRecommendation:\n\nOpenTelemetry.Exporter.Zipkin, 1.17.0",
+            "protectedSnippet": "OpenTelemetry.Exporter.Zipkin, 1.12.0\n\nRecommendation:\n\nOpenTelemetry.Exporter.Zipkin, 1.17.0",
+            "label": "OpenTelemetry.Exporter.Zipkin 1.12.0",
+            "properties": {
+              "PackageId": "OpenTelemetry.Exporter.Zipkin",
+              "PackageVersion": "1.12.0",
+              "PackageNewVersion": "1.17.0",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "ac226fc6-7ed9-423a-a5d5-cc23a6e17f33",
+          "ruleId": "NuGet.0004",
+          "projectPath": "src\\Core\\Club.Infrastructure\\Club.Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "OpenTelemetry.Extensions.Propagators, 1.12.0\n\nRecommendation:\n\nOpenTelemetry.Extensions.Propagators, 1.17.0",
+              "protected": "OpenTelemetry.Extensions.Propagators, 1.12.0\n\nRecommendation:\n\nOpenTelemetry.Extensions.Propagators, 1.17.0"
+            },
+            "kind": "File",
+            "path": "src\\Core\\Club.Infrastructure\\Club.Infrastructure.csproj",
+            "snippet": "OpenTelemetry.Extensions.Propagators, 1.12.0\n\nRecommendation:\n\nOpenTelemetry.Extensions.Propagators, 1.17.0",
+            "protectedSnippet": "OpenTelemetry.Extensions.Propagators, 1.12.0\n\nRecommendation:\n\nOpenTelemetry.Extensions.Propagators, 1.17.0",
+            "label": "OpenTelemetry.Extensions.Propagators 1.12.0",
+            "properties": {
+              "PackageId": "OpenTelemetry.Extensions.Propagators",
+              "PackageVersion": "1.12.0",
+              "PackageNewVersion": "1.17.0",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "d589e0b9-49c1-4094-8ac4-1ba88b96981d",
+          "ruleId": "Project.0002",
+          "projectPath": "src\\Core\\Club.Infrastructure\\Club.Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Current target framework: net10.0\nRecommended target framework: net10.0",
+              "protected": "Current target framework: net10.0\nRecommended target framework: net10.0"
+            },
+            "kind": "File",
+            "path": "src\\Core\\Club.Infrastructure\\Club.Infrastructure.csproj",
+            "snippet": "Current target framework: net10.0\nRecommended target framework: net10.0",
+            "protectedSnippet": "Current target framework: net10.0\nRecommended target framework: net10.0",
+            "properties": {
+              "CurrentTargetFramework": "net10.0",
+              "RecommendedTargetFramework": "net10.0"
+            }
+          }
+        },
+        {
+          "incidentId": "1e063e50-d816-49e5-903c-ae664f7d6109",
+          "ruleId": "Api.0003",
+          "description": "Breaking change - Streaming HTTP responses enabled by default in browser HTTP clients ",
+          "projectPath": "src\\Core\\Club.Infrastructure\\Club.Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "logger.LogInformation(\u0022opt send {status} {@request} {@response}\u0022, result.IsSuccessStatusCode, dto, await result.Content.ReadAsStringAsync());",
+              "protected": "T:System.Net.Http.HttpContent"
+            },
+            "kind": "File",
+            "path": "src\\Core\\Club.Infrastructure\\Features\\Sms\\SmsIR\\SmsClientService.cs",
+            "snippet": "logger.LogInformation(\u0022opt send {status} {@request} {@response}\u0022, result.IsSuccessStatusCode, dto, await result.Content.ReadAsStringAsync());",
+            "protectedSnippet": "T:System.Net.Http.HttpContent",
+            "label": "T:System.Net.Http.HttpContent",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/default-http-streaming.md",
+                "isCustom": false
+              }
+            ],
+            "line": 34,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "0cbb67e2-d1de-4dd4-9093-c20896fc9af3",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "src\\Core\\Club.Infrastructure\\Club.Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "options.BaseAddress = new Uri(configuration[\u0022Sms:Url\u0022]!);",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "src\\Core\\Club.Infrastructure\\Features\\Sms\\SmsIR\\DependencyInjection.cs",
+            "snippet": "options.BaseAddress = new Uri(configuration[\u0022Sms:Url\u0022]!);",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 13,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "1f692be2-a4ec-495c-b630-fed08c101f62",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "src\\Core\\Club.Infrastructure\\Club.Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "options.BaseAddress = new Uri(configuration[\u0022Sms:Url\u0022]!);",
+              "protected": "M:System.Uri.#ctor(System.String)"
+            },
+            "kind": "File",
+            "path": "src\\Core\\Club.Infrastructure\\Features\\Sms\\SmsIR\\DependencyInjection.cs",
+            "snippet": "options.BaseAddress = new Uri(configuration[\u0022Sms:Url\u0022]!);",
+            "protectedSnippet": "M:System.Uri.#ctor(System.String)",
+            "label": "M:System.Uri.#ctor(System.String)",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 13,
+            "column": 12
+          }
+        },
+        {
+          "incidentId": "5b679a27-848e-40e7-aeea-9a25fe1f729c",
+          "ruleId": "Api.0003",
+          "description": "Breaking change: URI length limits removed ",
+          "projectPath": "src\\Core\\Club.Infrastructure\\Club.Infrastructure.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "options.BaseAddress = new Uri(configuration[\u0022Sms:Url\u0022]!);",
+              "protected": "T:System.Uri"
+            },
+            "kind": "File",
+            "path": "src\\Core\\Club.Infrastructure\\Features\\Sms\\SmsIR\\DependencyInjection.cs",
+            "snippet": "options.BaseAddress = new Uri(configuration[\u0022Sms:Url\u0022]!);",
+            "protectedSnippet": "T:System.Uri",
+            "label": "T:System.Uri",
+            "links": [
+              {
+                "title": "API documentation",
+                "url": "https://github.com/dotnet/docs/blob/main/docs/core/compatibility/networking/10.0/uri-length-limits-removed.md",
+                "isCustom": false
+              }
+            ],
+            "line": 13,
+            "column": 12
+          }
+        }
+      ],
+      "features": []
+    },
+    {
+      "path": "src\\PromotionJobWorker\\Club.PromotionJobWorker.Api\\Club.PromotionJobWorker.Api.csproj",
+      "startingProject": true,
+      "issues": 2,
+      "storyPoints": 2,
+      "properties": {
+        "appName": "Club.PromotionJobWorker.Api",
+        "projectKind": "AspNetCore",
+        "frameworks": [
+          "net10.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 2,
+        "numberOfCodeFiles": 1,
+        "linesTotal": 53,
+        "linesOfCode": 44,
+        "totalApiScanned": 105,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "72961b4c-a259-4282-aacf-17b441b9e4fe",
+          "ruleId": "NuGet.0002",
+          "projectPath": "src\\PromotionJobWorker\\Club.PromotionJobWorker.Api\\Club.PromotionJobWorker.Api.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Microsoft.AspNetCore.OpenApi, 8.0.8\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.OpenApi, and replace with new package Microsoft.AspNetCore.OpenApi 10.0.10",
+              "protected": "Microsoft.AspNetCore.OpenApi, 8.0.8\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.OpenApi, and replace with new package Microsoft.AspNetCore.OpenApi 10.0.10"
+            },
+            "kind": "File",
+            "path": "src\\PromotionJobWorker\\Club.PromotionJobWorker.Api\\Club.PromotionJobWorker.Api.csproj",
+            "snippet": "Microsoft.AspNetCore.OpenApi, 8.0.8\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.OpenApi, and replace with new package Microsoft.AspNetCore.OpenApi 10.0.10",
+            "protectedSnippet": "Microsoft.AspNetCore.OpenApi, 8.0.8\n\nRecommendation:\n\nRemove Microsoft.AspNetCore.OpenApi, and replace with new package Microsoft.AspNetCore.OpenApi 10.0.10",
+            "label": "Microsoft.AspNetCore.OpenApi 8.0.8",
+            "properties": {
+              "PackageId": "Microsoft.AspNetCore.OpenApi",
+              "PackageVersion": "8.0.8",
+              "PackageNewVersion": "10.0.10",
+              "PackageReplacements": null
+            }
+          }
+        },
+        {
+          "incidentId": "b8cadcb8-bde9-4c8d-a2f5-4b8f95e0e5cc",
+          "ruleId": "Project.0002",
+          "projectPath": "src\\PromotionJobWorker\\Club.PromotionJobWorker.Api\\Club.PromotionJobWorker.Api.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Current target framework: net10.0\nRecommended target framework: net10.0",
+              "protected": "Current target framework: net10.0\nRecommended target framework: net10.0"
+            },
+            "kind": "File",
+            "path": "src\\PromotionJobWorker\\Club.PromotionJobWorker.Api\\Club.PromotionJobWorker.Api.csproj",
+            "snippet": "Current target framework: net10.0\nRecommended target framework: net10.0",
+            "protectedSnippet": "Current target framework: net10.0\nRecommended target framework: net10.0",
+            "properties": {
+              "CurrentTargetFramework": "net10.0",
+              "RecommendedTargetFramework": "net10.0"
+            }
+          }
+        }
+      ],
+      "features": []
+    },
+    {
+      "path": "src\\PromotionJobWorker\\Club.PromotionJobWorker.Application\\Club.PromotionJobWorker.Application.csproj",
+      "startingProject": true,
+      "issues": 1,
+      "storyPoints": 1,
+      "properties": {
+        "appName": "Club.PromotionJobWorker.Application",
+        "projectKind": "ClassLibrary",
+        "frameworks": [
+          "net10.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 1,
+        "numberOfCodeFiles": 1,
+        "linesTotal": 6,
+        "linesOfCode": 6,
+        "totalApiScanned": 0,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [
+        {
+          "incidentId": "db8e32f6-8d95-4f23-8ee5-64b7d1b4cedc",
+          "ruleId": "Project.0002",
+          "projectPath": "src\\PromotionJobWorker\\Club.PromotionJobWorker.Application\\Club.PromotionJobWorker.Application.csproj",
+          "state": "Active",
+          "location": {
+            "snippetModel": {
+              "unrestricted": "Current target framework: net10.0\nRecommended target framework: net10.0",
+              "protected": "Current target framework: net10.0\nRecommended target framework: net10.0"
+            },
+            "kind": "File",
+            "path": "src\\PromotionJobWorker\\Club.PromotionJobWorker.Application\\Club.PromotionJobWorker.Application.csproj",
+            "snippet": "Current target framework: net10.0\nRecommended target framework: net10.0",
+            "protectedSnippet": "Current target framework: net10.0\nRecommended target framework: net10.0",
+            "properties": {
+              "CurrentTargetFramework": "net10.0",
+              "RecommendedTargetFramework": "net10.0"
+            }
+          }
+        }
+      ],
+      "features": []
+    },
+    {
+      "path": "E:\\SJVS\\Projects\\Neo\\src\\Neo.Application\\Neo.Application.csproj",
+      "startingProject": true,
+      "issues": 0,
+      "storyPoints": 0,
+      "properties": {
+        "appName": "Neo.Application",
+        "projectKind": "ClassLibrary",
+        "frameworks": [
+          "net10.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 65,
+        "numberOfCodeFiles": 65,
+        "linesTotal": 2332,
+        "linesOfCode": 2332,
+        "totalApiScanned": 0,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [],
+      "features": []
+    },
+    {
+      "path": "E:\\SJVS\\Projects\\Neo\\tests\\Neo.Application.Tests\\Neo.Application.Tests.csproj",
+      "startingProject": true,
+      "issues": 0,
+      "storyPoints": 0,
+      "properties": {
+        "appName": "Neo.Application.Tests",
+        "projectKind": "ClassLibrary",
+        "frameworks": [
+          "net10.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 4,
+        "numberOfCodeFiles": 4,
+        "linesTotal": 218,
+        "linesOfCode": 218,
+        "totalApiScanned": 0,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [],
+      "features": []
+    },
+    {
+      "path": "E:\\SJVS\\Projects\\Neo-Bpms\\src\\Neo.Bpms.Api\\Neo.Bpms.Api.csproj",
+      "startingProject": true,
+      "issues": 0,
+      "storyPoints": 0,
+      "properties": {
+        "appName": "Neo.Bpms.Api",
+        "projectKind": "ClassLibrary",
+        "frameworks": [
+          "net10.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 25,
+        "numberOfCodeFiles": 25,
+        "linesTotal": 4110,
+        "linesOfCode": 4110,
+        "totalApiScanned": 0,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [],
+      "features": []
+    },
+    {
+      "path": "E:\\SJVS\\Projects\\Neo-Bpms\\src\\Neo.Bpms.Application\\Neo.Bpms.Application.csproj",
+      "startingProject": true,
+      "issues": 0,
+      "storyPoints": 0,
+      "properties": {
+        "appName": "Neo.Bpms.Application",
+        "projectKind": "ClassLibrary",
+        "frameworks": [
+          "net10.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 2,
+        "numberOfCodeFiles": 2,
+        "linesTotal": 7,
+        "linesOfCode": 7,
+        "totalApiScanned": 0,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [],
+      "features": []
+    },
+    {
+      "path": "E:\\SJVS\\Projects\\Neo-Bpms\\src\\Neo.Bpms.Domain\\Neo.Bpms.Domain.csproj",
+      "startingProject": true,
+      "issues": 0,
+      "storyPoints": 0,
+      "properties": {
+        "appName": "Neo.Bpms.Domain",
+        "projectKind": "ClassLibrary",
+        "frameworks": [
+          "net10.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 870,
+        "numberOfCodeFiles": 864,
+        "linesTotal": 56286,
+        "linesOfCode": 55226,
+        "totalApiScanned": 0,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [],
+      "features": []
+    },
+    {
+      "path": "E:\\SJVS\\Projects\\Neo-Bpms\\src\\Neo.Bpms.Infrastructure\\Neo.Bpms.Infrastructure.csproj",
+      "startingProject": true,
+      "issues": 0,
+      "storyPoints": 0,
+      "properties": {
+        "appName": "Neo.Bpms.Infrastructure",
+        "projectKind": "ClassLibrary",
+        "frameworks": [
+          "net10.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 570,
+        "numberOfCodeFiles": 564,
+        "linesTotal": 58672,
+        "linesOfCode": 57846,
+        "totalApiScanned": 0,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [],
+      "features": []
+    },
+    {
+      "path": "E:\\SJVS\\Projects\\Neo-Bpms\\src\\Neo.Bpms.UI.MVC\\Neo.Bpms.UI.MVC.csproj",
+      "startingProject": true,
+      "issues": 0,
+      "storyPoints": 0,
+      "properties": {
+        "appName": "Neo.Bpms.UI.MVC",
+        "projectKind": "ClassLibrary",
+        "frameworks": [
+          "net10.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 448,
+        "numberOfCodeFiles": 442,
+        "linesTotal": 59718,
+        "linesOfCode": 58202,
+        "totalApiScanned": 0,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [],
+      "features": []
+    },
+    {
+      "path": "E:\\SJVS\\Projects\\Neo-Bpms\\tests\\Neo.Bpms.UI.MVC.Tests\\Neo.Bpms.UI.MVC.Tests.csproj",
+      "startingProject": true,
+      "issues": 0,
+      "storyPoints": 0,
+      "properties": {
+        "appName": "Neo.Bpms.UI.MVC.Tests",
+        "projectKind": "ClassLibrary",
+        "frameworks": [
+          "net10.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 7,
+        "numberOfCodeFiles": 7,
+        "linesTotal": 1319,
+        "linesOfCode": 1319,
+        "totalApiScanned": 0,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [],
+      "features": []
+    },
+    {
+      "path": "E:\\SJVS\\Projects\\Neo-Bpms\\src\\Neo.Bpms.UI.Resources\\Neo.Bpms.UI.Resources.csproj",
+      "startingProject": true,
+      "issues": 0,
+      "storyPoints": 0,
+      "properties": {
+        "appName": "Neo.Bpms.UI.Resources",
+        "projectKind": "ClassLibrary",
+        "frameworks": [
+          "net10.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 12,
+        "numberOfCodeFiles": 6,
+        "linesTotal": 8502,
+        "linesOfCode": 5796,
+        "totalApiScanned": 0,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [],
+      "features": []
+    },
+    {
+      "path": "E:\\SJVS\\Projects\\Neo\\src\\Neo.Common\\Neo.Common.csproj",
+      "startingProject": true,
+      "issues": 0,
+      "storyPoints": 0,
+      "properties": {
+        "appName": "Neo.Common",
+        "projectKind": "ClassLibrary",
+        "frameworks": [
+          "net10.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 31,
+        "numberOfCodeFiles": 31,
+        "linesTotal": 2809,
+        "linesOfCode": 2809,
+        "totalApiScanned": 0,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [],
+      "features": []
+    },
+    {
+      "path": "E:\\SJVS\\Projects\\Neo\\tests\\Neo.Common.Tests\\Neo.Common.Tests.csproj",
+      "startingProject": true,
+      "issues": 0,
+      "storyPoints": 0,
+      "properties": {
+        "appName": "Neo.Common.Tests",
+        "projectKind": "ClassLibrary",
+        "frameworks": [
+          "net10.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 9,
+        "numberOfCodeFiles": 9,
+        "linesTotal": 1398,
+        "linesOfCode": 1398,
+        "totalApiScanned": 0,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [],
+      "features": []
+    },
+    {
+      "path": "E:\\SJVS\\Projects\\Neo\\src\\Neo.Domain\\Neo.Domain.csproj",
+      "startingProject": true,
+      "issues": 0,
+      "storyPoints": 0,
+      "properties": {
+        "appName": "Neo.Domain",
+        "projectKind": "ClassLibrary",
+        "frameworks": [
+          "net10.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 94,
+        "numberOfCodeFiles": 94,
+        "linesTotal": 2418,
+        "linesOfCode": 2418,
+        "totalApiScanned": 0,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [],
+      "features": []
+    },
+    {
+      "path": "E:\\SJVS\\Projects\\Neo\\tests\\Neo.Domain.Tests\\Neo.Domain.Tests.csproj",
+      "startingProject": true,
+      "issues": 0,
+      "storyPoints": 0,
+      "properties": {
+        "appName": "Neo.Domain.Tests",
+        "projectKind": "ClassLibrary",
+        "frameworks": [
+          "net10.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 2,
+        "numberOfCodeFiles": 2,
+        "linesTotal": 167,
+        "linesOfCode": 167,
+        "totalApiScanned": 0,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [],
+      "features": []
+    },
+    {
+      "path": "E:\\SJVS\\Projects\\Neo\\src\\Neo.Endpoint\\Neo.Endpoint.csproj",
+      "startingProject": true,
+      "issues": 0,
+      "storyPoints": 0,
+      "properties": {
+        "appName": "Neo.Endpoint",
+        "projectKind": "ClassLibrary",
+        "frameworks": [
+          "net10.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 39,
+        "numberOfCodeFiles": 39,
+        "linesTotal": 9651,
+        "linesOfCode": 9651,
+        "totalApiScanned": 0,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [],
+      "features": []
+    },
+    {
+      "path": "E:\\SJVS\\Projects\\Neo\\src\\Neo.Infrastructure\\Neo.Infrastructure.csproj",
+      "startingProject": true,
+      "issues": 0,
+      "storyPoints": 0,
+      "properties": {
+        "appName": "Neo.Infrastructure",
+        "projectKind": "ClassLibrary",
+        "frameworks": [
+          "net10.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 64,
+        "numberOfCodeFiles": 64,
+        "linesTotal": 5356,
+        "linesOfCode": 5356,
+        "totalApiScanned": 0,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [],
+      "features": []
+    },
+    {
+      "path": "E:\\SJVS\\Projects\\Neo\\tests\\Neo.Infrastructure.IntegrationTests\\Neo.Infrastructure.IntegrationTests.csproj",
+      "startingProject": true,
+      "issues": 0,
+      "storyPoints": 0,
+      "properties": {
+        "appName": "Neo.Infrastructure.IntegrationTests",
+        "projectKind": "ClassLibrary",
+        "frameworks": [
+          "net10.0"
+        ],
+        "languages": [
+          "C#"
+        ],
+        "tools": [
+          "MSBuild"
+        ],
+        "isSdkStyle": true,
+        "numberOfFiles": 1,
+        "numberOfCodeFiles": 1,
+        "linesTotal": 230,
+        "linesOfCode": 230,
+        "totalApiScanned": 0,
+        "minLinesOfCodeToChange": 0,
+        "maxLinesOfCodeToChange": 0
+      },
+      "ruleInstances": [],
+      "features": []
+    }
+  ],
+  "rules": {
+    "NuGet.0002": {
+      "id": "NuGet.0002",
+      "isFeature": false,
+      "description": "NuGet package upgrade is recommended for selected target framework.\n\nStandard .NET packages are recommended to have versions matching version of .NET that project targets.\n\nSome other packages also are known to work better for selected target frameworks.",
+      "label": "NuGet package upgrade is recommended",
+      "severity": "Potential",
+      "effort": 1,
+      "links": [
+        {
+          "url": "https://go.microsoft.com/fwlink/?linkid=2262530",
+          "isCustom": false
+        }
+      ]
+    },
+    "NuGet.0005": {
+      "id": "NuGet.0005",
+      "isFeature": false,
+      "description": "NuGet package is deprecated.\n\nGo to its documentation and if there is a guidance for replacement of functionality provided by this package.",
+      "label": "NuGet package is deprecated",
+      "severity": "Optional",
+      "effort": 1,
+      "links": [
+        {
+          "url": "https://go.microsoft.com/fwlink/?linkid=2262531",
+          "isCustom": false
+        }
+      ]
+    },
+    "Project.0002": {
+      "id": "Project.0002",
+      "isFeature": false,
+      "description": "Project\u0027s target framework(s) needs to be changed to the new target framework that you selected for this upgrade.\n\nDuring upgrade target framework will be adjusted to corresponding platform when applicable. In some cases project would result in multiple target frameworks after the upgrade if it was using features that now have their own platforms in modern .NET frameworks (windows, iOS, Android etc).",
+      "label": "Project\u0027s target framework(s) needs to be changed",
+      "severity": "Mandatory",
+      "effort": 1,
+      "links": [
+        {
+          "title": "Overview of porting from .NET Framework to .NET",
+          "url": "https://go.microsoft.com/fwlink/?linkid=2265227",
+          "isCustom": false
+        },
+        {
+          "title": ".NET project SDKs",
+          "url": "https://go.microsoft.com/fwlink/?linkid=2265226",
+          "isCustom": false
+        }
+      ]
+    },
+    "NuGet.0004": {
+      "id": "NuGet.0004",
+      "isFeature": false,
+      "description": "NuGet package contains security vulnerabilities.\n\nPackage needs to be upgraded to a newer version that addresses known security vulnerabilities.",
+      "label": "NuGet package contains security vulnerability",
+      "severity": "Optional",
+      "effort": 1
+    },
+    "Api.0003": {
+      "id": "Api.0003",
+      "isFeature": false,
+      "description": "API has a behavioral change in selected .NET version: code and binaries may behave differently at runtime without needing recompilation, but the new behavior might be undesirable and require updates.",
+      "label": "Behavioral change in selected .NET version",
+      "severity": "Potential",
+      "effort": 1
+    },
+    "NuGet.0001": {
+      "id": "NuGet.0001",
+      "isFeature": false,
+      "description": "NuGet package is incompatible with selected target framework.\n\nPackage needs to be upgraded to a version supporting selected project target framework. If there no new package versions supporting new target framework, different package needs to be used and all code needs to be upgraded to new API.",
+      "label": "NuGet package is incompatible",
+      "severity": "Mandatory",
+      "effort": 1,
+      "links": [
+        {
+          "url": "https://go.microsoft.com/fwlink/?linkid=2262529",
+          "isCustom": false
+        }
+      ]
+    },
+    "NuGet.0003": {
+      "id": "NuGet.0003",
+      "isFeature": false,
+      "description": "NuGet package functionality is included with framework reference.\n\nPackage needs to be removed.",
+      "label": "NuGet package functionality is included with framework reference",
+      "severity": "Mandatory",
+      "effort": 1,
+      "links": [
+        {
+          "url": "https://go.microsoft.com/fwlink/?linkid=2262609",
+          "isCustom": false
+        }
+      ]
+    },
+    "Api.0002": {
+      "id": "Api.0002",
+      "isFeature": false,
+      "description": "API is source incompatible for selected .NET version: requires code changes to compile successfully when targeting a new version, such as removing obsolete APIs or changing method signatures.",
+      "label": "Source incompatible for selected .NET version",
+      "severity": "Potential",
+      "effort": 1,
+      "links": [
+        {
+          "title": "Breaking changes in .NET",
+          "url": "https://go.microsoft.com/fwlink/?linkid=2262679",
+          "isCustom": false
+        }
+      ]
+    },
+    "Api.0001": {
+      "id": "Api.0001",
+      "isFeature": false,
+      "description": "API is binary incompatible for selected .NET version: affects existing binaries, often requiring recompilation, because the API has changed in a way that prevents older binaries from loading or executing.",
+      "label": "Binary incompatible for selected .NET version",
+      "severity": "Mandatory",
+      "effort": 1,
+      "links": [
+        {
+          "title": "Breaking changes in .NET",
+          "url": "https://go.microsoft.com/fwlink/?linkid=2262679",
+          "isCustom": false
+        }
+      ]
+    },
+    "IdentityModel": {
+      "id": "IdentityModel",
+      "isFeature": false,
+      "description": "Windows Identity Foundation (WIF), SAML, and claims-based authentication APIs that have been replaced by modern identity libraries. WIF was the original identity framework for .NET Framework. Migrate to Microsoft.IdentityModel.* packages (modern identity stack).",
+      "label": "IdentityModel \u0026 Claims-based Security",
+      "severity": "Mandatory",
+      "effort": 4,
+      "links": [
+        {
+          "title": "Microsoft.IdentityModel packages",
+          "url": "https://go.microsoft.com/fwlink/?linkid=2341614",
+          "isCustom": false
+        }
+      ]
+    }
+  }
+}

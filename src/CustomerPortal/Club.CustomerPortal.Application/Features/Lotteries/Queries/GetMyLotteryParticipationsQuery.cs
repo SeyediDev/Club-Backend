@@ -1,4 +1,6 @@
-﻿namespace Club.CustomerPortal.Application.Features.Lotteries.Queries;
+using Club.CustomerPortal.Application.Interfaces;
+
+namespace Club.CustomerPortal.Application.Features.Lotteries.Queries;
 
 public record GetMyLotteryParticipationsQuery : IRequest<GetMyLotteryParticipationsQueryResponse>
 {
@@ -20,23 +22,14 @@ public record LotteryParticipationDto
     public string? Prize { get; set; }
 }
 
-public class GetMyLotteryParticipationsQueryHandler : IRequestHandler<GetMyLotteryParticipationsQuery, GetMyLotteryParticipationsQueryResponse>
+public class GetMyLotteryParticipationsQueryHandler(
+    ILotteryService lotteryService,
+    ICustomerRequesterUser requesterUser) : IRequestHandler<GetMyLotteryParticipationsQuery, GetMyLotteryParticipationsQueryResponse>
 {
-    private readonly ILotteryService _lotteryService;
-    private readonly IRequesterUser _requesterUser;
-
-    public GetMyLotteryParticipationsQueryHandler(
-        ILotteryService lotteryService,
-        IRequesterUser requesterUser)
-    {
-        _lotteryService = lotteryService;
-        _requesterUser = requesterUser;
-    }
-
     public async Task<GetMyLotteryParticipationsQueryResponse> Handle(GetMyLotteryParticipationsQuery request, CancellationToken cancellationToken)
     {
-        var customerId = _requesterUser.GetUserId();
-        var result = await _lotteryService.GetMyParticipationsAsync(customerId, request.PageNumber, request.PageSize, cancellationToken);
+        var customerId = requesterUser.CustomerId;
+        var result = await lotteryService.GetMyParticipationsAsync(customerId, request.PageNumber, request.PageSize, cancellationToken);
         
         var participations = result.Items.Select(p => new LotteryParticipationDto
         {

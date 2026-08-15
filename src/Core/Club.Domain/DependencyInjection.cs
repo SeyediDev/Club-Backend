@@ -1,9 +1,7 @@
-﻿using Neo.Domain;
-using Neo.Domain.Features.Client;
-using Club.Domain.Features;
-using Club.Domain.Features.Client;
-using Club.Domain.Features.ScoringRules;
+using Club.Domain.Features.Channels;
 using Microsoft.Extensions.Configuration;
+using Neo.Domain;
+using Neo.Domain.Features.Client;
 
 namespace Club.Domain;
 
@@ -11,25 +9,35 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddClubDomainServices(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddCandoDomainServices(configuration);
-        services.AddScoped<IAwardAssetService, AwardAssetService>();
-        services.AddScoped<IAwardAssetInternalService, AwardAssetInternalService>();
-        services.AddScoped<IProductOrServiceService, ProductOrServiceService>();
+        services.AddNeoDomainServices(configuration);
+        services.AddScoped<IAttributeService, AttributeService>();
+        services.AddScoped<IAttributeValueService, AttributeValueService>();
+        services.AddScoped<IAttributeAggregationQueryService, AttributeAggregationQueryService>();
+        services.AddScoped<IRewardAssetService, RewardAssetService>();
+        services.AddScoped<IRewardAssetInternalService, RewardAssetInternalService>();
+        services.AddScoped<IProductService, ProductService>();
         services.AddScoped<ILotteryService, LotteryService>();
         services.AddScoped<IPromotionService, PromotionService>();
         services.AddScoped<ICustomerService, CustomerService>();
+        services.AddScoped<ICustomerTenantService, CustomerTenantService>();
         services.AddScoped<IEventService, EventService>();
-        services.AddScoped<IScoringRuleService, ScoringRuleService>();
-        services.AddScoped<IScoringRuleActionService, ScoringRuleActionService>();
+        services.AddScoped<IEventTypeService, EventTypeService>();
+        services.AddScoped<IChannelService, ChannelService>();
+        services.AddScoped<IPromotionActionService, PromotionActionService>();
+        services.AddScoped<IPromotionMetricsService, PromotionMetricsService>();
         services.AddScoped<ISerialGenerator, SerialGenerator>();
-        services.AddScoped<IAwardService, AwardService>();
-        services.AddScoped<IPointBudgetService, PointBudgetService>();
+        services.AddScoped<IRewardService, RewardService>();
+        services.AddScoped<IPromotionBudgetService, PromotionBudgetService>();
         services.AddScoped<IPointLevelService, PointLevelService>();
         services.AddScoped<IPointTransferService, PointTransferService>();
         services.AddScoped<IEvaluateFormulaService, EvaluateFormulaService>();
         services.AddScoped<ICustomerSegmentService, CustomerSegmentService>();
+        services.AddScoped<IReferrerCodeValidationService, ReferrerCodeValidationService>();
+        services.AddScoped<ILoginUserService<UserId>, LoginUserService>();
         
-        services.AddScoped<ILoginUserService<int>, LoginUserService>();
+        // Theme Service
+        services.AddSingleton<IThemeService, ThemeService>();
+        
         return services;
     }
 }

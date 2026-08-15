@@ -1,18 +1,19 @@
-﻿namespace Club.Domain.Entities.Promotions;
+namespace Club.Domain.Entities.Promotions;
 
 /// <summary>
 /// پیام پویش - مدیریت پیام‌های ارسالی در کمپین‌های بازاریابی
 /// این موجودیت شامل اطلاعات کامل پیام‌های ارسالی، آمار ارسال و نرخ‌های تعامل می‌باشد
 /// </summary>
 [DisplayName("پیام پویش")]
-public class PromotionMessage : ClubBaseCoreAuditableEntity<int>
+public class PromotionMessage : ClubBaseCoreAuditableEntity<int>, ISubOfPromotion
 {
-    /// <summary>
-    /// شناسه پویش مرتبط - هر پیام باید به یک پویش مشخص تعلق داشته باشد
-    /// </summary>
     public int PromotionId { get; set; }
-
+    [DisplayName("پویش")]
     public Promotion Promotion { get; set; } = null!;
+
+    [DisplayName("روش اطلاع رسانی")]
+    [SBVR(SBVRModality.Permitted, "اطلاع رسانی", "روش اطلاع رسانی تعیین می‌کند که چگونه به مشتری اطلاع داده می‌شود")]
+    public PromotionMessageSendMethod SendMethod { get; set; }
 
     /// <summary>
     /// موضوع پیام - عنوان کوتاه و جذاب برای پیام (اختیاری)
@@ -39,6 +40,37 @@ public class PromotionMessage : ClubBaseCoreAuditableEntity<int>
     [DisplayName("نوع پیام")]
     [SBVR(SBVRModality.Obligatory, "نوع پیام", "نوع پیام باید بر اساس هدف کمپین انتخاب شود")]
     public PromotionMessageType Type { get; set; }
+
+    /// <summary>
+    /// اولویت پیام - تعیین اولویت ارسال پیام (1=بالا، 5=پایین)
+    /// پیش‌فرض: 1
+    /// </summary>
+    [DisplayName("اولویت پیام")]
+    [SBVR(SBVRModality.Recommended, "اولویت پیام", "پیام‌های با اولویت بالاتر زودتر ارسال می‌شوند")]
+    [SBVR(SBVRModality.Permitted, "اولویت پیام", "اولویت 1 برای پیام‌های فوری، اولویت 5 برای پیام‌های معمولی")]
+    public int Priority { get; set; } = 1;
+
+    /// <summary>
+    /// زمان برنامه‌ریزی شده - زمان مشخص شده برای ارسال پیام (اختیاری)
+    /// </summary>
+    [DisplayName("زمان برنامه‌ریزی شده")]
+    [SBVR(SBVRModality.Permitted, "زمان برنامه‌ریزی شده", "زمان برنامه‌ریزی شده برای ارسال خودکار پیام استفاده می‌شود")]
+    public DateTime? ScheduledTime { get; set; }
+
+    /// <summary>
+    /// تعداد تکرار - تعداد دفعات تلاش برای ارسال پیام
+    /// </summary>
+    [DisplayName("تعداد تکرار")]
+    [SBVR(SBVRModality.Calculated, "تعداد تکرار", "تعداد تکرار بر اساس تلاش‌های ناموفق محاسبه می‌شود")]
+    public int RetryCount { get; set; }
+
+    /// <summary>
+    /// حداکثر تکرار - حداکثر تعداد تلاش برای ارسال پیام
+    /// پیش‌فرض: 3
+    /// </summary>
+    [DisplayName("حداکثر تکرار")]
+    [SBVR(SBVRModality.Recommended, "حداکثر تکرار", "حداکثر تکرار باید بین 1 تا 5 باشد تا از اسپم جلوگیری شود")]
+    public int MaxRetries { get; set; } = 3;
 
     /// <summary>
     /// وضعیت پیام - وضعیت فعلی پیام در فرآیند ارسال
@@ -92,35 +124,4 @@ public class PromotionMessage : ClubBaseCoreAuditableEntity<int>
     [SBVR(SBVRModality.Calculated, "نرخ خواندن", "نرخ خواندن = (تعداد خوانده شده / تعداد تحویل شده) × 100")]
     [SBVR(SBVRModality.Recommended, "نرخ خواندن", "نرخ خواندن بالای 80% نشان‌دهنده جذابیت پیام است")]
     public decimal ReadRate => DeliveredCount > 0 ? (decimal)ReadCount / DeliveredCount : 0;
-
-    /// <summary>
-    /// اولویت پیام - تعیین اولویت ارسال پیام (1=بالا، 5=پایین)
-    /// پیش‌فرض: 1
-    /// </summary>
-    [DisplayName("اولویت پیام")]
-    [SBVR(SBVRModality.Recommended, "اولویت پیام", "پیام‌های با اولویت بالاتر زودتر ارسال می‌شوند")]
-    [SBVR(SBVRModality.Permitted, "اولویت پیام", "اولویت 1 برای پیام‌های فوری، اولویت 5 برای پیام‌های معمولی")]
-    public int Priority { get; set; } = 1;
-
-    /// <summary>
-    /// زمان برنامه‌ریزی شده - زمان مشخص شده برای ارسال پیام (اختیاری)
-    /// </summary>
-    [DisplayName("زمان برنامه‌ریزی شده")]
-    [SBVR(SBVRModality.Permitted, "زمان برنامه‌ریزی شده", "زمان برنامه‌ریزی شده برای ارسال خودکار پیام استفاده می‌شود")]
-    public DateTime? ScheduledTime { get; set; }
-
-    /// <summary>
-    /// تعداد تکرار - تعداد دفعات تلاش برای ارسال پیام
-    /// </summary>
-    [DisplayName("تعداد تکرار")]
-    [SBVR(SBVRModality.Calculated, "تعداد تکرار", "تعداد تکرار بر اساس تلاش‌های ناموفق محاسبه می‌شود")]
-    public int RetryCount { get; set; }
-
-    /// <summary>
-    /// حداکثر تکرار - حداکثر تعداد تلاش برای ارسال پیام
-    /// پیش‌فرض: 3
-    /// </summary>
-    [DisplayName("حداکثر تکرار")]
-    [SBVR(SBVRModality.Recommended, "حداکثر تکرار", "حداکثر تکرار باید بین 1 تا 5 باشد تا از اسپم جلوگیری شود")]
-    public int MaxRetries { get; set; } = 3;
 }

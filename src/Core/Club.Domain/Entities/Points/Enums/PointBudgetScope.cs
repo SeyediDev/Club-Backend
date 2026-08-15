@@ -2,7 +2,7 @@ namespace Club.Domain.Entities.Points.Enums;
 
 public enum PointBudgetScope
 {
-    [Description("کل مشتریان سازمان بهره‌بردار")]
+    [Description("کل مشتریان اکوسیستم")]
     PerTenant = 1,
     [Description("هر مشتری")]
     PerCustomer = 2,

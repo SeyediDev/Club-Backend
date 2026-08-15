@@ -1,4 +1,4 @@
-﻿namespace Club.Domain.Entities.Points;
+namespace Club.Domain.Entities.Points;
 
 /// <summary>
 /// می خواهیم یک سری سطوح امتیاز تعریف کنیم
@@ -17,6 +17,9 @@ public class PointLevel : ClubBaseCoreConfigAuditableEntity<int>
     [MaxLength(41)]
     public string Title { get; set; } = null!;
 
+    [DisplayName("کلید")]
+    [MaxLength(41)]
+    public string Key { get; set; } = null!;
 
     [DisplayName("حداقل امتیاز")]
     public int MinXp { get; set; }

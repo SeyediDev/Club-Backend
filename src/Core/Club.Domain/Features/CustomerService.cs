@@ -1,5 +1,3 @@
-using Club.Domain.Entities.Customers.Enums;
-
 namespace Club.Domain.Features;
 
 public interface ICustomerService
@@ -10,12 +8,13 @@ public interface ICustomerService
     Task<IEnumerable<CustomerPointLevel>> GetCustomerPointLevels(int customerId, int? tenantId, CancellationToken cancellationToken);
     Task<long> GetPointBalanceAsync(int tenantId, int pointId, int customerId, CancellationToken cancellationToken);
     [Telemetry]
-    Task SaveCustomerParameter(Customer customer, int customerParameterId, string parameterValue, CancellationToken cancellationToken);
+    Task SaveCustomerParameter(Customer customer, CustomerTenant customerTenant, int customerParameterId, string parameterValue, long eventLogId, CancellationToken cancellationToken);
 }
 
 internal class CustomerService(
     IQueryRepository<CustomerTransaction, long> customerTransactionRepo,
     IQueryRepository<CustomerPointLevel, int> customerPointLevelRepo,
+    IQueryRepository<CustomerTenant, int> customerTenantQueryRepo,
     ICommandRepository<Customer, int> customerCmdRepo,
     ICommandRepository<CustomerParameterValue, int> customerParameterValueCmdRepo,
     ICommandRepository<CustomerTransaction, long> customerTransactionCmdRepo
@@ -163,48 +162,90 @@ internal class CustomerService(
 
     public async Task<IEnumerable<CustomerTransaction>> GetCustomerPointBalances(int customerId, int? tenantId, CancellationToken cancellationToken)
     {
-        return tenantId is null
-            ? await customerTransactionRepo.GetAllAsync(cancellationToken, x => x.CustomerId == customerId)
-            : await customerTransactionRepo.GetAllAsync(cancellationToken, x => x.CustomerId == customerId && x.TenantId == tenantId);
+        if (tenantId is null)
+        {
+            return await customerTransactionRepo.GetAllAsync(
+                cancellationToken,
+                x => x.CustomerTenant.CustomerId == customerId);
+        }
+
+        CustomerTenant? customerTenant = await customerTenantQueryRepo.FirstOrDefaultAsync(
+            x => x.CustomerId == customerId && x.TenantId == tenantId.Value, cancellationToken);
+
+        if (customerTenant == null)
+        {
+            return Enumerable.Empty<CustomerTransaction>();
+        }
+
+        return await customerTransactionRepo.GetAllAsync(
+            cancellationToken,
+            x => x.CustomerTenantId == customerTenant.Id && x.TenantId == tenantId);
     }
 
     public async Task<IEnumerable<CustomerPointLevel>> GetCustomerPointLevels(int customerId, int? tenantId, CancellationToken cancellationToken)
     {
-        return tenantId is null
-            ? await customerPointLevelRepo.GetAllWithIncludeAsync(x => x.PointLevel, cancellationToken, x => x.CustomerId == customerId)
-            : await customerPointLevelRepo.GetAllWithIncludeAsync(x => x.PointLevel, cancellationToken, x => x.CustomerId == customerId && x.PointLevel.Point.TenantId == tenantId);
+        if (tenantId is null)
+        {
+            return await customerPointLevelRepo.GetAllWithIncludeAsync(
+                x => x.PointLevel,
+                cancellationToken,
+                x => x.CustomerTenant.CustomerId == customerId);
+        }
+
+        CustomerTenant? customerTenant = await customerTenantQueryRepo.FirstOrDefaultAsync(
+            x => x.CustomerId == customerId && x.TenantId == tenantId.Value, cancellationToken);
+
+        if (customerTenant == null)
+        {
+            return Enumerable.Empty<CustomerPointLevel>();
+        }
+
+        return await customerPointLevelRepo.GetAllWithIncludeAsync(
+            x => x.PointLevel,
+            cancellationToken,
+            x => x.CustomerTenantId == customerTenant.Id);
     }
 
     public async Task<long> GetPointBalanceAsync(int tenantId, int pointId, int customerId, CancellationToken cancellationToken)
     {
+        CustomerTenant? customerTenant = await customerTenantQueryRepo.FirstOrDefaultAsync(
+            x => x.CustomerId == customerId && x.TenantId == tenantId, cancellationToken);
+
+        if (customerTenant == null)
+        {
+            return 0;
+        }
+
         CustomerTransaction? customerTransaction =
             await customerTransactionCmdRepo.FirstOrDefaultAsync(
                     x => x.TenantId == tenantId &&
                     x.PointId == pointId &&
-                    x.CustomerId == customerId, cancellationToken);
+                    x.CustomerTenantId == customerTenant.Id, cancellationToken);
         return customerTransaction?.Balance ?? 0;
     }
 
-    public async Task SaveCustomerParameter(Customer customer, int customerParameterId, 
-        string parameterValue, CancellationToken cancellationToken)
+    public async Task SaveCustomerParameter(Customer customer, CustomerTenant customerTenant, int customerParameterId, 
+        string parameterValue, long eventLogId, CancellationToken cancellationToken)
     {
         CustomerParameterValue? customerParameterValue = await customerParameterValueCmdRepo.FirstOrDefaultAsync(
-            x => x.CustomerId == customer.Id &&
+            x => x.CustomerTenantId == customerTenant.Id &&
             x.ParameterId == customerParameterId, cancellationToken);
         if (customerParameterValue == null)
         {
             customerParameterValue = new()
             {
-                CustomerId = customer.Id,
+                CustomerTenantId = customerTenant.Id,
                 ParameterId = customerParameterId,
                 Value = parameterValue,
+                EventLogId = eventLogId
             };
             customerParameterValueCmdRepo.Add(customerParameterValue);
         }
         else
         {
             customerParameterValue.Value = parameterValue;
+            customerParameterValue.EventLogId = eventLogId;
         }
-        _ = await customerParameterValueCmdRepo.UnitOfWork.SaveChangesAsync();
+        _ = await customerParameterValueCmdRepo.UnitOfWork.SaveChangesAsync(cancellationToken);
     }
 }

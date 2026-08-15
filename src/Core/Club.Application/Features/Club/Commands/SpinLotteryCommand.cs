@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Logging;
+using Club.Domain.Features.Promotions;
 
 namespace Club.Application.Features.Club.Commands;
 
@@ -15,8 +15,8 @@ public record SpinLotteryCommandResponse
 {
     public int ParticipantId { get; init; }
     public bool IsWinner { get; init; }
-    public int? AwardId { get; init; }
-    public int? AwardAmount { get; init; }
+    public int? RewardId { get; init; }
+    public int? RewardAmount { get; init; }
     public string? Message { get; init; }
 }
 
@@ -62,8 +62,8 @@ public class SpinLotteryCommandHandler : IRequestHandler<SpinLotteryCommand, Spi
         {
             ParticipantId = response.ParticipantId,
             IsWinner = response.IsWinner,
-            AwardId = response.AwardId,
-            AwardAmount = response.AwardAmount,
+            RewardId = response.RewardId,
+            RewardAmount = response.RewardAmount,
             Message = response.Message
         };
     }

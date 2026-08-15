@@ -5,15 +5,8 @@ namespace Club.CustomerPortal.Application.Services;
 /// <summary>
 /// Mock implementation برای تست
 /// </summary>
-public class MockPointService : IPointService
+public class MockPointService(ILogger<MockPointService> logger) : IPointService
 {
-    private readonly ILogger<MockPointService> _logger;
-
-    public MockPointService(ILogger<MockPointService> logger)
-    {
-        _logger = logger;
-    }
-
     public Task<PointsSummaryDto> GetPointsSummaryAsync(int customerId, CancellationToken cancellationToken = default)
     {
         return Task.FromResult(new PointsSummaryDto
@@ -31,9 +24,9 @@ public class MockPointService : IPointService
     {
         var transactions = new List<PointTransactionDto>
         {
-            new() { Id = 1, Title = "خرید محصول", Amount = 500, Type = "Earned", CreatedAt = DateTime.Now.AddDays(-1), Description = "امتیاز خرید" },
-            new() { Id = 2, Title = "معرفی دوست", Amount = 1000, Type = "Referral", CreatedAt = DateTime.Now.AddDays(-2), Description = "امتیاز معرفی" },
-            new() { Id = 3, Title = "خرید پاداش", Amount = -200, Type = "Spent", CreatedAt = DateTime.Now.AddDays(-3), Description = "خرید هدیه" }
+            new() { Id = 1, Title = "خرید محصول", Amount = 500, Type = "Earned", CreatedAt = DateTime.UtcNow.AddDays(-1), Description = "امتیاز خرید" },
+            new() { Id = 2, Title = "معرفی دوست", Amount = 1000, Type = "Referral", CreatedAt = DateTime.UtcNow.AddDays(-2), Description = "امتیاز معرفی" },
+            new() { Id = 3, Title = "خرید پاداش", Amount = -200, Type = "Spent", CreatedAt = DateTime.UtcNow.AddDays(-3), Description = "خرید هدیه" }
         };
 
         return Task.FromResult(new PaginatedList<PointTransactionDto>(transactions, 3, pageNumber, pageSize));
@@ -41,7 +34,7 @@ public class MockPointService : IPointService
 
     public Task<ConvertPointsResultDto> ConvertPointsAsync(int customerId, int sourcePointTypeId, int targetPointTypeId, long amount, CancellationToken cancellationToken = default)
     {
-        _logger.LogInformation("Mock: Converted {Amount} points", amount);
+        logger.LogInformation("Mock: Converted {Amount} points", amount);
         return Task.FromResult(new ConvertPointsResultDto
         {
             Success = true,
@@ -52,7 +45,7 @@ public class MockPointService : IPointService
 
     public Task<TransferPointsResultDto> TransferPointsAsync(int fromCustomerId, string toPhoneNumber, long amount, CancellationToken cancellationToken = default)
     {
-        _logger.LogInformation("Mock: Transferred {Amount} points to {Phone}", amount, toPhoneNumber);
+        logger.LogInformation("Mock: Transferred {Amount} points to {Phone}", amount, toPhoneNumber);
         return Task.FromResult(new TransferPointsResultDto
         {
             Success = true,
@@ -66,7 +59,7 @@ public class MockPointService : IPointService
     {
         var expiringPoints = new List<ExpiringPointDto>
         {
-            new() { Amount = 500, ExpiryDate = DateTime.Now.AddDays(15), DaysRemaining = 15 }
+            new() { Amount = 500, ExpiryDate = DateTime.UtcNow.AddDays(15), DaysRemaining = 15 }
         };
 
         return Task.FromResult<IEnumerable<ExpiringPointDto>>(expiringPoints);

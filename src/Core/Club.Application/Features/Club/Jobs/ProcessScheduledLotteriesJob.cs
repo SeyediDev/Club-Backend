@@ -1,4 +1,4 @@
-using Microsoft.Extensions.Logging;
+using Club.Domain.Features.Promotions;
 
 namespace Club.Application.Features.Club.Jobs;
 
@@ -12,16 +12,16 @@ public class ProcessScheduledLotteriesJob(
 {
     public async Task Run()
     {
-        logger.LogInformation("Starting scheduled lotteries processing at {Time}", DateTime.Now);
+        logger.LogInformation("Starting scheduled lotteries processing at {Time}", DateTime.UtcNow);
 
         try
         {
             await lotteryService.ProcessScheduledLotteries(CancellationToken.None);
-            logger.LogInformation("Completed scheduled lotteries processing at {Time}", DateTime.Now);
+            logger.LogInformation("Completed scheduled lotteries processing at {Time}", DateTime.UtcNow);
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error processing scheduled lotteries at {Time}", DateTime.Now);
+            logger.LogError(ex, "Error processing scheduled lotteries at {Time}", DateTime.UtcNow);
             throw;
         }
     }

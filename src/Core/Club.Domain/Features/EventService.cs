@@ -10,13 +10,15 @@ public interface IEventService
 
 public record EventRequest(TriggerType TriggerType, string CustomerIdentifier, Dictionary<string, string>? Parameters)
 {
+    public int TenantId { get; set; }
     public string? EventChannel { get; set; }
     public string? EventType { get; set; }
     public int? PromotionId { get; set; }
     public int? PointLevelId { get; set; }
-    [OldDbMap("ProductId")]
     public int? AwardId { get; set; }
-    public int? TenantProductOrServiceId { get; set; }
+    public int? ProductId { get; set; }
+    public string? ProductCategoryKey { get; set; }
+    public string? ProductKey { get; set; }
     public int? AssetId { get; set; }
 }
 
@@ -35,41 +37,52 @@ internal class EventService(
         ICommandRepository<EventLog, long> eventLogCmdRepo,
         ICommandRepository<EventLogParameter, long> eventLogParameterCmdRepo,
         ICommandRepository<EventTypeParameter, int> eventTypeParameterCmdRepo,
+        ICommandRepository<CustomerTenant, int> customerTenantCmdRepo,
         ICustomerSegmentService customerSegmentService
     ) : IEventService
 {
     public async Task<EventResponse> RecordEventAsync(EventRequest request, CancellationToken cancellationToken)
     {
+        if (request.TenantId <= 0)
+        {
+            throw new ArgumentException("شناسه اکوسیستم معتبر نمی‌باشد");
+        }
+
         long eventLogId = 0;
         EventChannel? eventChannel=null;
-        int? eventTypeId = 0;
+        int? eventTypeId = null;
         if (request.TriggerType == TriggerType.Event)
         {
-            eventChannel = await eventChannelRepo.FirstOrDefaultAsync(x => x.Key == request.EventChannel, cancellationToken);
+            eventChannel = await eventChannelRepo.FirstOrDefaultAsync(
+                x => x.Key == request.EventChannel && x.TenantId == request.TenantId,
+                cancellationToken);
             if (eventChannel == null)
             {
                 throw new ArgumentException("منبع تولید رویداد معتبر نمی باشد");
             }
 
-            eventTypeId = await eventTypeRepo.GetEntityAsQueryable()
-                .Where(x => x.Key == request.EventType).Select(x => x.Id).FirstOrDefaultAsync(cancellationToken);
+            eventTypeId = await eventTypeRepo.Query()
+                .Where(x => x.Key == request.EventType && x.TenantId == request.TenantId)
+                .Select(x => (int?)x.Id)
+                .FirstOrDefaultAsync(cancellationToken);
             if (eventTypeId == null)
             {
                 throw new ArgumentException("رویداد معتبر نمی باشد");
             }
         }
 
-        List<EventLogParameter>? parameters = null;
-        Customer customer = null!;
+        Customer customer = await customerService.GetCustomerByMobile(request.CustomerIdentifier, true, request.Parameters, cancellationToken)??
+            throw new ArgumentException("اطلاعات مشتری معتبر نمی باشد");
+
+        CustomerTenant customerTenant = await EnsureCustomerTenantAsync(customer, request.TenantId, cancellationToken);
+
         await eventLogCmdRepo.UnitOfWork.DoTransaction(async () =>
         {
-            customer = await customerService.GetCustomerByMobile(request.CustomerIdentifier, true, request.Parameters, cancellationToken)??
-                throw new ArgumentException("اطلاعات مشتری معتبر نمی باشد");
-            eventLogId = await LogEvent(request, eventChannel?.Id, eventTypeId, customer!, cancellationToken);
-            parameters = await LogEventParameters(request, customer!, eventTypeId.Value, eventLogId, cancellationToken);
+            eventLogId = await LogEvent(request, eventChannel?.Id, eventTypeId, customer, customerTenant, cancellationToken);
+            await LogEventParameters(request, customer, customerTenant, eventTypeId, eventLogId, cancellationToken);
         });
         
-        // بررسی خودکار و عضویت در جامعه‌های مناسب
+        // بررسی خودکار و عضویت در جامعه‌ها/بازارهای مناسب
         try
         {
             await customerSegmentService.AutoJoinCustomerToEligibleSegmentsAsync(
@@ -81,7 +94,7 @@ internal class EventService(
         {
             // لاگ خطا اما عدم مسدود کردن جریان اصلی
             // TODO: اضافه کردن logger
-            // logger.LogWarning(ex, "خطا در بررسی خودکار عضویت جامعه برای مشتری {CustomerId}", customer.Id);
+            // logger.LogWarning(ex, "خطا در بررسی خودکار عضویت جامعه/بازار برای مشتری {CustomerId}", customer.Id);
         }
         
         return new()
@@ -94,18 +107,21 @@ internal class EventService(
     }
 
     private async Task<long> LogEvent(EventRequest request, int? eventChannelId, int? eventTypeId,
-        Customer customer, CancellationToken cancellationToken)
+        Customer customer, CustomerTenant customerTenant, CancellationToken cancellationToken)
     {
         EventLog eventLog = new()
         {
-            CustomerId = customer.Id,
+            TenantId = request.TenantId,
+            CustomerTenantId = customerTenant.Id,
             TriggerType = request.TriggerType,
             EventChannelId = eventChannelId,
             EventTypeId = eventTypeId,
             PromotionId = request.PromotionId,
             PointLevelId = request.PointLevelId,
             AwardId = request.AwardId,
-            TenantProductOrServiceId = request.TenantProductOrServiceId,
+            ProductId = request.ProductId,
+            ProductCategoryKey = request.ProductCategoryKey,
+            ProductKey = request.ProductKey,
             AssetId = request.AssetId,
         };
         eventLogCmdRepo.Add(eventLog);
@@ -114,31 +130,63 @@ internal class EventService(
     }
 
     private async Task<List<EventLogParameter>> LogEventParameters(
-        EventRequest eventData, Customer customer,
-        int eventTypeId, long eventLogId, CancellationToken cancellationToken)
+        EventRequest eventData, Customer customer, CustomerTenant customerTenant,
+        int? eventTypeId, long eventLogId, CancellationToken cancellationToken)
     {
         List<EventLogParameter> parameters = [];
-        if (eventData.Parameters != null)
+        if (eventTypeId == null || eventData.Parameters == null)
         {
-            foreach (KeyValuePair<string, string> param in eventData.Parameters)
-            {
-                EventTypeParameter? parameter = await GetParameterAsync(eventTypeId, param.Key, true, cancellationToken);
-                EventLogParameter eventLogParameter = new()
-                {
-                    EventLogId = eventLogId,
-                    ParameterId = parameter?.Id ?? 0,
-                    Value = param.Value
-                };
-                parameters.Add(eventLogParameter);
-                eventLogParameterCmdRepo.Add(eventLogParameter);
-                if (parameter?.CustomerParameterId !=null)
-                {
-                    await customerService.SaveCustomerParameter(customer, parameter.CustomerParameterId.Value, param.Value, cancellationToken);
-                }
-            }
-            _ = await eventLogParameterCmdRepo.UnitOfWork.SaveChangesAsync(cancellationToken);
+            return parameters;
         }
+
+        foreach (KeyValuePair<string, string> param in eventData.Parameters)
+        {
+            EventTypeParameter? parameter = await GetParameterAsync(eventTypeId.Value, param.Key, true, cancellationToken);
+            EventLogParameter eventLogParameter = new()
+            {
+                EventLogId = eventLogId,
+                ParameterId = parameter?.Id ?? 0,
+                Value = param.Value
+            };
+            parameters.Add(eventLogParameter);
+            eventLogParameterCmdRepo.Add(eventLogParameter);
+            if (parameter?.CustomerParameterId !=null)
+            {
+                await customerService.SaveCustomerParameter(customer, customerTenant, parameter.CustomerParameterId.Value, param.Value, eventLogId, cancellationToken);
+            }
+        }
+        _ = await eventLogParameterCmdRepo.UnitOfWork.SaveChangesAsync(cancellationToken);
         return parameters;
+    }
+    
+    private async Task<CustomerTenant> EnsureCustomerTenantAsync(Customer customer, int tenantId, CancellationToken cancellationToken)
+    {
+        CustomerTenant? customerTenant =
+            await customerTenantCmdRepo.FirstOrDefaultAsync(
+                ct => ct.CustomerId == customer.Id && ct.TenantId == tenantId,
+                cancellationToken);
+
+        if (customerTenant == null)
+        {
+            customerTenant = new CustomerTenant
+            {
+                CustomerId = customer.Id,
+                TenantId = tenantId,
+                JoinDate = DateTime.Now,
+                IsActive = true
+            };
+            customerTenantCmdRepo.Add(customerTenant);
+            _ = await customerTenantCmdRepo.UnitOfWork.SaveChangesAsync(cancellationToken);
+        }
+        else if (!customerTenant.IsActive)
+        {
+            customerTenant.IsActive = true;
+            customerTenant.LeaveDate = null;
+            customerTenantCmdRepo.Update(customerTenant);
+            _ = await customerTenantCmdRepo.UnitOfWork.SaveChangesAsync(cancellationToken);
+        }
+
+        return customerTenant;
     }
     
     public async Task<EventTypeParameter?> GetParameterAsync(int id, CancellationToken cancellationToken)

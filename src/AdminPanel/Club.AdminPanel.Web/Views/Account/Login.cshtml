@@ -1,6 +1,6 @@
 ﻿@addTagHelper "BotDetect.Web.Mvc.CaptchaTagHelper, BotDetect.Web.Mvc"
 
-@using Neo.Bpms.Domain.Modeling.MetaDefinitions.ProjectDefinitions
+@using Neo.Bpms.Domain.Features.MetaDefinitions.ProjectDefinitions
 @using Neo.Bpms.UI.MVC
 @using Neo.Bpms.UI.MVC.Helpers
 @using Neo.Bpms.UI.Resources.Resources
@@ -13,34 +13,34 @@
     ViewBag.Title = ViewTexts.LoginToSystem;
 }
 
-<div class="cando-login-container">
-    <div class="cando-login-form-section">
-        @using (Html.BeginForm("Login", "Account", new { ViewBag.ReturnUrl }, FormMethod.Post, false, new { @class = "cando-login-form", role = "form", autocomplete = "off" }))
+<div class="neo-login-container">
+    <div class="neo-login-form-section">
+        @using (Html.BeginForm("Login", "Account", new { returnUrl = ViewBag.ReturnUrl }, FormMethod.Post, false, new { @class = "neo-login-form", role = "form", autocomplete = "off" }))
         {
             @Html.AntiForgeryToken()
             HiddenFields();
 
-            <h3 class="cando-login-title">
+            <h3 class="neo-login-title">
                 پلتفرم باشگاه مشتریان
             </h3>
-            <h6 class="cando-login-subtitle">
+            <h6 class="neo-login-subtitle">
                 لطفا اطلاعات ورود خود را وارد کنید
             </h6>
             
-            @Html.ValidationSummary(false, "", new { @class = "cando-login-field-validation-error" })
+            @Html.ValidationSummary(false, "", new { @class = "neo-login-field-validation-error" })
             
-            <div class="cando-login-form-group">
-                <div class="cando-login-input-container">
-                    <img src="@Url.Content(SpecificCommonlyNeededAssets.GetImage("leading-icon"))" class="cando-login-input-icon" alt="User Icon" />
+            <div class="neo-login-form-group">
+                <div class="neo-login-input-container">
+                    <img src="@Url.Content(SpecificCommonlyNeededAssets.GetImage("leading-icon"))" class="neo-login-input-icon" alt="User Icon" />
                     @Html.TextBoxFor(m => m.UserName, new
                         {
-                            @class = "cando-login-input",
+                            @class = "neo-login-input",
                             dir = "ltr",
                             placeholder = ViewTexts.Username,
                             id = "userNameInput"
                         })
                 </div>
-                @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "cando-login-field-validation-error" })
+                @Html.ValidationMessageFor(m => m.UserName, "", new { @class = "neo-login-field-validation-error" })
             </div>
            
             @if (ProjectDefinition.Project.CaptchaInLoginEnabled)
@@ -48,182 +48,30 @@
                 //await RenderCaptcha();
             }
             
-            <div class="cando-login-form-group">
-                <input type="submit" value="@ViewTexts.LogIn" class="cando-login-submit-btn" id="loginSubmitBtn" />
+            <div class="neo-login-form-group">
+                <button type="submit" class="neo-login-submit-btn" id="loginSubmitBtn">
+                    <span class="btn-text">@ViewTexts.LogIn</span>
+                    <span class="btn-loader"></span>
+                </button>
             </div>
         }
     </div>
     
-    <div class="cando-login-brand-section">
-        <div class="cando-login-brand-content">
-            <!-- Professional Club SVG Icon - Inspired by Bank Badge Design -->
+    <div class="neo-login-brand-section">
+        <div class="neo-login-brand-content">
+            <!-- Customer Club Icon -->
             <div class="club-svg-icon">
-                <svg width="160" height="160" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <!-- Professional Gradients -->
-                    <defs>
-                        <!-- Main Circle Gradient -->
-                        <radialGradient id="mainCircleGradient" cx="50%" cy="50%" r="50%">
-                            <stop offset="0%" style="stop-color:#00d4aa;stop-opacity:1" />
-                            <stop offset="25%" style="stop-color:#00b4d8;stop-opacity:1" />
-                            <stop offset="50%" style="stop-color:#0077b6;stop-opacity:1" />
-                            <stop offset="75%" style="stop-color:#023e8a;stop-opacity:1" />
-                            <stop offset="100%" style="stop-color:#001d3d;stop-opacity:1" />
-                        </radialGradient>
-                        
-                        <!-- Badge Gradient -->
-                        <linearGradient id="badgeGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style="stop-color:#ffffff;stop-opacity:1" />
-                            <stop offset="30%" style="stop-color:#f0f9ff;stop-opacity:1" />
-                            <stop offset="70%" style="stop-color:#e0f2fe;stop-opacity:1" />
-                            <stop offset="100%" style="stop-color:#bae6fd;stop-opacity:1" />
-                        </linearGradient>
-                        
-                        <!-- User Icons Gradient -->
-                        <linearGradient id="userGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                            <stop offset="0%" style="stop-color:#00d4aa;stop-opacity:1" />
-                            <stop offset="50%" style="stop-color:#00b4d8;stop-opacity:1" />
-                            <stop offset="100%" style="stop-color:#0077b6;stop-opacity:1" />
-                        </linearGradient>
-                        
-                        <!-- Glow Effect -->
-                        <filter id="glowEffect">
-                            <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
-                            <feMerge> 
-                                <feMergeNode in="coloredBlur"/>
-                                <feMergeNode in="SourceGraphic"/>
-                            </feMerge>
-                        </filter>
-                        
-                        <!-- Shadow Effect -->
-                        <filter id="shadowEffect">
-                            <feDropShadow dx="0" dy="4" stdDeviation="8" flood-color="#000000" flood-opacity="0.3"/>
-                        </filter>
-                    </defs>
-                    
-                    <!-- Main Background Circle -->
-                    <circle cx="80" cy="80" r="75" fill="url(#mainCircleGradient)" stroke="rgba(255,255,255,0.2)" stroke-width="2" filter="url(#glowEffect)"/>
-                    
-                    <!-- Inner Ring -->
-                    <circle cx="80" cy="80" r="65" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.5"/>
-                    
-                    <!-- Central Badge - Bank Badge SVG -->
-                    <g transform="translate(48, 64)">
-                        <svg width="64" height="32" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <mask id="logo_svg__a" width="33" height="32" x="31" y="0" maskUnits="userSpaceOnUse" style="mask-type:luminance">
-                                <path fill="#fff" d="M52.911 2.512 31.579 24.719c7.538 10.325 19.9 8.628 27.215 1.386 5.868-5.808 6.42-15.512 3.426-22.52-1.368-3.203-4.08-4.833-7.682-2.448a9.7 9.7 0 0 0-1.627 1.373z"></path>
-                            </mask>
-                            <g mask="url(#logo_svg__a)">
-                                <path fill="#002D5D" d="M65.214-1.246H31.58v36.29h33.635z"></path>
-                                <path fill="#002D5D" d="M63.48 27.82c-2.567 2.697-5.297 4.992-8.039 6.837q-1.028.691-2.055 1.297v-.76H32.997v.074c-.417-.893-.693-1.887-.833-2.962-.281-2.15-.02-4.628.738-7.275 1.516-5.292 5.02-11.262 10.154-16.654 2.567-2.697 5.297-4.993 8.039-6.837a39 39 0 0 1 4.098-2.42q1.018-.517 2.02-.944v.429h8.149v26.13h.83q-.423.522-.865 1.038a51 51 0 0 1-1.849 2.047z"></path>
-                            </g>
-                            <mask id="logo_svg__b" width="50" height="32" x="0" y="0" maskUnits="userSpaceOnUse" style="mask-type:luminance">
-                                <path fill="#fff" d="m31.442 24.86 17.8-18.53C47.746 7.875 38.213 17.575 31.43 17.583c-6.704.009-12.357-5.681-12.738-6.078L10.544 2.97C6.974-.878 3.466-.6 1.652 4.18c-2.705 7.124-2.386 17.036 3.535 22.973 7.507 7.53 17.875 5.882 26.22-2.257l.016-.016.022-.02z"></path>
-                            </mask>
-                            <g mask="url(#logo_svg__b)">
-                                <path fill="#993" d="M49.243-.878H-1.053v35.562h50.296z"></path>
-                                <path fill="#993" d="M30.939 25.409c-7.881 8.277-20.98 8.6-29.258.718a20.7 20.7 0 0 1-3.816-4.917h.933V.18h-.408q.548-.876 1.19-1.705v.498h32.758v-.477q.318.412.612.835a20.6 20.6 0 0 1 1.983 3.552 20.7 20.7 0 0 1 1.706 7.748 20.63 20.63 0 0 1-5.7 14.779z"></path>
-                            </g>
-                        </svg>
-                    </g>
-                    
-                    <!-- User Icons Around Badge (8 users) -->
-                    <!-- Top User -->
-                    <g transform="translate(80, 15)">
-                        <circle cx="0" cy="0" r="10" fill="url(#userGradient)" stroke="rgba(255,255,255,0.8)" stroke-width="2"/>
-                        <circle cx="0" cy="-3" r="4" fill="rgba(255,255,255,0.9)"/>
-                        <path d="M-6 3 Q0 8 6 3" fill="rgba(255,255,255,0.9)" stroke="rgba(255,255,255,0.7)" stroke-width="1.5"/>
-                    </g>
-                    
-                    <!-- Top-Right User -->
-                    <g transform="translate(125, 35)">
-                        <circle cx="0" cy="0" r="8" fill="url(#userGradient)" stroke="rgba(255,255,255,0.8)" stroke-width="2"/>
-                        <circle cx="0" cy="-2.5" r="3" fill="rgba(255,255,255,0.9)"/>
-                        <path d="M-5 2.5 Q0 6 5 2.5" fill="rgba(255,255,255,0.9)" stroke="rgba(255,255,255,0.7)" stroke-width="1.5"/>
-                    </g>
-                    
-                    <!-- Right User -->
-                    <g transform="translate(145, 80)">
-                        <circle cx="0" cy="0" r="10" fill="url(#userGradient)" stroke="rgba(255,255,255,0.8)" stroke-width="2"/>
-                        <circle cx="0" cy="-3" r="4" fill="rgba(255,255,255,0.9)"/>
-                        <path d="M-6 3 Q0 8 6 3" fill="rgba(255,255,255,0.9)" stroke="rgba(255,255,255,0.7)" stroke-width="1.5"/>
-                    </g>
-                    
-                    <!-- Bottom-Right User -->
-                    <g transform="translate(125, 125)">
-                        <circle cx="0" cy="0" r="8" fill="url(#userGradient)" stroke="rgba(255,255,255,0.8)" stroke-width="2"/>
-                        <circle cx="0" cy="-2.5" r="3" fill="rgba(255,255,255,0.9)"/>
-                        <path d="M-5 2.5 Q0 6 5 2.5" fill="rgba(255,255,255,0.9)" stroke="rgba(255,255,255,0.7)" stroke-width="1.5"/>
-                    </g>
-                    
-                    <!-- Bottom User -->
-                    <g transform="translate(80, 145)">
-                        <circle cx="0" cy="0" r="10" fill="url(#userGradient)" stroke="rgba(255,255,255,0.8)" stroke-width="2"/>
-                        <circle cx="0" cy="-3" r="4" fill="rgba(255,255,255,0.9)"/>
-                        <path d="M-6 3 Q0 8 6 3" fill="rgba(255,255,255,0.9)" stroke="rgba(255,255,255,0.7)" stroke-width="1.5"/>
-                    </g>
-                    
-                    <!-- Bottom-Left User -->
-                    <g transform="translate(35, 125)">
-                        <circle cx="0" cy="0" r="8" fill="url(#userGradient)" stroke="rgba(255,255,255,0.8)" stroke-width="2"/>
-                        <circle cx="0" cy="-2.5" r="3" fill="rgba(255,255,255,0.9)"/>
-                        <path d="M-5 2.5 Q0 6 5 2.5" fill="rgba(255,255,255,0.9)" stroke="rgba(255,255,255,0.7)" stroke-width="1.5"/>
-                    </g>
-                    
-                    <!-- Left User -->
-                    <g transform="translate(15, 80)">
-                        <circle cx="0" cy="0" r="10" fill="url(#userGradient)" stroke="rgba(255,255,255,0.8)" stroke-width="2"/>
-                        <circle cx="0" cy="-3" r="4" fill="rgba(255,255,255,0.9)"/>
-                        <path d="M-6 3 Q0 8 6 3" fill="rgba(255,255,255,0.9)" stroke="rgba(255,255,255,0.7)" stroke-width="1.5"/>
-                    </g>
-                    
-                    <!-- Top-Left User -->
-                    <g transform="translate(35, 35)">
-                        <circle cx="0" cy="0" r="8" fill="url(#userGradient)" stroke="rgba(255,255,255,0.8)" stroke-width="2"/>
-                        <circle cx="0" cy="-2.5" r="3" fill="rgba(255,255,255,0.9)"/>
-                        <path d="M-5 2.5 Q0 6 5 2.5" fill="rgba(255,255,255,0.9)" stroke="rgba(255,255,255,0.7)" stroke-width="1.5"/>
-                    </g>
-                    
-                    <!-- Connection Lines -->
-                    <g stroke="rgba(255,255,255,0.4)" stroke-width="1.5" fill="none">
-                        <line x1="80" y1="25" x2="80" y2="50"/>
-                        <line x1="135" y1="45" x2="110" y2="50"/>
-                        <line x1="155" y1="80" x2="130" y2="80"/>
-                        <line x1="135" y1="115" x2="110" y2="110"/>
-                        <line x1="80" y1="135" x2="80" y2="110"/>
-                        <line x1="25" y1="115" x2="50" y2="110"/>
-                        <line x1="5" y1="80" x2="30" y2="80"/>
-                        <line x1="25" y1="45" x2="50" y2="50"/>
-                    </g>
-                    
-                    <!-- Sparkle Effects -->
-                    <g fill="rgba(255,255,255,0.9)">
-                        <circle cx="60" cy="30" r="2"/>
-                        <circle cx="100" cy="50" r="2"/>
-                        <circle cx="60" cy="130" r="2"/>
-                        <circle cx="30" cy="60" r="2"/>
-                        <circle cx="130" cy="30" r="1.5"/>
-                        <circle cx="130" cy="130" r="1.5"/>
-                        <circle cx="30" cy="130" r="1.5"/>
-                        <circle cx="30" cy="30" r="1.5"/>
-                        <circle cx="80" cy="10" r="1"/>
-                        <circle cx="150" cy="80" r="1"/>
-                        <circle cx="80" cy="150" r="1"/>
-                        <circle cx="10" cy="80" r="1"/>
-                    </g>
-                    
-                    <!-- Inner Glow -->
-                    <circle cx="80" cy="80" r="55" fill="none" stroke="rgba(0, 212, 170, 0.3)" stroke-width="1"/>
-                </svg>
+                <img src="@Url.Content("~/Content/images/customer-club-icon.svg")" alt="باشگاه مشتریان" style="width: 270px; height: 270px;" />
             </div>
             
-            <div class="cando-login-brand-title">
+            <div class="neo-login-brand-title">
                 پلتفرم باشگاه مشتریان
             </div>
-            <div class="cando-login-brand-subtitle">
+            <div class="neo-login-brand-subtitle">
                 Simotech Customer Club
             </div>
         </div>
-        <div class="cando-login-brand-footer">© Simotech. All Rights Reserved.</div>
+        <div class="neo-login-brand-footer">© Simotech. All Rights Reserved.</div>
     </div>
 </div>
 
@@ -236,13 +84,20 @@
         }
 
         // Add loading state to submit button
-        const loginForm = document.querySelector('.cando-login-form');
+        const loginForm = document.querySelector('.neo-login-form');
         const submitBtn = document.getElementById('loginSubmitBtn');
         
         if (loginForm && submitBtn) {
-            loginForm.addEventListener('submit', function() {
+            loginForm.addEventListener('submit', function(e) {
+                // Show loading state immediately
                 submitBtn.classList.add('loading');
                 submitBtn.disabled = true;
+                
+                // Lock input field (readonly keeps the value in POST)
+                if (userNameInput) {
+                    userNameInput.readOnly = true;
+                    userNameInput.classList.add('locked');
+                }
             });
         }
 
@@ -262,62 +117,6 @@
                 }
             });
         }
-    });
-</script>
-
-<script>
-    const countdownElement = document.getElementById('countdown');
-    const resendText = document.getElementById('resendText');
-    const resendContainer = document.getElementById('resendContainer');
-
-    let timerDuration = 179; // ثانیه
-    let seconds = timerDuration;
-    let timer;
-
-    function pad(n) {
-      return n.toString().padStart(2, '0');
-    }
-
-    function toPersianDigits(str) {
-      return str.replace(/\d/g, d => '۰۱۲۳۴۵۶۷۸۹'[d]);
-    }
-
-    function updateCountdown() {
-      const minutes = Math.floor(seconds / 60);
-      const secs = seconds % 60;
-      const timeString = `${pad(minutes)}:${pad(secs)}`;
-      countdownElement.textContent = toPersianDigits(timeString);
-
-      if (seconds > 0) {
-        seconds--;
-        timer = setTimeout(updateCountdown, 1000);
-      } else {
-        countdownElement.style.display = 'none';
-        resendText.textContent = 'ارسال مجدد';
-        resendContainer.classList.add('active');
-        resendContainer.addEventListener('click', restartTimer);
-      }
-    }
-
-    function startTimer() {
-      resendContainer.classList.remove('active');
-      resendText.textContent = 'تا ارسال مجدد';
-      countdownElement.style.display = 'inline';
-      seconds = timerDuration;
-      updateCountdown();
-    }
-
-    function restartTimer() {
-      resendContainer.removeEventListener('click', restartTimer);
-      startTimer();
-      // اینجا می‌تونی AJAX برای ارسال مجدد پیامک بزنی
-      console.log("📨 ارسال مجدد پیامک");
-    }
-
-
-
-    document.addEventListener("DOMContentLoaded", () => {
-        startTimer();
     });
 </script>
 

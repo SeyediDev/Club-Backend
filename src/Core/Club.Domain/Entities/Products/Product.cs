@@ -1,34 +1,19 @@
-using Club.Domain.Entities.Products.Enums;
-
 namespace Club.Domain.Entities.Products;
 
 /// <summary>
-/// محصول یا خدمت سازمان - موجودیت برای مدیریت محصولات ارائه شده توسط سازمان
-/// این موجودیت برای ثبت خرید یا استفاده مشتریان از محصولات سازمان و کسب امتیاز استفاده می‌شود
+/// محصول یا خدمت - موجودیت برای مدیریت محصولات ارائه شده توسط 
+/// این موجودیت برای ثبت خرید یا استفاده مشتریان از محصولات  و کسب امتیاز استفاده می‌شود
 /// </summary>
-[DisplayName("محصول سازمان")]
-[SBVR(SBVRModality.Obligatory, "مدیریت محصولات سازمان", "هر محصول یا خدمت سازمان باید برای ثبت خرید، تخصیص امتیاز و تحلیل فروش قابل شناسایی باشد")]
-[SBVR(SBVRModality.Recommended, "مدیریت محصولات سازمان", "محصولات سازمان باید برای تحلیل رفتار مشتریان، محاسبه ROI و بهینه‌سازی استراتژی‌های بازاریابی سازماندهی شوند")]
-[OldDbMap("ProductOrServices")]
-public class Product : ClubBaseCoreAuditableEntity<int>
+[DisplayName("محصول")]
+[SBVR(SBVRModality.Obligatory, "مدیریت محصولات", "هر محصول یا خدمت  باید برای ثبت خرید، تخصیص امتیاز و تحلیل فروش قابل شناسایی باشد")]
+[SBVR(SBVRModality.Recommended, "مدیریت محصولات ", "محصولات باید برای تحلیل رفتار مشتریان، محاسبه ROI و بهینه‌سازی استراتژی‌های بازاریابی سازماندهی شوند")]
+public class Product : ClubBaseCoreConfigAuditableEntity<int>, ISubOfTenant
 {
-    /// <summary>
-    /// شناسه سازمان بهره‌بردار
-    /// </summary>
-    [DisplayName("شناسه سازمان بهره‌بردار")]
-    [SBVR(SBVRModality.Obligatory, "چندین سازمان", "هر محصول باید به یک سازمان مشخص تعلق داشته باشد تا از تداخل داده‌ها جلوگیری شود")]
     public int TenantId { get; set; }
-
-    /// <summary>
-    /// سازمان بهره‌بردار
-    /// </summary>
-    [DisplayName("سازمان بهره‌بردار")]
-    [SBVR(SBVRModality.Obligatory, "چندین سازمان", "هر محصول باید به یک سازمان مشخص تعلق داشته باشد")]
+    [DisplayName("اکوسیستم")]
+    [SBVR(SBVRModality.Obligatory, "چندین اکوسیستم", "هر محصول باید به یک اکوسیستم مشخص تعلق داشته باشد")]
     public Tenant Tenant { get; set; } = null!;
 
-    /// <summary>
-    /// عنوان محصول
-    /// </summary>
     [DisplayName("عنوان محصول")]
     [InDisplayString]
     [MaxLength(81)]
@@ -40,6 +25,11 @@ public class Product : ClubBaseCoreAuditableEntity<int>
     [DisplayName("کلید")]
     public string Key { get; set; } = null!;
 
+    [OldDbMap("CategoryId")]
+    public int? ProductCategoryId { get; set; }
+    [DisplayName("دسته‌بندی مافوق")]
+    public ProductCategory? ProductCategory { get; set; }
+
     /// <summary>
     /// توضیحات محصول
     /// </summary>
@@ -49,59 +39,27 @@ public class Product : ClubBaseCoreAuditableEntity<int>
     public string? Description { get; set; }
 
     /// <summary>
-    /// نوع محصول یا خدمت
-    /// </summary>
-    [DisplayName("نوع محصول")]
-    [SBVR(SBVRModality.Obligatory, "تمایز محصولات", "نوع برای تمایز بین محصولات فیزیکی، خدمات و محصولات دیجیتالی ضروری است")]
-    [SBVR(SBVRModality.Recommended, "تمایز محصولات", "نوع برای تحلیل فروش، مدیریت موجودی و بهینه‌سازی استراتژی‌ها استفاده می‌شود")]
-    public ProductType ProductType { get; set; }
-
-    /// <summary>
-    /// قیمت محصول (ریال)
-    /// </summary>
-    [DisplayName("قیمت (ریال)")]
-    [SBVR(SBVRModality.Calculated, "قیمت‌گذاری", "قیمت برای محاسبه درآمد، تحلیل سودآوری و ارزیابی ارزش محصول استفاده می‌شود")]
-    public decimal? Price { get; set; }
-
-    /// <summary>
-    /// تعداد امتیاز قابل کسب از خرید/استفاده این محصول
-    /// </summary>
-    [DisplayName("امتیاز قابل کسب")]
-    [SBVR(SBVRModality.Recommended, "سیستم امتیازدهی", "امتیاز قابل کسب برای تشویق خرید و استفاده از محصولات سازمان و افزایش وفاداری مشتریان استفاده می‌شود")]
-    [SBVR(SBVRModality.Calculated, "سیستم امتیازدهی", "امتیاز بر اساس ارزش محصول، میزان سودآوری و استراتژی‌های بازاریابی محاسبه می‌شود")]
-    public long? PointsEarnable { get; set; }
-
-    /// <summary>
     /// آیا محصول فعال است
     /// </summary>
     [DisplayName("فعال")]
     [SBVR(SBVRModality.Permitted, "مدیریت چرخه حیات", "وضعیت فعال برای کنترل نمایش محصولات در کاتالوگ و جلوگیری از فروش محصولات غیرفعال استفاده می‌شود")]
     public bool IsActive { get; set; } = true;
 
-    /// <summary>
-    /// تعداد خرید/استفاده
-    /// </summary>
-    [DisplayName("تعداد خرید/استفاده")]
-    [SBVR(SBVRModality.Calculated, "تحلیل محبوبیت", "تعداد خرید برای تحلیل محبوبیت محصول، الگوهای خرید و بهینه‌سازی کاتالوگ استفاده می‌شود")]
-    public int PurchaseCount { get; set; }
-
-    /// <summary>
-    /// مقدار درآمد ایجاد شده
-    /// </summary>
-    [DisplayName("کل درآمد (ریال)")]
-    [SBVR(SBVRModality.Calculated, "تحلیل درآمد", "کل درآمد برای محاسبه سودآوری محصول و ارزیابی تأثیر بر رشد کسب‌وکار استفاده می‌شود")]
-    public decimal TotalRevenue { get; set; }
-
     public int? PictureId { get; set; }
-    /// <summary>
-    /// تصویر محصول
-    /// </summary>
     [DisplayName("تصویر")]
     [SBVR(SBVRModality.Permitted, "نمایش بصری", "تصویر برای بهبود تجربه کاربری و افزایش نرخ تبدیل استفاده می‌شود")]
     public Document? Picture { get; set; }
 
+    /// <summary>
+    /// آیا این محصول نیاز به وارد کردن سریال دارد؟
+    /// برای محصولاتی که در کانال‌ها ارائه نمی‌شوند و مشتری باید در کلاب خرید را اعلام کند
+    /// </summary>
+    [DisplayName("نیاز به سریال")]
+    [SBVR(SBVRModality.Permitted, "ثبت خرید دستی", "برای محصولاتی که در کانال‌ها ارائه نمی‌شوند و مشتری باید در کلاب خرید را اعلام کند")]
+    public bool RequiresSerialEntry { get; set; } = false;
+
     // ===== CONSUMPTION & CUSTOMER LIFETIME METRICS =====
-    
+
     /// <summary>
     /// مدت زمان مصرف پیش‌بینی شده - مدت زمان پیش‌بینی شده برای مصرف محصول توسط مشتری (به روز)
     /// </summary>
@@ -132,14 +90,6 @@ public class Product : ClubBaseCoreAuditableEntity<int>
     [SBVR(SBVRModality.Recommended, "مدیریت خرید مجدد", "آستانه سفارش مجدد برای زمان‌بندی تبلیغات محصول و تشویق خرید مجدد استفاده می‌شود")]
     [SBVR(SBVRModality.Calculated, "مدیریت خرید مجدد", "آستانه سفارش مجدد بر اساس ExpectedConsumptionDuration و الگوهای تاریخی محاسبه می‌شود")]
     public decimal? ReorderThreshold { get; set; }
-
-    /// <summary>
-    /// ارزش طول عمر مشتری (CLV) برای این محصول - ارزش پیش‌بینی شده طول عمر مشتری برای این محصول (ریال)
-    /// </summary>
-    [DisplayName("ارزش طول عمر مشتری (CLV محصول)")]
-    [SBVR(SBVRModality.Calculated, "تحلیل ارزش طول عمر مشتری", "CLV محصول برای ارزیابی سودآوری محصول، تصمیم‌گیری تخصیص بودجه بازاریابی و طراحی استراتژی نگهداری مشتری استفاده می‌شود")]
-    [SBVR(SBVRModality.Predicted, "تحلیل ارزش طول عمر مشتری", "CLV محصول = متوسط درآمد هر مشتری × نرخ نگهداری × تعداد خریدهای پیش‌بینی شده × طول عمر متوسط")]
-    public decimal? CustomerLifetimeValueProduct { get; set; }
 
     /// <summary>
     /// طول عمر معمولی مشتری برای این محصول - طول عمر معمولی یک مشتری برای این محصول (به روز)

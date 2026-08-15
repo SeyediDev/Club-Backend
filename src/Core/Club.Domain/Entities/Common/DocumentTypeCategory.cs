@@ -1,7 +1,7 @@
 ﻿namespace Club.Domain.Entities.Common;
 
 [DisplayName("دسته بندی نوع مستند")]
-public partial class DocumentTypeCategory : ClubBaseCoreCommonAuditableEntity<int>
+public partial class DocumentTypeCategory : ClubBaseCoreConfigAuditableEntity<int>
 {
     public int DocumentTypeId { get; set; }
 

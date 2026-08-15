@@ -1,6 +1,5 @@
-﻿using Neo.Application.Exceptions;
-using Neo.Domain.Features.Client;
-using Neo.Domain.Features.Multilingual;
+using Neo.Application.Exceptions;
+using Neo.Domain.Entities.Common;
 using Neo.Domain.Features.Sms;
 
 namespace Club.Application.Features.Account.Commands.LoginUser;
@@ -9,7 +8,7 @@ public record LoginUserCommand : IRequest<LoginUserCommandResponse>
 {
     public required string Mobile { get; set; }
     public required int CountryCode { get; set; }
-    public Func<Neo.Domain.Entities.IUser<int>,Task>? SetUseParametersInRegistration { get; set; }
+    public Func<Neo.Domain.Entities.IUser<UserId>,Task>? SetUseParametersInRegistration { get; set; }
 }
 
 public record LoginUserCommandResponse(DateTimeOffset Timeout)
@@ -28,12 +27,12 @@ public class LoginUserCommandValidator : AbstractValidator<LoginUserCommand>
     }
 }
 
-public class LoginUserCommandHandler(ILoginUserService<int> userService, IOtpService otpService, IRequesterUser requesterUser, IMultiLingualService multiLingual)
+public class LoginUserCommandHandler(ILoginUserService<UserId> userService, IOtpService otpService, IRequesterUser requesterUser, IMultiLingualService multiLingual)
     : IRequestHandler<LoginUserCommand, LoginUserCommandResponse>
 {
     public async Task<LoginUserCommandResponse> Handle(LoginUserCommand request, CancellationToken cancellationToken)
     {
-        Neo.Domain.Entities.IUser<int> user = await userService.FindUser(request.Mobile, request.CountryCode, cancellationToken) ??
+        Neo.Domain.Entities.IUser<UserId> user = await userService.FindUser(request.Mobile, request.CountryCode, cancellationToken) ??
             await userService.RegisterUser(request.Mobile, request.CountryCode, otpService.GetNewOtpSeed(), 
                                            request.SetUseParametersInRegistration, cancellationToken);
         requesterUser.Id = user.Id;

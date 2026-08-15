@@ -25,19 +25,19 @@ public class ForumPost : ClubBaseCoreAuditableEntity<int>
     /// </summary>
     [DisplayName("شناسه مشتری")]
     [SBVR(SBVRModality.Obligatory, "شناسایی", "هر پست باید توسط یک مشتری ایجاد شود")]
-    public int CustomerId { get; set; }
+    public int CustomerTenantId { get; set; }
 
     /// <summary>
     /// مشتری
     /// </summary>
     [DisplayName("مشتری")]
-    public Customer Customer { get; set; } = null!;
+    public CustomerTenant CustomerTenant { get; set; } = null!;
 
     /// <summary>
     /// محتوای پست
     /// </summary>
     [DisplayName("محتوا")]
-    [MaxLength(10000)]
+    [MaxLength(4000)]
     [SBVR(SBVRModality.Obligatory, "محتوا", "محتوای پست الزامی است")]
     public string Content { get; set; } = null!;
 
@@ -57,7 +57,7 @@ public class ForumPost : ClubBaseCoreAuditableEntity<int>
     /// پاسخ‌ها
     /// </summary>
     [DisplayName("پاسخ‌ها")]
-    public ICollection<ForumPost> Replies { get; set; } = new List<ForumPost>();
+    public ICollection<ForumPost> Replies { get; set; } = [];
 
     /// <summary>
     /// آیا بهترین پاسخ است
@@ -88,7 +88,7 @@ public class ForumPost : ClubBaseCoreAuditableEntity<int>
     /// لایک‌ها
     /// </summary>
     [DisplayName("لایک‌ها")]
-    public ICollection<ForumPostLike> Likes { get; set; } = new List<ForumPostLike>();
+    public ICollection<ForumPostLike> Likes { get; set; } = [];
 }
 
 

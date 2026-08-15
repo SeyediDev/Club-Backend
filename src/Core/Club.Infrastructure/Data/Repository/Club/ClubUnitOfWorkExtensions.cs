@@ -1,5 +1,4 @@
-﻿using Neo.Domain.Entities.Base;
-using Neo.Domain.Repository;
+﻿using Neo.Domain.Repository;
 using Club.Domain.Repository;
 
 namespace Club.Infrastructure.Data.Repository.Club;

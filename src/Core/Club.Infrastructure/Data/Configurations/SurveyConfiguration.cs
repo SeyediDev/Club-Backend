@@ -1,4 +1,4 @@
-using Club.Domain.Entities.Surveys;
+using Club.Domain.Entities.Promotions.Surveys;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -46,9 +46,9 @@ public class SurveyConfiguration : IEntityTypeConfiguration<Survey>
             .HasColumnType("datetime");
 
         // Relationships
-        entity.HasOne(d => d.Tenant)
+        entity.HasOne(d => d.Promotion)
             .WithMany()
-            .HasForeignKey(d => d.TenantId)
+            .HasForeignKey(d => d.PromotionId)
             .OnDelete(DeleteBehavior.Cascade)
             .IsRequired();
 
@@ -69,7 +69,7 @@ public class SurveyConfiguration : IEntityTypeConfiguration<Survey>
             .OnDelete(DeleteBehavior.Cascade);
 
         // Indexes
-        entity.HasIndex(e => e.TenantId);
+        entity.HasIndex(e => e.PromotionId);
         entity.HasIndex(e => e.IsActive);
         entity.HasIndex(e => e.SurveyType);
         entity.HasIndex(e => new { e.StartDate, e.EndDate });

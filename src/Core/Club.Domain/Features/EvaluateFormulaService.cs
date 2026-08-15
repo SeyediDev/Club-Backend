@@ -1,4 +1,4 @@
-﻿using Neo.Bpms.Domain.Utility;
+﻿using Neo.Bpms.Domain.Extensions;
 
 namespace Club.Domain.Features;
 public interface IEvaluateFormulaService

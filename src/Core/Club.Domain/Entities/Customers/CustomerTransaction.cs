@@ -1,4 +1,5 @@
-using Club.Domain.Entities.Customers.Enums;
+using Club.Domain.Entities.Channels;
+using Club.Domain.Entities.Promotions.Plans;
 
 namespace Club.Domain.Entities.Customers;
 
@@ -7,17 +8,14 @@ namespace Club.Domain.Entities.Customers;
 /// به ازای هر تغییر یک رکورد جدید اضافه می شود
 /// به ازای بازدید کاربر از امتیازاتش فیلد VisitedAt پر میشود
 /// </summary>
-[Entity_Index($"{nameof(CustomerId)},{nameof(VisitedAt)},{nameof(IsDeleted)}")]
+[EntityIndex($"{nameof(CustomerTenantId)},{nameof(VisitedAt)},{nameof(IsDeleted)}")]
 [DisplayName("تراکنش مشتری")]
 public class CustomerTransaction : ClubBaseCoreAuditableEntity<long>
 {
-    public int TenantId { get; set; }
-    [DisplayName("سازمان بهره‌بردار")]
-    public Tenant Tenant { get; set; } = null!;
-
-    public int CustomerId { get; set; }
-    [DisplayName("مشتری")]
-    public Customer Customer { get; set; } = null!;
+    public int CustomerTenantId { get; set; }
+    [DisplayName("مشتری اکوسیستم")]
+    [InDisplayString]
+    public CustomerTenant CustomerTenant { get; set; } = null!;
 
     public int PointId { get; set; }
     [DisplayName("امتیاز")]
@@ -51,11 +49,51 @@ public class CustomerTransaction : ClubBaseCoreAuditableEntity<long>
     [DisplayName("لاگ رویداد")]
     public EventLog EventLog { get; set; } = null!;
 
-    public int? ScoringRuleId { get; set; }
-    [DisplayName("قانون‌امتیازدهی")]
-    public ScoringRule? ScoringRule { get; set; }
+    public int? EventChannelId { get; set; }
+    [DisplayName("کانال تراکنش")]
+    public EventChannel? EventChannel { get; set; }
 
-    public int? ScoringRuleActionId { get; set; }
-    [DisplayName("عملیات قانون‌امتیازدهی")]
-    public ScoringRuleAction? ScoringRuleAction { get; set; }
+    public int? ActivePlanId { get; set; }
+    [DisplayName("طرح فعال در لحظه تراکنش")]
+    public Plan? ActivePlan { get; set; }
+
+    public int? RewardId { get; set; }
+    [DisplayName("ریوارد")]
+    public Reward? Reward { get; set; }
+
+    public int? PromotionId { get; set; }
+    [DisplayName("پویش")]
+    public Promotion? Promotion { get; set; }
+
+    public int? PromotionActionId { get; set; }
+    [DisplayName("عملیات پویش")]
+    public PromotionAction? PromotionAction { get; set; }
+
+    /// <summary>
+    /// تاریخ انقضای این تراکنش امتیازی (فقط برای تراکنش‌های Credit)
+    /// </summary>
+    [DisplayName("تاریخ انقضا")]
+    [SBVR(SBVRModality.Permitted, "مدیریت اعتبار امتیاز", "تاریخ انقضای این تراکنش امتیازی. این فیلد فقط برای تراکنش‌های Credit (افزایش امتیاز) معنی دارد و در زمان دریافت امتیاز محاسبه می‌شود.")]
+    public DateTime? ExpirationDate { get; set; }
+
+    /// <summary>
+    /// آیا این تراکنش منقضی شده است؟
+    /// </summary>
+    [DisplayName("منقضی شده")]
+    [SBVR(SBVRModality.Calculated, "مدیریت اعتبار امتیاز", "این فیلد نشان می‌دهد که آیا این تراکنش امتیازی منقضی شده است یا خیر. یک تراکنش منقضی می‌شود اگر ExpirationDate <= Today و IsSpent = false باشد.")]
+    public bool IsExpired { get; set; } = false;
+
+    /// <summary>
+    /// تاریخ منقضی شدن (اگر منقضی شده باشد)
+    /// </summary>
+    [DisplayName("تاریخ منقضی شدن")]
+    [SBVR(SBVRModality.Permitted, "مدیریت اعتبار امتیاز", "تاریخ منقضی شدن این تراکنش امتیازی. این فیلد زمانی پر می‌شود که تراکنش منقضی می‌شود.")]
+    public DateTime? ExpiredDate { get; set; }
+
+    /// <summary>
+    /// آیا این امتیاز خرج شده است؟
+    /// </summary>
+    [DisplayName("خرج شده")]
+    [SBVR(SBVRModality.Calculated, "مدیریت اعتبار امتیاز", "این فیلد نشان می‌دهد که آیا این امتیاز خرج شده است یا خیر. یک امتیاز خرج شده نمی‌تواند منقضی شود.")]
+    public bool IsSpent { get; set; } = false;
 }

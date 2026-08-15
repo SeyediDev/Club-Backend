@@ -1,4 +1,4 @@
-﻿//using Neo.Domain.Repository;
+//using Neo.Domain.Repository;
 
 //namespace Club.Application.Features.ReferrerCodes.Queries;
 
@@ -179,7 +179,7 @@
 //            var referrerCodes = await _referrerCodeQueryRepo.GetAllAsync(
 //                rc => rc.TenantId == request.TenantId && 
 //                      rc.IsActive && 
-//                      (rc.ExpiryDate == null || rc.ExpiryDate > DateTime.Now));
+//                      (rc.ExpiryDate == null || rc.ExpiryDate > DateTime.UtcNow));
 
 //            var dtos = referrerCodes.Select(rc => new ReferrerCodeDto
 //            {
@@ -237,7 +237,7 @@
 //                return Result<bool>.Success(false);
 
 //            // بررسی انقضا
-//            if (referrerCode.ExpiryDate.HasValue && referrerCode.ExpiryDate.Value < DateTime.Now)
+//            if (referrerCode.ExpiryDate.HasValue && referrerCode.ExpiryDate.Value < DateTime.UtcNow)
 //                return Result<bool>.Success(false);
 
 //            // بررسی حداکثر استفاده
@@ -292,7 +292,7 @@
 //                SuccessfulReferrals = referrals.Count(cr => cr.Status == ReferrerStatus.Successful),
 //                TotalEarnedPoints = referrals.Sum(cr => cr.ReferrerEarnedPoints),
 //                LastUsedAt = referrerCode.UsedAt,
-//                IsExpired = referrerCode.ExpiryDate.HasValue && referrerCode.ExpiryDate.Value < DateTime.Now,
+//                IsExpired = referrerCode.ExpiryDate.HasValue && referrerCode.ExpiryDate.Value < DateTime.UtcNow,
 //                IsMaxUsageReached = referrerCode.MaxUsageCount.HasValue && referrerCode.UsageCount >= referrerCode.MaxUsageCount.Value
 //            };
 

@@ -25,13 +25,13 @@ public class FeedbackLike : ClubBaseCoreAuditableEntity<int>
     /// </summary>
     [DisplayName("شناسه مشتری")]
     [SBVR(SBVRModality.Obligatory, "شناسایی", "هر لایک باید به یک مشتری تعلق داشته باشد")]
-    public int CustomerId { get; set; }
+    public int CustomerTenantId { get; set; }
 
     /// <summary>
     /// مشتری
     /// </summary>
     [DisplayName("مشتری")]
-    public Customer Customer { get; set; } = null!;
+    public CustomerTenant CustomerTenant { get; set; } = null!;
 
     /// <summary>
     /// تاریخ لایک

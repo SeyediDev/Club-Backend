@@ -16,11 +16,24 @@ public class AwardService(
 {
     public async Task<Reward?> GetAward(int awardId, CancellationToken cancellationToken)
     { 
-        return await awardRepository.FirstOrDefaultAsync(x=>x.Id==awardId, cancellationToken);
+        var award = await awardRepository.FirstOrDefaultAsync(x=>x.Id==awardId, cancellationToken);
+        // If award is lottery-only, return null for Club usage
+        if (award?.IsLotteryOnly == true)
+        {
+            return null;
+        }
+        return award;
     }
     public async Task<AwardDto?> GetAwardDto(int awardId, CancellationToken cancellationToken)
     {
         ConfigMap();
+
+        var award = await awardRepository.FirstOrDefaultAsync(x => x.Id == awardId, cancellationToken);
+        // If award is lottery-only, return null for Club usage
+        if (award?.IsLotteryOnly == true)
+        {
+            return null;
+        }
 
         AwardDto? awardDto = await awardRepository.GetByIdAsync<AwardDto>(awardId, cancellationToken);
 
@@ -31,7 +44,7 @@ public class AwardService(
     {
         ConfigMap();
         // Asset بررسی و حذفِ پاداش‌ها با وضعیت ControlAsset
-        var awardIdsHavingAssets = assetRepository.GetEntityAsQueryable()
+        var awardIdsHavingAssets = assetRepository.Query()
             .Where(x => 
                 (x.Reward.ControlAsset==true )
                 && x.Reward.TenantId == tenantId && 
@@ -43,7 +56,8 @@ public class AwardService(
         List<AwardDto> awards = await awardRepository.GetAllAsync<AwardDto>(
             cancellationToken,
             x => x.TenantId == tenantId && x.Visible==true && 
-            (x.ControlAsset==null || x.ControlAsset==false || awardIdsHavingAssets.Contains(x.Id)),
+            (x.ControlAsset==null || x.ControlAsset==false || awardIdsHavingAssets.Contains(x.Id)) &&
+            x.IsLotteryOnly == false, // Exclude lottery-only rewards from Club
             o => o.OrderByDescending(x => x.OrderId));
 
         return awards;
@@ -56,7 +70,7 @@ public class AwardService(
             .Map(dest => dest.PointLevelTitle, src => src.PointLevel != null ? src.PointLevel.Title : "")
             .Map(dest => dest.CategoryTitle, src => src.Category != null ? src.Category.Title : "")
             .Map(dest => dest.MerchantTitle, src => src.Merchant.Title)
-            .Map(dest => dest.Picture, src => src.Picture)
+            .Map(dest => dest.PictureId, src => src.PictureId)
             .Map(dest => dest.Costs, src => src.Costs != null ? src.Costs.Select(c => c.Adapt<AwardCostDto>()) : new List<AwardCostDto>())
             ;
         _ = TypeAdapterConfig<RewardCost, AwardCostDto>.NewConfig()
@@ -88,7 +102,7 @@ public record AwardDto
     public bool Visible { get; set; }
     public bool ControlAsset { get; set; }
     public int Quantity { get; set; }
-    public string? Picture { get; set; }
+    public int? PictureId { get; set; }
     public List<AwardCostDto>? Costs { get; set; }
 }
 

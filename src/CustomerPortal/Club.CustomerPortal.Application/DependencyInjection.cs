@@ -1,6 +1,8 @@
-﻿using Neo.Application;
+using Club.CustomerPortal.Application.Features.Plans.Jobs;
+using Neo.Application;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Club.CustomerPortal.Application.Interfaces;
 
 namespace Club.CustomerPortal.Application;
 
@@ -10,7 +12,7 @@ public static class DependencyInjection
         this IServiceCollection services, 
         IConfiguration configuration)
     {
-        services.AddCandoApplicationServices(
+        services.AddNeoApplicationServices(
             configuration, 
             typeof(DependencyInjection).Assembly);
         
@@ -21,10 +23,14 @@ public static class DependencyInjection
         services.AddScoped<IPointService, Services.MockPointService>();
         services.AddScoped<IRewardService, Services.MockRewardService>();
         services.AddScoped<IReferralService, Services.MockReferralService>();
-        services.AddScoped<IPromotionService, Services.MockPromotionService>();
+        services.AddScoped<IPromotionService, Services.PromotionService>();
         services.AddScoped<ILotteryService, Services.MockLotteryService>();
         services.AddScoped<ISurveyService, Services.MockSurveyService>();
         services.AddScoped<IDashboardService, Services.MockDashboardService>();
+        services.AddScoped<IPlanService, Services.PlanService>();
+        services.AddScoped<IWheelService, Services.WheelService>();
+        services.AddScoped<IProductService, Services.ProductService>();
+        services.AddScoped<IExpireCustomerPlansJob, ExpireCustomerPlansJob>();
         
         return services;
     }

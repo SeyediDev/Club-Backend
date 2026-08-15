@@ -292,11 +292,121 @@ thead > tr:hover > th .designTool {
     border-radius: 12px;
     margin-bottom: 16px;
     box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3);
+    position: relative;
+}
+
+/* Fix for icons/buttons inside reportHeader - shift them to the right */
+.reportHeader .icons,
+.reportHeader .top-bar-anchor-icon,
+.reportHeader a.top-bar-anchor-icon,
+.reportHeader > .icons,
+.reportHeader > a.top-bar-anchor-icon {
+    position: relative !important;
+    z-index: 10 !important;
+    pointer-events: auto !important;
+    margin-left: 16px !important;
+    padding-left: 8px !important;
+}
+
+/* Ensure all buttons in reportHeader are clickable and properly spaced */
+.reportHeader .icons {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    padding-left: 20px !important;
+    margin-left: 12px !important;
+}
+
+.reportHeader .icons a,
+.reportHeader .icons .top-bar-anchor-icon,
+.reportHeader .icons > * {
+    position: relative !important;
+    z-index: 11 !important;
+    pointer-events: auto !important;
+    cursor: pointer !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-width: 36px !important;
+    min-height: 36px !important;
+    padding: 4px 8px !important;
+    margin: 0 2px !important;
+    border-radius: 6px !important;
+    transition: all 0.2s ease !important;
+}
+
+.reportHeader .icons a:hover,
+.reportHeader .icons .top-bar-anchor-icon:hover {
+    background-color: rgba(255, 255, 255, 0.15) !important;
+    transform: translateY(-1px) !important;
+}
+
+/* Comprehensive fix for all anchor icons in reportHeader - ensure they're shifted right */
+.reportHeader a[onclick*="toggle"],
+.reportHeader a[onclick*="Toggle"],
+.reportHeader a.top-bar-anchor-icon:first-child,
+.reportHeader .icons:first-child {
+    margin-left: 20px !important;
+    padding-left: 12px !important;
 }
 
 .tblCell {
     vertical-align: middle;
     display: table-cell;
+}
+
+/* Fix for icons/buttons in table cells - shift them to the right (LTR) */
+.tblCell .icons,
+.tblCell .top-bar-anchor-icon,
+.tblCell a.top-bar-anchor-icon,
+.tblCell > .icons,
+.tblCell > a.top-bar-anchor-icon {
+    position: relative !important;
+    z-index: 10 !important;
+    pointer-events: auto !important;
+    margin-left: 16px !important;
+    padding-left: 8px !important;
+}
+
+.tblCell .icons {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    padding-left: 20px !important;
+    margin-left: 12px !important;
+}
+
+.tblCell .icons a,
+.tblCell .icons .top-bar-anchor-icon,
+.tblCell .icons > * {
+    position: relative !important;
+    z-index: 11 !important;
+    pointer-events: auto !important;
+    cursor: pointer !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-width: 36px !important;
+    min-height: 36px !important;
+    padding: 4px 8px !important;
+    margin: 0 2px !important;
+    border-radius: 6px !important;
+    transition: all 0.2s ease !important;
+}
+
+.tblCell .icons a:hover,
+.tblCell .icons .top-bar-anchor-icon:hover {
+    background-color: rgba(255, 255, 255, 0.15) !important;
+    transform: translateY(-1px) !important;
+}
+
+/* Comprehensive fix for all anchor icons in tblCell - ensure they're shifted right */
+.tblCell a[onclick*="toggle"],
+.tblCell a[onclick*="Toggle"],
+.tblCell a.top-bar-anchor-icon:first-child,
+.tblCell .icons:first-child {
+    margin-left: 20px !important;
+    padding-left: 12px !important;
 }
 
 .reportNameSpan {
@@ -335,6 +445,21 @@ thead > tr:hover > th .designTool {
 
 .ShowHide {
     display: none !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    height: 0 !important;
+    border: none !important;
+}
+
+/* Hide parent rows/containers when ShowHide is applied */
+tr.ShowHide,
+td.ShowHide,
+th.ShowHide {
+    display: none !important;
+    height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
 }
 
 .inset {
@@ -386,6 +511,62 @@ thead > tr:hover > th .designTool {
     position: relative;
     box-shadow: 0 3px 6px #000000, 0 3px 6px #000000;
     box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+/* Ensure buttons in top-bar are properly spaced and clickable */
+.top-bar .icons {
+    position: relative !important;
+    z-index: 10 !important;
+    pointer-events: auto !important;
+    padding-left: 16px !important;
+    margin-left: 8px !important;
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    flex-shrink: 0 !important;
+}
+
+.top-bar .icons a,
+.top-bar .icons .top-bar-anchor-icon,
+.top-bar .icons > * {
+    position: relative !important;
+    z-index: 11 !important;
+    pointer-events: auto !important;
+    cursor: pointer !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-width: 36px !important;
+    min-height: 36px !important;
+    padding: 4px 8px !important;
+    margin: 0 2px !important;
+    border-radius: 6px !important;
+    transition: all 0.2s ease !important;
+}
+
+.top-bar .icons a:hover,
+.top-bar .icons .top-bar-anchor-icon:hover,
+.top-bar .icons > *:hover {
+    background-color: rgba(24, 105, 170, 0.1) !important;
+    transform: translateY(-1px) !important;
+}
+
+/* Add padding to shift buttons away from left edge (LTR) */
+.top-bar > .icons:first-child,
+.top-bar > .top-bar-anchor-icon:first-child {
+    margin-left: 12px !important;
+    padding-left: 8px !important;
+}
+
+/* Ensure top-bar-anchor-icon is clickable when not inside .icons */
+.top-bar > .top-bar-anchor-icon {
+    position: relative !important;
+    z-index: 11 !important;
+    pointer-events: auto !important;
+    margin-left: 8px !important;
 }
 
 .top-bar:before, .top-bar:after {
@@ -450,6 +631,29 @@ thead > tr:hover > th .designTool {
     color: #1869AA;
     cursor: pointer;
     text-decoration: none !important;
+    position: relative !important;
+    z-index: 10 !important;
+    pointer-events: auto !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-width: 36px !important;
+    min-height: 36px !important;
+    padding: 4px 8px !important;
+    margin-left: 4px !important;
+    margin-right: 4px !important;
+    border-radius: 6px !important;
+    transition: all 0.2s ease !important;
+}
+
+.top-bar-anchor-icon:hover {
+    background-color: rgba(24, 105, 170, 0.1) !important;
+    transform: translateY(-1px) !important;
+}
+
+.top-bar-anchor-icon:active {
+    transform: translateY(0) !important;
+    background-color: rgba(24, 105, 170, 0.15) !important;
 }
 
 .top-bar-icon {
@@ -482,7 +686,7 @@ thead > tr:hover > th .designTool {
     border-bottom: none;
 }*/
 
-.cando-control {
+.neo-control {
     margin-bottom: .5rem;
 }
 .teta-fieldSet {
@@ -1279,8 +1483,11 @@ div.mm-page {
 }
 
 .hr-menu-divider {
-    border: solid 1px white;
-    margin: 0;
+    height: 0;
+    margin: 0.25rem 0;
+    overflow: hidden;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    border-bottom: none;
 }
 
 /* sizing utilities */

@@ -4,7 +4,7 @@
 /// گیرنده پویش - مدیریت گیرندگان پیام‌های کمپین و تعاملات آنها
 /// این موجودیت شامل اطلاعات کامل گیرندگان، وضعیت ارسال و آمار تعامل می‌باشد
 /// </summary>
-[DisplayName("گیرنده پویش")]
+[DisplayName("گیرنده پویش/کمپین")]
 public class PromotionRecipient : ClubBaseCoreAuditableEntity<int>
 {
     /// <summary>
@@ -14,12 +14,10 @@ public class PromotionRecipient : ClubBaseCoreAuditableEntity<int>
 
     public Promotion Promotion { get; set; } = null!;
 
-    /// <summary>
-    /// شناسه مشتری - شناسه مشتری که پیام را دریافت کرده است
-    /// </summary>
-    public int CustomerId { get; set; }
+    [DisplayName("شناسه مشتری")]
+    public int CustomerTenantId { get; set; }
 
-    public Customer Customer { get; set; } = null!;
+    public CustomerTenant CustomerTenant { get; set; } = null!;
 
     /// <summary>
     /// وضعیت ارسال - وضعیت فعلی ارسال پیام به این گیرنده

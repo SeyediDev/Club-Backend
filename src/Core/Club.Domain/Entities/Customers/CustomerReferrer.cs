@@ -1,15 +1,17 @@
-﻿namespace Club.Domain.Entities.Customers;
+﻿using Club.Domain.Entities.Promotions;
+
+namespace Club.Domain.Entities.Customers;
 
 /// <summary>
 /// ثبت معرفی‌های موفق مشتریان
 /// این موجودیت برای ردیابی دعوت‌های موفق و مدیریت پاداش‌ها استفاده می‌شود
 /// </summary>
 [DisplayName("معرفی مشتری")]
-[Entity_Index($"{nameof(ReferrerCodeId)},{nameof(ReferredCustomerId)},{nameof(IsDeleted)}")]
+[EntityIndex($"{nameof(ReferrerCodeId)},{nameof(ReferredCustomerId)},{nameof(IsDeleted)}")]
 public class CustomerReferrer : ClubBaseCoreAuditableEntity<int>
 {
     public int TenantId { get; set; }
-    [DisplayName("سازمان بهره‌بردار")]
+    [DisplayName("اکوسیستم")]
     public Tenant Tenant { get; set; } = null!;
 
     public int ReferrerCodeId { get; set; }
@@ -20,25 +22,31 @@ public class CustomerReferrer : ClubBaseCoreAuditableEntity<int>
     /// مشتری معرف
     /// </summary>
     public int ReferrerCustomerId { get; set; }
+
+    public int ReferrerCustomerTenantId { get; set; }
     [DisplayName("مشتری معرف")]
-    public Customer ReferrerCustomer { get; set; } = null!;
+    public CustomerTenant ReferrerCustomerTenant { get; set; } = null!;
 
     /// <summary>
     /// مشتری دعوت شده
     /// </summary>
     public int ReferredCustomerId { get; set; }
+
+    public int ReferredCustomerTenantId { get; set; }
     [DisplayName("مشتری دعوت شده")]
-    public Customer ReferredCustomer { get; set; } = null!;
+    public CustomerTenant ReferredCustomerTenant { get; set; } = null!;
 
     public long EventLogId { get; set; }
     [DisplayName("لاگ رویداد")]
     public EventLog EventLog { get; set; } = null!;
 
-    public int? RuleId { get; set; }
-    [DisplayName("قانون")]
-    public ScoringRule? Rule { get; set; }
+    [OldDbMap("RuleId")]
+    public int? PromotionId { get; set; }
+    [DisplayName("پویش")]
+    public Promotion? Promotion { get; set; }
 
-    public int? RuleActionId { get; set; }
-    [DisplayName("عملیات قانون")]
-    public ScoringRuleAction? RuleAction { get; set; }
+    [OldDbMap("RuleActionId")]
+    public int? PromotionActionId { get; set; }
+    [DisplayName("عملیات پویش")]
+    public PromotionAction? PromotionAction { get; set; }
 }

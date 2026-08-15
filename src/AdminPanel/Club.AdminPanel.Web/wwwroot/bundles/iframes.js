@@ -844,11 +844,36 @@ function preProcessFormula(formula, elem, bReport) {
 }
 
 function getControlContainer(fieldName) {
+	console.log('[getControlContainer v2.0] fieldName:', fieldName);
+	// اول از data-id استفاده کن که container کامل فیلد است
+	var $dataIdContainer = $('[data-id="' + fieldName + '"]');
+	console.log('[getControlContainer v2.0] $dataIdContainer.length:', $dataIdContainer.length);
+	if ($dataIdContainer.length) {
+		console.log('[getControlContainer v2.0] Using data-id container');
+		return $dataIdContainer;
+	}
+	console.log('[getControlContainer v2.0] Falling back to getSpecifierContainer');
 	return getSpecifierContainer("name=\"" + fieldName + "\"");
 }
 
 function getSpecifierContainer(specifier) {
-	var $container = $("[" + specifier + "]").closest(".cando-control");
+	console.log('[getSpecifierContainer v2.1] specifier:', specifier);
+	
+	// اگر specifier به فرمت name="fieldName" است، fieldName را استخراج کن و از data-id استفاده کن
+	var nameMatch = specifier.match(/name="([^"]+)"/);
+	if (nameMatch) {
+		var fieldName = nameMatch[1];
+		var $dataIdContainer = $('[data-id="' + fieldName + '"]');
+		console.log('[getSpecifierContainer v2.1] fieldName:', fieldName, '$dataIdContainer.length:', $dataIdContainer.length);
+		if ($dataIdContainer.length) {
+			console.log('[getSpecifierContainer v2.1] Using data-id container for:', fieldName);
+			return $dataIdContainer;
+		}
+	}
+	
+	// fallback به روش قبلی
+	var $container = $("[" + specifier + "]").closest(".neo-control");
+	console.log('[getSpecifierContainer v2.1] neo-control.length:', $container.length);
 	if ($container.length)
 		return $container;
 	return $("[" + specifier + "]").closest("div").parent();
@@ -1125,24 +1150,52 @@ function Client_AddClass(This, scope, fieldName, className, targetArea, formula)
 	}
 	switch (targetArea) {
 	case "Container":
+		var $container;
 		if (formula) {
 			if ($("*[name=" + fieldName + "]").closest("div.upload")[0]) {
-				$("*[name=" + fieldName + "]").closest("div").parent().addClass(className);
+				$container = $("*[name=" + fieldName + "]").closest("div").parent();
+				$container.addClass(className);
 			} else {
 				if ($("[name=" + fieldName + "]").length)
-					getControlContainer(fieldName).addClass(className);
-				else $('[id="' + fieldName + '"]').addClass(className);
+					$container = getControlContainer(fieldName);
+				else $container = $('[id="' + fieldName + '"]');
+				$container.addClass(className);
 			}
-
+			// Also hide parent table cells/rows to free up space
+			if (className == "ShowHide" && $container.length) {
+				$container.closest("td, th").addClass(className);
+				// If all cells in a row are hidden, hide the row too
+				var $row = $container.closest("tr");
+				if ($row.length) {
+					var visibleCells = $row.find("td, th").not(".ShowHide").length;
+					if (visibleCells === 0) {
+						$row.addClass(className);
+					}
+				}
+			}
 		} else {
 			if ($("*[name=" + fieldName + "]").closest("div.upload")[0]) {
-				$("*[name=" + fieldName + "]").closest("div").parent().removeClass(className);
+				$container = $("*[name=" + fieldName + "]").closest("div").parent();
+				$container.removeClass(className);
 			} else {
 				if ($("[name=" + fieldName + "]").length)
-					getControlContainer(fieldName).removeClass(className);
-				else $('[id="' + fieldName + '"]').removeClass(className);
+					$container = getControlContainer(fieldName);
+				else $container = $('[id="' + fieldName + '"]');
+				$container.removeClass(className);
 			}
-
+			// Also show parent table cells/rows
+			if (className == "ShowHide" && $container.length) {
+				var $cell = $container.closest("td, th");
+				$cell.removeClass(className);
+				// Show the row if at least one cell is now visible
+				var $row = $container.closest("tr");
+				if ($row.length) {
+					var visibleCells = $row.find("td, th").not(".ShowHide").length;
+					if (visibleCells > 0) {
+						$row.removeClass(className);
+					}
+				}
+			}
 		}
 		break;
 	case "Input":
@@ -1590,7 +1643,7 @@ var Select2Beneficiary = function() {
 		var namespaceId = $thisRemoteSelect.data('namespace') || window.PageAddressManager.getNamespaceId();
 		var entityId = $thisRemoteSelect.data('entity') || window.PageAddressManager.getEntityId();
 		var fieldId = $thisRemoteSelect.data('column') ||
-			$thisRemoteSelect.parents('.cando-control').data('id');
+			$thisRemoteSelect.parents('.neo-control').data('id');
 
 		var formId = $thisRemoteSelect.data('form') || window.PageAddressManager.getPageId();
 		$thisRemoteSelect
@@ -1651,7 +1704,7 @@ var Select2Beneficiary = function() {
 		fetchInitValues(values,
 				namespaceId,
 				entityId,
-				$remoteSelect.parents('.cando-control').data('id'),
+				$remoteSelect.parents('.neo-control').data('id'),
 				formId,
 				$remoteSelect.attr("filter-formula"))
 			.then(function(rows) {
@@ -1775,9 +1828,55 @@ function instantiatePlugins() {
 	AddClearBeneficiary.instantiate();
 }
 
+// Select2 Change Handler - برای اجرای UI Rules از طریق inputChanged
+// این handler لازم است چون Select2 از jQuery events استفاده می‌کند و onchange attribute DOM با آن کار نمی‌کند
+var Select2ChangeHandler = function() {
+	
+	var initializeChangeHandlers = function() {
+		
+		// برای همه select ها - trigger کردن inputChanged
+		$(document).on('change', 'select', function(e) {
+			var $select = $(this);
+			var selectName = $select.attr('name');
+			var onchangeAttr = $select.attr('onchange');
+			var selectValue = $select.val();
+			
+			// اگر onchange attribute دارد، از آن استفاده کن
+			if (onchangeAttr && onchangeAttr.indexOf('inputChanged') !== -1) {
+				try {
+					var match = onchangeAttr.match(/inputChanged\(this,\s*'([^']*)',\s*'([^']*)'\)/);
+					if (match) {
+						var source = match[1];
+						var scope = match[2];
+						
+						if (typeof inputChanged === 'function') {
+							inputChanged(this, source, scope);
+						}
+					}
+				} catch (ex) {
+					console.error('[Select2ChangeHandler] Error executing onchange:', ex);
+				}
+			}
+			// اگر onchange attribute ندارد، سعی کن مستقیماً inputChanged را با نام فیلد فراخوانی کن
+			else if (selectName && typeof inputChanged === 'function') {
+				try {
+					inputChanged(this, selectName, '');
+				} catch (ex) {
+					console.error('[Select2ChangeHandler] Error in fallback inputChanged:', ex);
+				}
+			}
+		});
+	};
+	
+	return {
+		initialize: initializeChangeHandlers
+	};
+}();
+
 $(function() {
 	initializePluginsDefaults();
 	instantiatePlugins();
+	Select2ChangeHandler.initialize();
 	$('[nodatamandatory]').prop('selectedIndex', -1);
 	$('[nodatamandatory]').trigger('change');
 	$('form').trigger('reinitialize.areYouSure');

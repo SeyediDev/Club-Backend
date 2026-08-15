@@ -1,8 +1,8 @@
-﻿namespace Club.Domain.Entities.Common;
+namespace Club.Domain.Entities.Common;
 
-public partial class Notification: ClubBaseCoreCommonAuditableEntity<int>
+public partial class Notification: ClubBaseCoreAuditableEntity<int>
 {
-    public int UserId { get; set; }
+    public UserId UserId { get; set; }
     public virtual User? User { get; set; }
 
     [MaxLength(41)]

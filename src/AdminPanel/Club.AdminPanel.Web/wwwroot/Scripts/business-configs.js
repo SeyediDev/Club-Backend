@@ -8,7 +8,7 @@
      </a>
      </li></ul>`;
 
-//window.tetaConfigs.brandContent = menuItemIn + '<a href="https://Cando.co.ir"><img ' +
+//window.tetaConfigs.brandContent = menuItemIn + '<a href="https://Neo.co.ir"><img ' +
 //    'class="' + (window.tetaConfigs.isRtl ? 'mr-n3' : 'ml-n3') +
 //    '" style="height: 20px; padding: 3; margin:7px; color:;" src="/Content/images/' + (window.tetaConfigs.isRtl ? 'can-do-farsi.svg' : 'can-do-english.svg') + '" tooltip="کندو - سداد" /></a>';
 //logo-white.svg

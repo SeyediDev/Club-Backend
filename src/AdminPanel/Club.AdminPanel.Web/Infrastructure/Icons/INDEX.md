@@ -11,9 +11,9 @@ Club.Bpms/
 │   ├── MenuIconExtensions.cs     # Extension methods (اختیاری)
 │   └── INDEX.md                  # این فایل
 │
-└── Club.Bpms.Web/wwwroot/Content/club-icons/
-    ├── club-sprite.svg           # فایل SVG اصلی
-    ├── club-menu-icons.css       # استایل‌های رنگی
+└── Club.Bpms.Web/wwwroot/Content/custom-icons/
+    ├── custom-sprite.svg         # فایل SVG اصلی
+    ├── custom-menu-icons.css       # استایل‌های رنگی
     └── README.md                 # راهنمای استفاده
 ```
 
@@ -86,16 +86,15 @@ menuItem.WithClubIconAndColor("Customer");
 | CustomerTransaction | wallet-money | #10B981 (Emerald) |
 | CustomerPointLevel | trophy-star | #10B981 (Emerald) |
 | **Products** | | |
-| Award | box-package | #F59E0B (Amber) |
-| AwardCost | coins-money | #F59E0B (Amber) |
-| AwardAsset | cube-3d | #F59E0B (Amber) |
-| AwardCategory | grid-layout | #F59E0B (Amber) |
-| AwardMerchant | store-shop | #F59E0B (Amber) |
+| Reward | box-package | #F59E0B (Amber) |
+| RewardCost | coins-money | #F59E0B (Amber) |
+| RewardAsset | cube-3d | #F59E0B (Amber) |
+| RewardCategory | grid-layout | #F59E0B (Amber) |
+| RewardMerchant | store-shop | #F59E0B (Amber) |
 | **Scoring** | | |
 | Point | star-badge | #EF4444 (Red) |
-| PointLevel | medal-award | #EF4444 (Red) |
+| PointLevel | medal-reward | #EF4444 (Red) |
 | PointBudget | piggy-bank | #EF4444 (Red) |
-| ScoringRule | rule-checklist | #EF4444 (Red) |
 | ScoringRuleTriggerCondition | flag-trigger | #EF4444 (Red) |
 | ScoringRuleAction | bolt-lightning | #EF4444 (Red) |
 | **Events** | | |
@@ -131,7 +130,7 @@ IconRegistry.Colors.Default     // #6B7280 - Gray
 ## 🔄 افزودن Icon جدید
 
 1. **افزودن SVG به sprite**:
-   - فایل: `Club.Bpms.Web/wwwroot/Content/club-icons/club-sprite.svg`
+   - فایل: `Club.Bpms.Web/wwwroot/Content/custom-icons/custom-sprite.svg`
    - افزودن `<symbol id="new-icon-name">...</symbol>`
 
 2. **افزودن به Registry**:
@@ -160,7 +159,7 @@ IconRegistry.Colors.Default     // #6B7280 - Gray
 
 4. **افزودن رنگ به CSS**:
    ```css
-   /* club-menu-icons.css */
+   /* custom-menu-icons.css */
    .sidemenu-icon use[href*="new-icon-name"] {
        stroke: #ColorCode;
    }
@@ -168,7 +167,7 @@ IconRegistry.Colors.Default     // #6B7280 - Gray
 
 5. **بروزرسانی Documentation**:
    - این فایل (INDEX.md)
-   - `README.md` در wwwroot/Content/club-icons/
+   - `README.md` در wwwroot/Content/custom-icons/
 
 ## 🧪 تست
 
@@ -198,8 +197,8 @@ Assert.Equal("#6B7280", IconRegistry.Colors.GetColor("UnknownEntity"));
 
 ## 🔗 وابستگی‌ها
 
-- **Frontend**: `MenuHelper.cs` (Cando.Bpms.UI.MVC)
-- **Assets**: `club-sprite.svg`, `club-menu-icons.css`
+- **Frontend**: `MenuHelper.cs` (Neo.Bpms.UI.MVC)
+- **Assets**: `custom-sprite.svg`, `custom-menu-icons.css`
 - **Menu**: `Menu_Club.cs` (Club.Bpms)
 
 ## 📞 پشتیبانی

@@ -1,21 +1,18 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.UI.Reports;
-using Club.Domain.Entities.Surveys;
-
 namespace Club.AdminPanel.Domain.UiDefinitions.Surveys;
 
 public partial class SurveyUiDefinitions
 {
     public new partial class PublicReport : CRUDDefinition.PublicReport
     {
+        public override List<string>? Roles => DefaultRoles;
+
         /// <summary>
         /// نظرسنجی‌های فعال
         /// </summary>
         public partial class ActiveSurveysConfig : ReportConfigDefinition
         {
-            protected override void Identify()
-            {
-                DefineConfig("نظرسنجی‌های فعال", ReportViewType.List);
-            }
+            protected override string Name => "نظرسنجی‌های فعال";
+            
 
             protected override string WhereCondition => $"{nameof(Survey.IsActive)} == true";
 
@@ -35,10 +32,8 @@ public partial class SurveyUiDefinitions
         /// </summary>
         public partial class TopSurveysConfig : ReportConfigDefinition
         {
-            protected override void Identify()
-            {
-                DefineConfig("نظرسنجی‌های محبوب", ReportViewType.List);
-            }
+            protected override string Name => "نظرسنجی‌های محبوب";
+            
 
             protected override void DefineColumns()
             {
@@ -57,14 +52,11 @@ public partial class SurveyUiDefinitions
         /// <summary>
         /// توزیع نظرسنجی‌ها بر اساس نوع
         /// </summary>
-        public partial class SurveyTypeDistributionConfig : ReportConfigDefinition
+        public partial class SurveyTypeDistributionConfig() : ChartConfigDefinition(ChartType.Pie)
         {
-            protected override void Identify()
-            {
-                DefineConfig("توزیع بر اساس نوع", ReportViewType.Chart, Report.ChartType.Pie);
-            }
+            protected override string Name => "توزیع بر اساس نوع";
 
-            protected override void DefineColumns()
+            protected override void DefineGroupBy()
             {
                 GroupBy(nameof(Survey.SurveyType));
                 Count();
@@ -74,14 +66,11 @@ public partial class SurveyUiDefinitions
         /// <summary>
         /// میزان مشارکت در نظرسنجی‌ها در طول زمان
         /// </summary>
-        public partial class SurveyParticipationTrendConfig : ReportConfigDefinition
+        public partial class SurveyParticipationTrendConfig() : ChartConfigDefinition(ChartType.Line)
         {
-            protected override void Identify()
-            {
-                DefineConfig("روند مشارکت در نظرسنجی‌ها", ReportViewType.Chart, Report.ChartType.Line);
-            }
+            protected override string Name => "روند مشارکت در نظرسنجی‌ها";
 
-            protected override void DefineColumns()
+            protected override void DefineGroupBy()
             {
                 GroupBy(nameof(Survey.CreateDate));
                 Count();
@@ -91,14 +80,11 @@ public partial class SurveyUiDefinitions
         /// <summary>
         /// نظرسنجی‌های بر اساس محصول
         /// </summary>
-        public partial class SurveysByProductConfig : ReportConfigDefinition
+        public partial class SurveysByProductConfig() : GroupByConfigDefinition
         {
-            protected override void Identify()
-            {
-                DefineConfig("نظرسنجی‌ها بر اساس محصول", ReportViewType.GroupByList);
-            }
+            protected override string Name => "نظرسنجی‌ها بر اساس محصول";
 
-            protected override void DefineColumns()
+            protected override void DefineGroupBy()
             {
                 GroupBy(nameof(Survey.Product));
                 Count();
@@ -108,14 +94,11 @@ public partial class SurveyUiDefinitions
         /// <summary>
         /// میانگین مشارکت در نظرسنجی‌ها
         /// </summary>
-        public partial class AverageParticipationConfig : ReportConfigDefinition
+        public partial class AverageParticipationConfig() : ChartConfigDefinition(ChartType.MetricBox)
         {
-            protected override void Identify()
-            {
-                DefineConfig("میانگین مشارکت", ReportViewType.Chart, Report.ChartType.MetricBox);
-            }
+            protected override string Name => "میانگین مشارکت";
 
-            protected override void DefineColumns()
+            protected override void DefineGroupBy()
             {
                 Average(nameof(Survey.TotalParticipants));
             }

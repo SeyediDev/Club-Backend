@@ -1,4 +1,4 @@
-﻿namespace Club.Application.Features.Common.Queries;
+namespace Club.Application.Features.Club.Queries;
 
 public record CustomerQuery() : IRequest<CustomerQueryResponse?>
 {
@@ -21,9 +21,8 @@ public class CustomerQueryHandler(
 {
     public async Task<CustomerQueryResponse?> Handle(CustomerQuery request, CancellationToken cancellationToken)
     {
-        Customer? customer = await customerService.GetCustomer(request.CustomerId, false, null, cancellationToken);
+        Customer? customer = await customerService.GetOrCreateAndSetReservedAttributesAsync(request.CustomerId, null, cancellationToken);
         if(customer == null) return null;
-        //TODO
         return new CustomerQueryResponse
         {
             FirstName = customer.FirstName,

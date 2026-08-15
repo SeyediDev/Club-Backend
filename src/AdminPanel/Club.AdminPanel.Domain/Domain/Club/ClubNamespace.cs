@@ -1,4 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.Common;
+﻿using Neo.Bpms.Domain.Models.Cmmn.Partitions;
 using Neo.Domain.Entities.Common;
 
 namespace Club.AdminPanel.Domain.Domain.Club;
@@ -12,10 +12,9 @@ public class ClubNamespace : ModelDefinition<ClubNamespace>
     protected override void Partitions()
     {
         AddPartitionFunction("pfArchive", typeof(bool),
-            Neo.Bpms.Domain.Entities.Cmmn.Partitions.PartitionFunctionType.FixRange,
-            Neo.Bpms.Domain.Entities.Cmmn.Partitions.PartitionFunctionBoundaryType.Left,
+            PartitionFunctionType.FixRange,
+            PartitionFunctionBoundaryType.Left,
             "0", "1", "0", "1");
-        AddArchivePartitionScheme(nameof(DomainSchema.CoreCommon));
         AddArchivePartitionScheme(nameof(DomainSchema.CoreConfig));
         AddArchivePartitionScheme(nameof(DomainSchema.Core));
         AddArchivePartitionScheme(nameof(DomainSchema.CoreLog));
@@ -26,12 +25,14 @@ public class ClubNamespace : ModelDefinition<ClubNamespace>
         DefineEntity<HomePageEntity>();
         DefineEntities<IDomainEventEntity>(typeof(Language).Assembly);
         DefineEntities<IDomainEventEntity>(typeof(Point).Assembly);
-    }
+		DefineEntities<IView>(typeof(Language).Assembly);
+		DefineEntities<IView>(typeof(Point).Assembly);
+	}
 
     private void AddArchivePartitionScheme(string name)
     {
         AddPartitionScheme($"Archive_{name}", "pfArchive",
-            Neo.Bpms.Domain.Entities.Cmmn.Partitions.FileGroupSelectionType.FromList,
+            FileGroupSelectionType.FromList,
             "", name, $"{name}_Archive");
     }
 }

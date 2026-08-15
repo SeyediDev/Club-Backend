@@ -1,7 +1,9 @@
-﻿namespace Club.Domain.Entities.Common;
+﻿using Neo.Domain.Entities.Common;
+
+namespace Club.Domain.Entities.Common;
 
 [DisplayName("سوال پرتکرار")]
-public class Faq : ClubBaseCoreCommonAuditableEntity<int>
+public class Faq : ClubBaseCoreConfigAuditableEntity<int>
 {
     [DisplayName("سوال")]
     public string Question { get; set; } = null!;
@@ -14,7 +16,7 @@ public class Faq : ClubBaseCoreCommonAuditableEntity<int>
     [DisplayName("طبقه بندی")]
     public FaqCategory FaqCategory { get; set; } = null!;
 
-    public int LanguageId { get; set; }
+    public LanguageId LanguageId { get; set; }
     [DisplayName("زبان")]
     public Language Language { get; set; } = null!;
 }

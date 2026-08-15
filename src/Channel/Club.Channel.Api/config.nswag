@@ -1,5 +1,5 @@
 {
-  "runtime": "Net80",
+  "runtime": "Net100",
   "defaultVariables": null,
   "documentGenerator": {
     "aspNetCoreToOpenApi": {
@@ -34,11 +34,13 @@
       "serviceHost": null,
       "serviceBasePath": null,
       "serviceSchemes": [],
-      "infoTitle": "Club API",
-      "infoDescription": null,
+      "infoTitle": "Club Channel API",
+      "infoDescription": "API برای مدیریت کانال‌ها و ارسال رویدادها. این API از OAuth 2.0 Client Credentials Flow برای احراز هویت استفاده می‌کند.",
       "infoVersion": "1.0.0",
       "documentTemplate": null,
-      "documentProcessorTypes": [],
+      "documentProcessorTypes": [
+        "Club.Channel.Api.Infrastructure.Swagger.SwaggerDocumentProcessor, Club.Channel.Api"
+      ],
       "operationProcessorTypes": [],
       "typeNameGeneratorType": null,
       "schemaNameGeneratorType": null,

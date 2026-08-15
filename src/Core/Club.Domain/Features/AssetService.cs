@@ -1,6 +1,4 @@
-using Club.Domain.Entities.Customers.Enums;
 using Club.Domain.Entities.Rewards;
-using Club.Domain.Features.ScoringRules;
 
 namespace Club.Domain.Features;
 
@@ -40,7 +38,7 @@ public record ConsumeAccetResponse
 internal class AwardAssetService(ILogger<AwardAssetService> logger,
     ICustomerService customerService,
     IAwardService awardService, IAwardAssetInternalService awardAssetInternalService,
-    IEventService eventService, IScoringRuleService scoringRuleService,
+    IEventService eventService, IPromotionService promotionService,
     ICommandRepository<CustomerTransaction, long> customerTransactionCmdRepo,
     ICommandRepository<RewardAsset, int> assetCmdRepo
     ) : IAwardAssetService
@@ -52,12 +50,6 @@ internal class AwardAssetService(ILogger<AwardAssetService> logger,
     /// </summary>
     public async Task<PurchaseAwardResponse> PurchaseAward(PurchaseAwardRequest request, CancellationToken cancellationToken)
     {
-        EventResponse eventResponse = (await eventService.RecordEventAsync(
-            new(TriggerType.PurchaseAward, request.Customer, null)
-            {
-                AwardId = request.AwardId
-            }, cancellationToken))!;
-
         Reward? award = (await awardService.GetAward(request.AwardId, cancellationToken))
             ?? throw new NullReferenceException(nameof(award));//TODO 404
         Customer? customer = await customerService.GetCustomer(request.Customer, false, null, cancellationToken)
@@ -65,6 +57,13 @@ internal class AwardAssetService(ILogger<AwardAssetService> logger,
         AwardDto? awardDto = (await awardService.GetAwardDto(request.AwardId, cancellationToken))
             ?? throw new NullReferenceException(nameof(award));//TODO 404
         IEnumerable<CustomerPointLevel> customerPointLevels = await customerService.GetCustomerPointLevels(customer.Id, award.TenantId, cancellationToken);
+        EventResponse eventResponse = (await eventService.RecordEventAsync(
+            new(TriggerType.PurchaseAward, request.Customer, null)
+            {
+                TenantId = award.TenantId,
+                AwardId = request.AwardId
+            }, cancellationToken))!;
+
         if (awardDto.PointLevelId is not null and > 0)
         {
             IEnumerable<CustomerPointLevel> pointCustomerPointLevels = customerPointLevels.Where(x => x.PointLevel?.PointId == awardDto.PointPointId);
@@ -101,7 +100,7 @@ internal class AwardAssetService(ILogger<AwardAssetService> logger,
                         Debit = costAmount,
                         Balance = costAmount - poitBalance.Balance,
                         TenantId = award.TenantId,
-                        CustomerId = customer.Id,
+                        CustomerTenantId = poitBalance.CustomerTenantId,
                         PointId = costs.Key,
                         EventLogId = eventResponse.EventLogId,
                     };
@@ -113,9 +112,16 @@ internal class AwardAssetService(ILogger<AwardAssetService> logger,
         }
 
         List<RewardAsset> assets = await awardAssetInternalService.Create(award, customer, eventResponse.EventLogId, null, null, 1, cancellationToken);
-        await scoringRuleService.ScoringAnalysis(
-            new(TriggerType.PurchaseAward, eventResponse.Customer, eventResponse.EventLogId, null)
+        await promotionService.ProcessEventAsync(
+            new PromotionProcessingRequest(
+                award.TenantId,
+                (int)eventResponse.EventLogId,
+                0,
+                0,
+                eventResponse.Customer,
+                null)
             {
+                TriggerType = TriggerType.PurchaseAward,
                 AwardId = award.Id
             }, cancellationToken);
         return new PurchaseAwardResponse { Assets = assets.Select(x => x.Serial).ToList() };
@@ -131,19 +137,30 @@ internal class AwardAssetService(ILogger<AwardAssetService> logger,
         //asset.ExpireDate = DateTime.Now; // ExpireDate property doesn't exist in AwardAsset
         asset.ConsumedQuantity++;
         assetCmdRepo.Update(asset);
-        await assetCmdRepo.UnitOfWork.SaveChangesAsync();
+        await assetCmdRepo.UnitOfWork.SaveChangesAsync(cancellationToken);
         
+        Reward? reward = await awardService.GetAward(asset.RewardId, cancellationToken)
+            ?? throw new NullReferenceException(nameof(asset.RewardId));//TODO 404
+
         EventResponse eventResponse = await eventService.RecordEventAsync(
             new(TriggerType.ConsumeAward, request.Customer, null)
             {
+                TenantId = reward.TenantId,
                 AwardId = asset.RewardId,
                 AssetId = asset.Id
             }, cancellationToken);
         if (eventResponse != null)
         {
-            await scoringRuleService.ScoringAnalysis(
-                new(TriggerType.ConsumeAward, eventResponse.Customer, eventResponse.EventLogId, null)
+            await promotionService.ProcessEventAsync(
+                new PromotionProcessingRequest(
+                    reward.TenantId,
+                    (int)eventResponse.EventLogId,
+                    0,
+                    0,
+                    eventResponse.Customer,
+                    null)
                 {
+                    TriggerType = TriggerType.ConsumeAward,
                     AwardId = asset.RewardId
                 }, cancellationToken);
         }

@@ -6,7 +6,7 @@ public interface IPointLevelService
     Task<CheckPointLevelResponse> CheckAndUpdateLevel(CheckPointLevelRequest request, CancellationToken cancellationToken);
 }
 
-public record CheckPointLevelRequest(int PointId, int CustomerId, long Balance, long EventLogId);
+public record CheckPointLevelRequest(int PointId, int CustomerTenantId, long Balance, long EventLogId);
 public record CheckPointLevelResponse
 {
     public Dictionary<int, int> NewPointLevelIds { get; set; } = [];
@@ -23,7 +23,7 @@ internal class PointLevelService(
         IEnumerable<PointLevel> pointLevels = await pointLevelRepo.GetAllAsync(cancellationToken,
             x => x.PointId == request.PointId);
         CustomerPointLevel? oldCustomerPointLevel = await customerPointLevelCmdRepo.FirstOrDefaultAsync(
-            x => x.CustomerId == request.CustomerId && x.PointLevel.PointId == request.PointId, cancellationToken);
+            x => x.CustomerTenantId == request.CustomerTenantId && x.PointLevel.PointId == request.PointId, cancellationToken);
         PointLevel? pointLevel = pointLevels.Where(x => x.MinXp >= request.Balance).OrderByDescending(x => x.Level).FirstOrDefault();
         if (pointLevel == null)
         {
@@ -47,7 +47,7 @@ internal class PointLevelService(
                 //اگر قبلا سطح نداشته یا سطح متفاوتی داشته الان بهش سطح بده
                 CustomerPointLevel? customerPointPointLevel = new()
                 {
-                    CustomerId = request.CustomerId,
+                    CustomerTenantId = request.CustomerTenantId,
                     PointLevelId = pointLevel?.Id ?? 0,
                     EventLogId = request.EventLogId
                 };

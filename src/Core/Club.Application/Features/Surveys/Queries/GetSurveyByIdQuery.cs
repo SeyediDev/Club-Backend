@@ -1,4 +1,8 @@
 using System.ComponentModel.DataAnnotations;
+using Club.Domain.Entities.Promotions.Surveys;
+using Club.Domain.Entities.Promotions.Surveys.Data;
+using Club.Domain.Entities.Promotions.Surveys.Enums;
+using Club.Domain.Entities.Tenants;
 
 namespace Club.Application.Features.Surveys.Queries;
 
@@ -10,7 +14,7 @@ public record GetSurveyByIdQuery : IRequest<SurveyDetailDto>
     [Required]
     public int Id { get; set; }
 
-    public int? CustomerId { get; set; } // برای بررسی شرکت قبلی
+    public int? CustomerTenantId { get; set; } // برای بررسی شرکت قبلی
 }
 
 public record SurveyDetailDto
@@ -32,7 +36,7 @@ public record SurveyDetailDto
     public long? ParticipationPoints { get; set; }
     public long? CorrectAnswerPoints { get; set; }
     public DateTime CreateDate { get; set; }
-    public List<SurveyItemDto> Items { get; set; } = new();
+    public List<SurveyItemDto> Items { get; set; } = [];
     public bool HasParticipated { get; set; } // آیا مشتری قبلاً شرکت کرده
     public int? SelectedItemId { get; set; } // گزینه انتخاب شده قبلی
 }
@@ -54,9 +58,11 @@ public class GetSurveyByIdQueryHandler(
     {
         var surveyRepo = unitOfWork.Repository<Survey, int>();
         var survey = await surveyRepo.GetByIdWithIncludeAsync(
-            id: request.Id,
-            include: s => s.Items,
-            cancellationToken: cancellationToken);
+            request.Id,
+            cancellationToken,
+            s => s.Items,
+            s => s.Promotion
+            );
         
         if (survey == null)
             throw new FluentValidation.ValidationException("نظرسنجی یافت نشد");
@@ -65,11 +71,11 @@ public class GetSurveyByIdQueryHandler(
         bool hasParticipated = false;
         int? selectedItemId = null;
 
-        if (request.CustomerId.HasValue)
+        if (request.CustomerTenantId.HasValue)
         {
             var participationRepo = unitOfWork.Repository<SurveyParticipation, int>();
             var participation = await participationRepo.FirstOrDefaultAsync(
-                p => p.SurveyId == request.Id && p.CustomerId == request.CustomerId,
+                p => p.SurveyId == request.Id && p.CustomerTenantId == request.CustomerTenantId,
                 cancellationToken);
             if (participation != null)
             {
@@ -80,14 +86,14 @@ public class GetSurveyByIdQueryHandler(
 
         // Load Tenant separately if needed (assuming navigation property exists)
         var tenantRepo = unitOfWork.Repository<Tenant, int>();
-        var tenant = survey.TenantId > 0 
-            ? await tenantRepo.GetByIdAsync(survey.TenantId, cancellationToken)
+        var tenant = survey.Promotion.TenantId > 0 
+            ? await tenantRepo.GetByIdAsync(survey.Promotion.TenantId, cancellationToken)
             : null;
 
         return new SurveyDetailDto
         {
             Id = survey.Id,
-            TenantId = survey.TenantId,
+            TenantId = survey.Promotion.TenantId,
             TenantName = tenant?.Title ?? string.Empty, // TODO: Check Tenant property name
             Title = survey.Title,
             Description = survey.Description,

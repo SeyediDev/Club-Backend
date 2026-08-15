@@ -1,4 +1,4 @@
-﻿using Neo.Domain.Entities.Common;
+using Neo.Domain.Entities.Common;
 using User = Club.Domain.Entities.Common.User;
 
 namespace Club.AdminPanel.Domain.UiDefinitions.HomePage;
@@ -29,17 +29,20 @@ public partial class HomePageEntityUiDefinitions
             AddClubPart("اطلاعات پایه", "Public Info");
             {
                 AddClubPartItem<CultureTerm>("واژه ها");
+                AddClubPartItem<Country>("کشورها");
+                AddClubPartItem<Province>("استان‌ها");
+                AddClubPartItem<City>("شهرها");
                 EndPart();
             }
             AddClubPart("مستندات", "DocumentsInfo");
             {
-                AddClubPartItem<DocumentType>("نوع مستندات");
+                AddClubPartItem<Club.Domain.Entities.Common.DocumentType>("نوع مستندات");
                 AddClubPartItem<Document>("مستندات");
                 EndPart();
             }
         }
 
-        void AddClubPartItem<T>(string name, string subject = null, string pageSubType = null, string entityItemId = null, string partName = nameof(Domains.Club))
+        void AddClubPartItem<T>(string name, string? subject = null, string? pageSubType = null, string? entityItemId = null, string partName = nameof(Domains.Club))
         {
             if (_state_is_form)
             {

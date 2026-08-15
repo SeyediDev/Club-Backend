@@ -6,6 +6,6 @@ public enum PointType : int
     Normal,
     [Description("امتیاز تجربه")]
     Xp,
-    [Description("امتیاز ارزش طول‌عمر‌مشتری")]
+    [Description("امتیاز ارزش ‌مشتری")]
     Value
 }

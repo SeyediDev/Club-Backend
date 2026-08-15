@@ -1,6 +1,4 @@
-﻿using Club.Domain.Entities.Rewards;
-
-namespace Club.AdminPanel.Domain.UiDefinitions.Customers;
+﻿namespace Club.AdminPanel.Domain.UiDefinitions.Customers;
 
 public class TenantDefinitions : CRUDDefinition<Tenant>
 {
@@ -11,6 +9,7 @@ public class TenantDefinitions : CRUDDefinition<Tenant>
                        nameof(Tenant.CreateDate),
                        nameof(Tenant.CreatedBy)
                        );
+        form.AddSubjectColumn<TenantRelations>();
     }
     
     protected override void CUDFormsViewModel(CUDForm form)
@@ -21,18 +20,25 @@ public class TenantDefinitions : CRUDDefinition<Tenant>
                        nameof(Tenant.CreatedBy)
                        );
     }
-    protected override void EditFormSubTables(CUDForm form)
+    public class TenantRelations : EditForm, ISubjectFormDefinition
     {
-        eControlTypeId groupControlType = eControlTypeId.None;
-        form.AddSubTable(nameof(Point), nameof(Point.Tenant), null/*"SubTenant"*/,
-            "امتیازات تعریف شده", null, false, groupControlType);
-        form.AddSubTable(nameof(Reward), nameof(Reward.Tenant), null/*"SubTenant"*/,
-            "پاداش‌های تعریف شده", null, false, groupControlType);
-        form.AddSubTable(nameof(CustomerParameter), nameof(CustomerParameter.Tenant), null/*"SubTenant"*/,
-            "پارامترهای مشتری", null, true, groupControlType);
-        form.AddSubTable(nameof(Promotion), nameof(Promotion.Tenant), null/*"SubTenant"*/,
-            "پویش ها", null, false, groupControlType);
-        form.AddSubTable(nameof(ScoringRule), nameof(ScoringRule.Tenant), null/*"SubTenant"*/,
-            "قوانین امتیازدهی", null, false, groupControlType);
+        public override string SubjectId => nameof(TenantRelations);
+        public override string Name => "اطلاعات وابسته";
+
+        protected override void ViewModel()
+        {
+            AddField(nameof(Tenant.Title), eControlPropertyId.ReadOnly);
+            var groupControlType = eControlTypeId.None;
+            AddSubTable(nameof(CustomerTenant), nameof(CustomerTenant.Tenant), null,
+                "مشتریان", null, true, groupControlType);
+            AddSubTable(nameof(Point), nameof(Point.Tenant), null,
+                "امتیازات تعریف شده", null, false, groupControlType);
+            AddSubTable(nameof(Reward), nameof(Reward.Tenant), null,
+                "پاداش‌های تعریف شده", null, false, groupControlType);
+            AddSubTable(nameof(CustomerParameter), nameof(CustomerParameter.Tenant), null,
+                "پارامترهای مشتری", null, true, groupControlType);
+            AddSubTable(nameof(Promotion), nameof(Promotion.Tenant), null,
+				"پویش‌ها و کمپین‌ها", null, false, groupControlType);
+        }
     }
 }

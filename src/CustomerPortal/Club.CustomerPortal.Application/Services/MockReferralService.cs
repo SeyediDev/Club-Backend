@@ -2,15 +2,8 @@ using Club.CustomerPortal.Application.Interfaces;
 
 namespace Club.CustomerPortal.Application.Services;
 
-public class MockReferralService : IReferralService
+public class MockReferralService(ILogger<MockReferralService> logger) : IReferralService
 {
-    private readonly ILogger<MockReferralService> _logger;
-
-    public MockReferralService(ILogger<MockReferralService> logger)
-    {
-        _logger = logger;
-    }
-
     public Task<ReferralStatsDto> GetReferralStatsAsync(int customerId, CancellationToken cancellationToken = default)
     {
         return Task.FromResult(new ReferralStatsDto
@@ -34,7 +27,7 @@ public class MockReferralService : IReferralService
 
     public Task SetReferrerAsync(int customerId, string referrerCode, CancellationToken cancellationToken = default)
     {
-        _logger.LogInformation("Mock: Set referrer {Code} for customer {CustomerId}", referrerCode, customerId);
+        logger.LogInformation("Mock: Set referrer {Code} for customer {CustomerId}", referrerCode, customerId);
         return Task.CompletedTask;
     }
 
@@ -42,7 +35,7 @@ public class MockReferralService : IReferralService
     {
         var customers = new List<ReferredCustomerDto>
         {
-            new() { Name = "علی محمدی", JoinedAt = DateTime.Now.AddDays(-10), PointsEarned = 1000, IsActive = true }
+            new() { Name = "علی محمدی", JoinedAt = DateTime.UtcNow.AddDays(-10), PointsEarned = 1000, IsActive = true }
         };
 
         return Task.FromResult(new PaginatedList<ReferredCustomerDto>(customers, 1, pageNumber, pageSize));

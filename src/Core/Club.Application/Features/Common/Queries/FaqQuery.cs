@@ -1,6 +1,4 @@
-﻿using Neo.Domain.Features.Client;
-using Neo.Domain.Repository;
-using Club.Domain.Entities.Common;
+﻿using Club.Domain.Entities.Common;
 
 namespace Club.Application.Features.Common.Queries;
 
@@ -24,7 +22,7 @@ public class FaqQueryHandler(IRequesterUser user
 {
     public async Task<FaqQueryResponse> Handle(FaqQuery request, CancellationToken cancellationToken)
     {
-        var userLangId = await user.GetLangIdAsync();
+        var userLangId = await user.GetLangIdAsync(cancellationToken);
         List<FaqDto> faqs = (await queryRepository.GetAllAsync(cancellationToken, x => x.LanguageId == userLangId ))
             .Select(x => new FaqDto
         {

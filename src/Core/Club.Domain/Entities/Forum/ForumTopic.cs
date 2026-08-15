@@ -6,19 +6,10 @@ namespace Club.Domain.Entities.Forum;
 [DisplayName("موضوع انجمن")]
 [SBVR(SBVRModality.Obligatory, "مدیریت انجمن", "هر موضوع بحث باید برای تعامل مشتریان قابل شناسایی باشد")]
 [SBVR(SBVRModality.Recommended, "مدیریت انجمن", "موضوعات باید برای افزایش تعامل و ایجاد جامعه مشتریان استفاده شوند")]
-public class ForumTopic : ClubBaseCoreAuditableEntity<int>
+public class ForumTopic : ClubBaseCoreAuditableEntity<int>, ISubOfTenant
 {
-    /// <summary>
-    /// شناسه سازمان بهره‌بردار
-    /// </summary>
-    [DisplayName("شناسه سازمان بهره‌بردار")]
-    [SBVR(SBVRModality.Obligatory, "چندین سازمان", "هر موضوع باید به یک سازمان مشخص تعلق داشته باشد")]
     public int TenantId { get; set; }
-
-    /// <summary>
-    /// سازمان بهره‌بردار
-    /// </summary>
-    [DisplayName("سازمان بهره‌بردار")]
+    [DisplayName("اکوسیستم")]
     public Tenant Tenant { get; set; } = null!;
 
     /// <summary>
@@ -26,13 +17,14 @@ public class ForumTopic : ClubBaseCoreAuditableEntity<int>
     /// </summary>
     [DisplayName("شناسه مشتری")]
     [SBVR(SBVRModality.Obligatory, "شناسایی", "هر موضوع باید توسط یک مشتری ایجاد شود")]
-    public int CustomerId { get; set; }
+    [OldDbMap("CustomerTenantId")]
+    public int CreatorCustomerTenantId { get; set; }
 
     /// <summary>
-    /// مشتری ایجادکننده
+    /// مشتری
     /// </summary>
     [DisplayName("مشتری")]
-    public Customer Customer { get; set; } = null!;
+    public CustomerTenant CreatorCustomerTenant { get; set; } = null!;
 
     /// <summary>
     /// عنوان موضوع
@@ -47,7 +39,7 @@ public class ForumTopic : ClubBaseCoreAuditableEntity<int>
     /// محتوای موضوع
     /// </summary>
     [DisplayName("محتوا")]
-    [MaxLength(10000)]
+    [MaxLength(4000)]
     [SBVR(SBVRModality.Obligatory, "محتوا", "محتوای موضوع الزامی است")]
     public string Content { get; set; } = null!;
 
@@ -120,14 +112,11 @@ public class ForumTopic : ClubBaseCoreAuditableEntity<int>
     /// پست‌های موضوع
     /// </summary>
     [DisplayName("پست‌ها")]
-    public ICollection<ForumPost> Posts { get; set; } = new List<ForumPost>();
+    public ICollection<ForumPost> Posts { get; set; } = [];
 
     /// <summary>
     /// لایک‌ها
     /// </summary>
     [DisplayName("لایک‌ها")]
-    public ICollection<ForumTopicLike> Likes { get; set; } = new List<ForumTopicLike>();
+    public ICollection<ForumTopicLike> Likes { get; set; } = [];
 }
-
-
-

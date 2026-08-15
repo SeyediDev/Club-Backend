@@ -1,5 +1,3 @@
-using Club.CustomerPortal.Application.Features.Auth.Commands;
-
 namespace Club.CustomerPortal.Application.Interfaces;
 
 /// <summary>
@@ -41,6 +39,11 @@ public interface ICustomerService
     /// تایید رمز عبور
     /// </summary>
     Task<bool> ValidatePasswordAsync(int customerId, string password, CancellationToken cancellationToken = default);
+
+	/// <summary>
+	/// دریافت ارتباط مشتری با اکوسیستم (CustomerTenant) برای دسترسی به شاخص‌های تحلیلی
+	/// </summary>
+	Task<CustomerTenant?> GetCustomerTenantAsync(int customerId, int? tenantId = null, CancellationToken cancellationToken = default);
     
     /// <summary>
     /// ایجاد توکن بازیابی رمز عبور
@@ -52,4 +55,3 @@ public interface ICustomerService
     /// </summary>
     Task ResetPasswordAsync(string token, string newPassword, CancellationToken cancellationToken = default);
 }
-

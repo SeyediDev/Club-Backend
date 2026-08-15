@@ -1,4 +1,6 @@
-﻿namespace Club.AdminPanel.Domain.UiDefinitions.Promotions;
+﻿using Club.Domain.Entities.Lotteries;
+
+namespace Club.AdminPanel.Domain.UiDefinitions.Promotions;
 
 public class LotteryRewardDefinitions : CRUDDefinition<LotteryReward>
 {
@@ -25,11 +27,6 @@ public class LotteryRewardDefinitions : CRUDDefinition<LotteryReward>
                        nameof(LotteryReward.DisplayOrder),
                        nameof(LotteryReward.IsActive)
                        );
-    }
-    
-    protected override void EditFormSubTables(CUDForm form)
-    {
-        // Sub-tables can be added here if needed
     }
 }
 

@@ -1,11 +1,17 @@
-﻿using Neo.Domain.Features.Multilingual;
-using Club.Domain.Enums;
-using Club.Domain.Features.ScoringRules;
+using Neo.Domain.Features.Multilingual;
+using Club.Domain.Features;
 
 namespace Club.Channel.Application.Features.Client.Commands;
 
 public record EventCommand : IRequest
 {
+	/// <summary>
+	/// شناسه اکوسیستم
+	/// </summary>
+	[Required]
+    [Range(1, int.MaxValue, ErrorMessage = "شناسه اکوسیستم الزامی است")]
+    public int TenantId { get; set; }
+
     /// <summary>
     /// شماره موبایل مشتری
     /// </summary>
@@ -19,11 +25,26 @@ public class EventCommandValidator : AbstractValidator<EventCommand>
 {
     public EventCommandValidator(IMultiLingualService multiLingual)
     {
+        RuleFor(x => x.TenantId)
+            .GreaterThan(0)
+            .WithMessage("شناسه اکوسیستم الزامی است");
+
+        RuleFor(x => x.CustomerMobile)
+            .NotEmpty()
+            .WithMessage("شماره موبایل مشتری الزامی است");
+
+        RuleFor(x => x.EventChannel)
+            .NotEmpty()
+            .WithMessage("شناسه کانال رویداد الزامی است");
+
+        RuleFor(x => x.EventType)
+            .NotEmpty()
+            .WithMessage("شناسه نوع رویداد الزامی است");
     }
 }
 
 public class EventCommandHandler(
-    IEventService eventLogService, IScoringRuleService scoringRuleService
+    IEventService eventLogService, IPromotionService promotionService
     ) : IRequestHandler<EventCommand>
 {
     public async Task Handle(EventCommand request, CancellationToken cancellationToken)
@@ -33,17 +54,23 @@ public class EventCommandHandler(
             request.CustomerMobile, // شماره موبایل
             request.Parameters)
         {
+            TenantId = request.TenantId,
             EventChannel = request.EventChannel,
             EventType = request.EventType
         };
         EventResponse? eventResponse = await eventLogService.RecordEventAsync(eventRequest, cancellationToken);
         if (eventResponse != null)
         {
-            await scoringRuleService.ScoringAnalysis(
-                new(TriggerType.Event, eventResponse.Customer, eventResponse.EventLogId, request.Parameters)
+            await promotionService.ProcessEventAsync(
+                new PromotionProcessingRequest(
+                    request.TenantId,
+                    (int)eventResponse.EventLogId,
+                    eventResponse.EventChannelId ?? 0,
+                    eventResponse.EventTypeId ?? 0,
+                    eventResponse.Customer,
+                    request.Parameters)
                 {
-                    EventChannelId = eventResponse.EventChannelId,
-                    EventTypeId = eventResponse.EventTypeId
+                    TriggerType = TriggerType.Event
                 }, cancellationToken);
         }
     }

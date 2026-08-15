@@ -1,4 +1,5 @@
-﻿using Neo.Domain.Dto;
+﻿using Club.Domain.Entities.Promotions;
+using Neo.Domain.Dto;
 
 namespace Club.Domain.Features;
 
@@ -9,7 +10,7 @@ public interface IReferrerCodeValidationService
 {
     Task<Result<ReferrerCode>> ValidateReferrerCodeAsync(string referrerCode, int tenantId);
     Task<Result> UpdateReferrerCodeUsageAsync(int referrerCodeId);
-    Task<Result<List<ScoringRuleAction>>> GetReferrerActionsAsync(int referrerCodeId);
+    Task<Result<List<PromotionAction>>> GetReferrerActionsAsync(int referrerCodeId);
 }
 
 /// <summary>
@@ -18,7 +19,7 @@ public interface IReferrerCodeValidationService
 public class ReferrerCodeValidationService(
     IQueryRepository<ReferrerCode, int> referrerCodeQueryRepo,
     ICommandRepository<ReferrerCode, int> referrerCodeCmdRepo,
-    IQueryRepository<ScoringRuleAction, int> ruleActionQueryRepo,
+    IQueryRepository<PromotionAction, int> ruleActionQueryRepo,
     ILogger<ReferrerCodeValidationService> logger)
     : IReferrerCodeValidationService
 {
@@ -76,25 +77,25 @@ public class ReferrerCodeValidationService(
     /// <summary>
     /// دریافت عملیات‌های مربوط به کد معرف
     /// </summary>
-    public async Task<Result<List<ScoringRuleAction>>> GetReferrerActionsAsync(int referrerCodeId)
+    public async Task<Result<List<PromotionAction>>> GetReferrerActionsAsync(int referrerCodeId)
     {
         try
         {
             var referrerCode = await referrerCodeQueryRepo.GetByIdAsync(referrerCodeId, CancellationToken.None);
             if (referrerCode == null)
-                return Result<List<ScoringRuleAction>>.Failure("کد معرف یافت نشد");
+                return Result<List<PromotionAction>>.Failure("کد معرف یافت نشد");
 
             // دریافت عملیات‌های مربوط به ثبت معرف
             var actions = await ruleActionQueryRepo.GetAllAsync(
                 CancellationToken.None, 
-                ra => ra.ActionKind == ScoringRuleActionKind.ReferrerRegistration);
+                ra => ra.ActionKind == PromotionActionKind.ReferrerRegistration);
 
-            return Result<List<ScoringRuleAction>>.Success(actions.ToList());
+            return Result<List<PromotionAction>>.Success(actions.ToList());
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "خطا در دریافت عملیات‌های کد معرف: {ReferrerCodeId}", referrerCodeId);
-            return Result<List<ScoringRuleAction>>.Failure("خطا در دریافت عملیات‌های کد معرف");
+            return Result<List<PromotionAction>>.Failure("خطا در دریافت عملیات‌های کد معرف");
         }
     }
 }

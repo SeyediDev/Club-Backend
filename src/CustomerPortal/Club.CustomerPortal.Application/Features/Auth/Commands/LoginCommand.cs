@@ -1,3 +1,5 @@
+using Club.CustomerPortal.Application.Interfaces;
+
 namespace Club.CustomerPortal.Application.Features.Auth.Commands;
 
 public record LoginCommand : IRequest<LoginCommandResponse>
@@ -24,49 +26,40 @@ public class LoginCommandValidator : AbstractValidator<LoginCommand>
     }
 }
 
-public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginCommandResponse>
+public class LoginCommandHandler(
+    ICustomerService customerService,
+    IAuthenticationService authenticationService,
+    ILogger<LoginCommandHandler> logger) : IRequestHandler<LoginCommand, LoginCommandResponse>
 {
-    private readonly ICustomerService _customerService;
-    private readonly IAuthenticationService _authenticationService;
-    private readonly ILogger<LoginCommandHandler> _logger;
-
-    public LoginCommandHandler(
-        ICustomerService customerService,
-        IAuthenticationService authenticationService,
-        ILogger<LoginCommandHandler> logger)
-    {
-        _customerService = customerService;
-        _authenticationService = authenticationService;
-        _logger = logger;
-    }
-
     public async Task<LoginCommandResponse> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
         // 1. یافتن مشتری با username (phone number یا email)
-        var customer = await _customerService.GetCustomerByPhoneAsync(request.Username, cancellationToken)
-                      ?? await _customerService.GetCustomerByEmailAsync(request.Username, cancellationToken);
+        var customer = await customerService.GetCustomerByPhoneAsync(request.Username, cancellationToken)
+                      ?? await customerService.GetCustomerByEmailAsync(request.Username, cancellationToken);
 
         if (customer == null)
         {
-            _logger.LogWarning("Login failed: Customer not found with username {Username}", request.Username);
+            logger.LogWarning("Login failed: Customer not found with username {Username}", request.Username);
             throw new UnauthorizedAccessException("نام کاربری یا رمز عبور اشتباه است");
         }
 
         // 2. تایید رمز عبور
-        var isPasswordValid = await _customerService.ValidatePasswordAsync(customer.Id, request.Password, cancellationToken);
+        var isPasswordValid = await customerService.ValidatePasswordAsync(customer.Id, request.Password, cancellationToken);
         if (!isPasswordValid)
         {
-            _logger.LogWarning("Login failed: Invalid password for customer {CustomerId}", customer.Id);
+            logger.LogWarning("Login failed: Invalid password for customer {CustomerId}", customer.Id);
             throw new UnauthorizedAccessException("نام کاربری یا رمز عبور اشتباه است");
         }
 
         // 3. تولید JWT Token
-        var tokenResult = await _authenticationService.GenerateTokenAsync(
+        var tokenResult = await authenticationService.GenerateTokenAsync(
             customer.Id,
             customer.MobileNo ?? string.Empty,
             cancellationToken);
 
-        _logger.LogInformation("Customer {CustomerId} logged in successfully", customer.Id);
+        logger.LogInformation("Customer {CustomerId} logged in successfully", customer.Id);
+
+        var customerTenant = await customerService.GetCustomerTenantAsync(customer.Id, null, cancellationToken);
 
         // 4. بازگشت پاسخ
         return new LoginCommandResponse
@@ -74,7 +67,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginCommandRes
             Token = tokenResult.AccessToken,
             RefreshToken = tokenResult.RefreshToken,
             ExpiresIn = tokenResult.ExpiresIn,
-            Customer = customer.Adapt<CustomerDto>()
+            Customer = CustomerDtoFactory.Create(customer, customerTenant)
         };
     }
 }

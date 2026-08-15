@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Club.Domain.Entities.Forum;
 
 namespace Club.Infrastructure.Data.Configurations;
 
@@ -21,16 +20,16 @@ internal class ForumTopicLikeConfiguration : IEntityTypeConfiguration<ForumTopic
             .OnDelete(DeleteBehavior.Cascade)
             .HasConstraintName("FK_ForumTopicLike_ForumTopic");
 
-        entity.HasOne(d => d.Customer)
+        entity.HasOne(d => d.CustomerTenant)
             .WithMany()
-            .HasForeignKey(d => d.CustomerId)
+            .HasForeignKey(d => d.CustomerTenantId)
             .OnDelete(DeleteBehavior.NoAction)
-            .HasConstraintName("FK_ForumTopicLike_Customer");
+            .HasConstraintName("FK_ForumTopicLike_CustomerTenant");
 
         // Indexes - جلوگیری از لایک مجدد
-        entity.HasIndex(e => new { e.TopicId, e.CustomerId })
+        entity.HasIndex(e => new { e.TopicId, e.CustomerTenantId })
             .IsUnique()
-            .HasDatabaseName("IX_ForumTopicLike_Topic_Customer_Unique");
+            .HasDatabaseName("IX_ForumTopicLike_Topic_CustomerTenant_Unique");
     }
 }
 

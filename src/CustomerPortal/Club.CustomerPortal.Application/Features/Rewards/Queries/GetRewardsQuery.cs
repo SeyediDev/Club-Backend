@@ -1,3 +1,6 @@
+using Club.CustomerPortal.Application.Common;
+using Club.CustomerPortal.Application.Interfaces;
+
 namespace Club.CustomerPortal.Application.Features.Rewards.Queries;
 
 public record GetRewardsQuery : IRequest<GetRewardsQueryResponse>
@@ -21,6 +24,7 @@ public record RewardDto
     public string Description { get; set; } = null!;
     public string CategoryId { get; set; } = null!;
     public string CategoryName { get; set; } = null!;
+    public int? PictureId { get; set; }
     public string? ImageUrl { get; set; }
     public List<RewardCostDto> Costs { get; set; } = [];
     public int? Stock { get; set; }
@@ -36,7 +40,10 @@ public record RewardCostDto
     public string PointTypeId { get; set; } = null!;
     public string PointTypeName { get; set; } = null!;
     public string PointTypeColor { get; set; } = null!;
-    public int Amount { get; set; }
+    public long OriginalAmount { get; set; }
+    public long FinalAmount { get; set; }
+    public bool HasDiscount { get; set; }
+    public long Amount => FinalAmount;
 }
 
 public record MerchantDto
@@ -46,56 +53,83 @@ public record MerchantDto
     public string? LogoUrl { get; set; }
 }
 
-public class GetRewardsQueryHandler : IRequestHandler<GetRewardsQuery, GetRewardsQueryResponse>
+public class GetRewardsQueryHandler(
+    IRewardService rewardService,
+    IPlanService planService,
+    ICustomerRequesterUser requesterUser) : IRequestHandler<GetRewardsQuery, GetRewardsQueryResponse>
 {
-    private readonly IRewardService _rewardService;
-
-    public GetRewardsQueryHandler(IRewardService rewardService)
-    {
-        _rewardService = rewardService;
-    }
-
     public async Task<GetRewardsQueryResponse> Handle(GetRewardsQuery request, CancellationToken cancellationToken)
     {
         var categoryId = string.IsNullOrEmpty(request.CategoryId) ? null : (int?)int.Parse(request.CategoryId);
         
-        var result = await _rewardService.GetRewardsAsync(
+        var result = await rewardService.GetRewardsAsync(
             categoryId,
             request.Search,
             request.PageNumber,
             request.PageSize,
             cancellationToken);
-        
-        var rewards = result.Items.Select(r => new RewardDto
+
+        CustomerPlanServiceDto? activePlan = null;
+        var customerId = requesterUser.CustomerId;
+        var hasCustomer = customerId > 0;
+
+        if (hasCustomer)
         {
-            Id = r.Id.ToString(),
-            Name = r.Title,
-            Description = r.Description ?? string.Empty,
-            CategoryId = "1", // TODO: از database
-            CategoryName = r.CategoryName,
-            ImageUrl = r.Picture,
-            Costs =
-            [
-                new RewardCostDto
-                {
-                    PointTypeId = "1",
-                    PointTypeName = "امتیاز طلایی",
-                    PointTypeColor = "#FFD700",
-                    Amount = (int)r.Value
-                }
-            ],
-            Stock = r.Quantity,
-            IsAvailable = r.IsAvailable,
-            ValidFrom = null,
-            ValidTo = null,
-            TermsAndConditions = null,
-            Merchant = new MerchantDto
+            activePlan = await planService.GetActiveCustomerPlanAsync(customerId, cancellationToken);
+        }
+        
+        var rewards = new List<RewardDto>();
+
+        foreach (var reward in result.Items)
+        {
+            var originalPrice = reward.Value;
+
+            long finalPrice = originalPrice;
+
+            if (hasCustomer && activePlan != null)
             {
-                Id = "1",
-                Name = r.MerchantName,
-                LogoUrl = null
+                finalPrice = await planService.CalculateRewardPriceWithPlanDiscountAsync(
+                    customerId,
+                    reward.Id,
+                    activePlan.PointId,
+                    originalPrice,
+                    activePlan,
+                    cancellationToken);
             }
-        }).ToList();
+
+            var costDto = new RewardCostDto
+            {
+                PointTypeId = activePlan?.PointId.ToString() ?? reward.Id.ToString(),
+                PointTypeName = activePlan?.PointTypeName ?? "امتیاز",
+                PointTypeColor = activePlan?.PointTypeColor ?? "#6366F1",
+                OriginalAmount = originalPrice,
+                FinalAmount = finalPrice,
+                HasDiscount = finalPrice < originalPrice
+            };
+
+            rewards.Add(new RewardDto
+            {
+                Id = reward.Id.ToString(),
+                Name = reward.Title,
+                Description = reward.Description ?? string.Empty,
+                CategoryId = "1", // TODO: دریافت شناسه واقعی دسته‌بندی
+                CategoryName = reward.CategoryName,
+                PictureId = reward.PictureId,
+                ImageUrl = DocumentUrlHelper.BuildDocumentUrl(reward.PictureId),
+                Costs = [costDto],
+                Stock = reward.Quantity,
+                IsAvailable = reward.IsAvailable,
+                ValidFrom = null,
+                ValidTo = null,
+                TermsAndConditions = null,
+                Merchant = new MerchantDto
+                {
+                    Id = "1",
+                    Name = reward.MerchantName,
+                    LogoUrl = null
+                }
+            });
+        }
         
         return new GetRewardsQueryResponse
         {

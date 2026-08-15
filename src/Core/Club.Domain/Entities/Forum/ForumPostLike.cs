@@ -22,13 +22,13 @@ public class ForumPostLike : ClubBaseCoreAuditableEntity<int>
     /// شناسه مشتری
     /// </summary>
     [DisplayName("شناسه مشتری")]
-    public int CustomerId { get; set; }
+    public int CustomerTenantId { get; set; }
 
     /// <summary>
     /// مشتری
     /// </summary>
     [DisplayName("مشتری")]
-    public Customer Customer { get; set; } = null!;
+    public CustomerTenant CustomerTenant { get; set; } = null!;
 
     /// <summary>
     /// تاریخ لایک

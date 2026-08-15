@@ -1,39 +1,63 @@
-﻿namespace Club.AdminPanel.Domain.UiDefinitions.Promotions;
+namespace Club.AdminPanel.Domain.UiDefinitions.Promotions;
 
 public partial class PromotionUiDefinitions : CRUDDefinition<Promotion>
 {
-    protected override void IndexFormViewModel(FormDefinition form)
+    private static readonly List<string> DefaultRoles =
+    [
+        Neo.Domain.Constants.Roles.Admin,
+        ClubRoles.MarketingManager,
+        ClubRoles.Analyst,
+        ClubRoles.Manager
+    ];
+
+    public override List<string>? Roles => DefaultRoles;
+    public override string? Icon => "fa fa-bullhorn";
+
+    protected override void IndexFormViewModel()
     {
-        form.AddColumns(nameof(Promotion.Title),
-                        nameof(Promotion.Category),
-                        nameof(Promotion.CustomerSegment),
-                        nameof(Promotion.FromDate),
-                        nameof(Promotion.ToDate),
-                        nameof(Promotion.CounterWindowMode),
-                        nameof(Promotion.Threshold),
-                        nameof(Promotion.TriggerKind),
-                        nameof(Promotion.CheckTime),
-                        nameof(Promotion.Tenant)
-                        );
+        AddColumns(nameof(Promotion.Title)
+                 , nameof(Promotion.Category)
+                 , nameof(Promotion.Status)
+                 , nameof(Promotion.FromDate)
+                 , nameof(Promotion.ToDate)
+                 , nameof(Promotion.FromHour)
+                 , nameof(Promotion.ToHour)
+                   );
+        AddSubjectColumn<Setting>();
     }
-    protected override void CUDFormsViewModel(CUDForm form)
+
+    protected override void CUDFormsViewModel()
     {
-        form.AddFields(nameof(Promotion.Title),
-                       nameof(Promotion.Category),
-                       nameof(Promotion.CustomerSegment),
-                       nameof(Promotion.FromDate),
-                       nameof(Promotion.ToDate),
-                       nameof(Promotion.CounterWindowMode),
-                       nameof(Promotion.Threshold),
-                       nameof(Promotion.TriggerKind),
-                       nameof(Promotion.CheckTime),
-                       nameof(Promotion.WeekDay),
-                       nameof(Promotion.MonthDay)
-                       );
+        AddFields(nameof(Promotion.Title)
+                , nameof(Promotion.Category)
+                , nameof(Promotion.Status)
+                , nameof(Promotion.FromDate)
+                , nameof(Promotion.ToDate)
+                , nameof(Promotion.FromHour)
+                , nameof(Promotion.ToHour)
+                );
     }
-    protected override void EditFormSubTables(CUDForm form)
+
+    public class Setting() : SubjectEditForm<Setting>("تنظیمات")
     {
-        //form.AddSubTable(nameof(Product), nameof(Product.Merchant), null/*"Sub"*/,
-        //    "محصولات", null, false, eControlTypeId.MultiTab);
+        protected override void ViewModel()
+        {
+            AddTable<PromotionTrigger>("محرک‌های عملیات پویش");
+            AddTable<PromotionAction>("عملیات پویش");
+            AddTable<PromotionCustomerSegment>("جوامع/بازارهای هدف");
+            AddTable<PromotionBudget>("بودجه");
+            AddTable<PromotionCostAllocation>("تسهیم‌های زمانی هزینه");
+            AddTable<Plan>("طرح‌ها");
+            AddTable<Survey>("مسابقات/نظرسنجی");
+            AddTable<Lottery>("قرعه‌کشی/چرخونه");
+            AddTable<PromotionMessage>("پیام‌های ارسالی");
+
+            void AddTable<TTableEntity>(string labelName)
+                where TTableEntity : IEntity, ISubOfPromotion
+            {
+                AddSubTable<TTableEntity>(
+                    nameof(ISubOfPromotion.Promotion), labelName, ContainerControl.MultiTab, null, null, null, null, false, null);
+            }
+        }
     }
 }

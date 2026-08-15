@@ -1,25 +1,52 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.UI.Reports;
+using Club.Domain.Entities.Channels;
 
 namespace Club.AdminPanel.Domain.UiDefinitions.Events;
 
 public partial class EventTypeUiDefinitions : CRUDDefinition<EventType>
 {
-    protected override void IndexFormViewModel(FormDefinition form)
+    private static readonly List<string> DefaultRoles =
+    [
+        Neo.Domain.Constants.Roles.Admin,
+        ClubRoles.Manager,
+        ClubRoles.Analyst
+    ];
+
+    public override List<string>? Roles => DefaultRoles;
+    public override string? Icon => "fa fa-tag";
+
+    protected override void IndexFormViewModel()
     {
-        form.AddColumns(nameof(EventType.Title),
-                        nameof(EventType.Key)
-                        );
+        AddColumns(nameof(EventType.Tenant)
+                 , nameof(EventType.Title)
+                 , nameof(EventType.Key)
+                 , nameof(EventType.AddNewAttributePermission)
+                 );
+        AddOrderBy(nameof(EventType.Tenant), nameof(EventType.Title));
+        AddSubjectColumn<Settings>();
     }
-    protected override void CUDFormsViewModel(CUDForm form)
+    protected override void CUDFormsViewModel()
     {
-        form.AddFields(nameof(EventType.Title),
-                       nameof(EventType.Key)
-                       );
+        AddFields(nameof(EventType.Tenant)
+                , nameof(EventType.Title)
+                , nameof(EventType.Key)
+                , nameof(EventType.AddNewAttributePermission)
+                , nameof(EventType.CustomerBehaviorType)
+                );
     }
-    protected override void EditFormSubTables(CUDForm form)
+
+    public class Settings() : SubjectEditForm<Settings>("تنظیمات")
     {
-        form.AddSubTable(nameof(EventTypeParameter), nameof(EventTypeParameter.EventType), "Sub",
-            "پارامترها", null, false, eControlTypeId.MultiTab);
+        protected override void ViewModel()
+        {
+            AddTable<EventChannelValidEvent>("کانال‌های مجاز");
+            AddTable<EventTypeValidAttribute>("ویژگی‌های مجاز");
+            AddTable<TenantAttribute>("ویژگی‌های خاص این رویداد");
+
+            void AddTable<T>(string title) where T : IEntity
+            {
+                AddSubTable<T>(nameof(ISubOfEventType.EventType), title);
+            }
+        }
     }
 
     // =====================================================
@@ -28,39 +55,25 @@ public partial class EventTypeUiDefinitions : CRUDDefinition<EventType>
 
     public new partial class PublicReport : CRUDDefinition.PublicReport
     {
-        /// <summary>
-        /// گزارش لیست انواع رویدادها
-        /// </summary>
-        public partial class AllEventTypesConfig : ReportConfigDefinition
+        public override List<string>? Roles => DefaultRoles;
+        public class AllEventTypesConfig : ReportConfigDefinition
         {
-            protected override List<string> Roles { get => [Neo.Domain.Constants.Roles.Admin, ClubRoles.Manager]; }
-            
-            protected override void Identify()
-            {
-                DefineConfig("لیست انواع رویدادها", ReportViewType.List);
-            }
-
+            protected override List<string> Roles => [Neo.Domain.Constants.Roles.Admin, ClubRoles.Manager];
+            protected override string Name => "لیست انواع رویدادها";
             protected override void DefineColumns()
             {
+                DisplayColumn(nameof(EventType.Tenant), "اکوسیستم");
                 DisplayColumn(nameof(EventType.Title), "عنوان");
                 DisplayColumn(nameof(EventType.Key), "کلید");
                 OrderBy(nameof(EventType.Title));
             }
         }
-
-        /// <summary>
-        /// گزارش پرکاربردترین انواع رویداد
-        /// </summary>
-        public partial class MostUsedEventTypesConfig : ReportConfigDefinition
+        public class MostUsedEventTypesConfig : GroupByConfigDefinition
         {
-            protected override List<string> Roles { get => [Neo.Domain.Constants.Roles.Admin, ClubRoles.Analyst]; }
-            
-            protected override void Identify()
-            {
-                DefineConfig("پرکاربردترین انواع رویداد", ReportViewType.GroupByList);
-            }
+            protected override List<string> Roles => [Neo.Domain.Constants.Roles.Admin, ClubRoles.Analyst];
+            protected override string Name => "پرکاربردترین انواع رویداد";
 
-            protected override void DefineColumns()
+            protected override void DefineGroupBy()
             {
                 GroupBy(nameof(EventType.Title), "نوع رویداد");
                 Count(null, "تعداد استفاده");

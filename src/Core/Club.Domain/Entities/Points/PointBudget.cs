@@ -1,7 +1,4 @@
-﻿using Neo.Bpms.Domain.Entities.Base;
-using Club.Domain.Entities.Points.Enums;
-
-namespace Club.Domain.Entities.Points;
+﻿namespace Club.Domain.Entities.Points;
 
 /// <summary>
 /// هدف : کنترل حداکثر دریافت امتیاز در یک بازه زمانی
@@ -125,25 +122,4 @@ public class PointBudget : ClubBaseCoreConfigAuditableEntity<int>
     /// </summary>
     [DisplayName("دقیقه")]
     public int? ResetMinute { get; set; }
-}
-
-/// <summary>
-/// نوع برنامه‌ریزی زمان‌بندی
-/// </summary>
-public enum SchedulingKind
-{
-    [Description("هر ساعت")]
-    Hourly = 1,
-    
-    [Description("روزانه")]
-    Daily = 2,
-    
-    [Description("هفتگی")]
-    Weekly = 3,
-    
-    [Description("ماهانه")]
-    Monthly = 4,
-    
-    [Description("سالانه")]
-    Yearly = 5
 }

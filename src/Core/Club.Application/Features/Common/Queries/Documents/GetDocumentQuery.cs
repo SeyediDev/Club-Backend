@@ -1,7 +1,6 @@
 ﻿using Neo.Application.Exceptions;
 using Neo.Domain.Features.ObjectStore;
 using Neo.Domain.Features.ObjectStore.Dto;
-using Neo.Domain.Repository;
 using Club.Domain.Entities.Common;
 
 namespace Club.Application.Features.Common.Queries.Documents;

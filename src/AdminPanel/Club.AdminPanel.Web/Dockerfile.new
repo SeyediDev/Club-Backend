@@ -1,0 +1,86 @@
+# ===============================================
+# Multi-stage Dockerfile for Club.AdminPanel.Web
+# Build Context: D:\Projects (parent of all three repos)
+# Command: docker build -f Club/Backend/src/AdminPanel/Club.AdminPanel.Web/Dockerfile.new -t club-admin-web .
+# ===============================================
+
+# Stage 1: Build
+FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+WORKDIR /src
+
+# Copy solution and project files for restore
+COPY ["Club/Backend/Club.Backend.sln", "Club/Backend/"]
+COPY ["Club/Backend/Directory.Build.props", "Club/Backend/"]
+COPY ["Club/Backend/Directory.Packages.props", "Club/Backend/"]
+COPY ["Club/Backend/global.json", "Club/Backend/"]
+COPY ["Club/Backend/NuGet.config", "Club/Backend/"]
+
+# Copy all csproj files
+COPY ["Club/Backend/src/AdminPanel/Club.AdminPanel.Web/Club.AdminPanel.Web.csproj", "Club/Backend/src/AdminPanel/Club.AdminPanel.Web/"]
+COPY ["Club/Backend/src/AdminPanel/Club.AdminPanel.Domain/Club.AdminPanel.Domain.csproj", "Club/Backend/src/AdminPanel/Club.AdminPanel.Domain/"]
+COPY ["Club/Backend/src/Core/Club.Domain/Club.Domain.csproj", "Club/Backend/src/Core/Club.Domain/"]
+COPY ["Club/Backend/src/Core/Club.Application/Club.Application.csproj", "Club/Backend/src/Core/Club.Application/"]
+COPY ["Club/Backend/src/Core/Club.Infrastructure/Club.Infrastructure.csproj", "Club/Backend/src/Core/Club.Infrastructure/"]
+
+# Copy Neo projects
+COPY ["Neo/src/Neo.Common/Neo.Common.csproj", "Neo/src/Neo.Common/"]
+COPY ["Neo/src/Neo.Domain/Neo.Domain.csproj", "Neo/src/Neo.Domain/"]
+COPY ["Neo/src/Neo.Application/Neo.Application.csproj", "Neo/src/Neo.Application/"]
+COPY ["Neo/src/Neo.Infrastructure/Neo.Infrastructure.csproj", "Neo/src/Neo.Infrastructure/"]
+COPY ["Neo/src/Neo.Infrastructure.Hangfire/Neo.Infrastructure.Hangfire.csproj", "Neo/src/Neo.Infrastructure.Hangfire/"]
+COPY ["Neo/src/Neo.Endpoint/Neo.Endpoint.csproj", "Neo/src/Neo.Endpoint/"]
+
+# Copy Neo.Bpms projects
+COPY ["Neo.Bpms/src/Neo.Bpms.Domain/Neo.Bpms.Domain.csproj", "Neo.Bpms/src/Neo.Bpms.Domain/"]
+COPY ["Neo.Bpms/src/Neo.Bpms.Domain.Features/Neo.Bpms.Domain.Features.csproj", "Neo.Bpms/src/Neo.Bpms.Domain.Features/"]
+COPY ["Neo.Bpms/src/Neo.Bpms.Application/Neo.Bpms.Application.csproj", "Neo.Bpms/src/Neo.Bpms.Application/"]
+COPY ["Neo.Bpms/src/Neo.Bpms.Infrastructure/Neo.Bpms.Infrastructure.csproj", "Neo.Bpms/src/Neo.Bpms.Infrastructure/"]
+COPY ["Neo.Bpms/src/Neo.Bpms.UI.Resources/Neo.Bpms.UI.Resources.csproj", "Neo.Bpms/src/Neo.Bpms.UI.Resources/"]
+COPY ["Neo.Bpms/src/Neo.Bpms.UI.MVC/Neo.Bpms.UI.MVC.csproj", "Neo.Bpms/src/Neo.Bpms.UI.MVC/"]
+
+# Restore dependencies
+WORKDIR /src/Club/Backend
+RUN dotnet restore "src/AdminPanel/Club.AdminPanel.Web/Club.AdminPanel.Web.csproj"
+
+# Copy all source code
+COPY ["Club/", "Club/"]
+COPY ["Neo/", "Neo/"]
+COPY ["Neo.Bpms/", "Neo.Bpms/"]
+
+# Build the project
+WORKDIR /src/Club/Backend/src/AdminPanel/Club.AdminPanel.Web
+RUN dotnet build "Club.AdminPanel.Web.csproj" -c Release -o /app/build --no-restore
+
+# Stage 2: Publish
+FROM build AS publish
+RUN dotnet publish "Club.AdminPanel.Web.csproj" -c Release -o /app/publish --no-restore --no-build /p:UseAppHost=false
+
+# Stage 3: Final Runtime
+FROM mcr.microsoft.com/dotnet/aspnet:8.0 AS final
+WORKDIR /app
+
+# Install necessary dependencies
+RUN apt-get update && apt-get install -y \
+    libgdiplus \
+    libc6-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create non-root user
+RUN groupadd -r clubapp && useradd -r -g clubapp clubapp
+RUN chown -R clubapp:clubapp /app
+
+# Copy published files
+COPY --from=publish --chown=clubapp:clubapp /app/publish .
+
+# Switch to non-root user
+USER clubapp
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:80/health || exit 1
+
+EXPOSE 80
+EXPOSE 443
+
+ENTRYPOINT ["dotnet", "Club.AdminPanel.Web.dll"]
+

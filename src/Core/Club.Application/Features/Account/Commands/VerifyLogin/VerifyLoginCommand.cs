@@ -1,5 +1,5 @@
-﻿using Neo.Application.Exceptions;
-using Neo.Domain.Features.Client;
+using Neo.Application.Exceptions;
+using Neo.Domain.Entities.Common;
 using Neo.Domain.Features.Client.Dto;
 using Neo.Domain.Features.Sms;
 
@@ -54,7 +54,7 @@ public class VerifyLoginCommandValidator : AbstractValidator<VerifyLoginCommand>
 public class VerifyLoginCommandHandler(IRequesterUser requesterUser,
                                        IOtpService otpService,
                                        IIdpService idpService,
-                                       ILoginUserService<int> userService
+                                       ILoginUserService<UserId> userService
                                        //, IUserQueryRepository userQueryRepository,
                                        //IPublishEndpoint publisher
     )
@@ -67,7 +67,7 @@ public class VerifyLoginCommandHandler(IRequesterUser requesterUser,
             throw new BadRequestException("The 'x-app-name' header must be either 'member' or 'doctor'.");
         }
         request.Mobile = request.Mobile.PadLeft(11, '0');
-        Neo.Domain.Entities.IUser<int> user = await userService.FindUser(request.Mobile, request.CountryCode, cancellationToken)
+        Neo.Domain.Entities.IUser<UserId> user = await userService.FindUser(request.Mobile, request.CountryCode, cancellationToken)
             ?? throw new BadRequestException("کاربر نامعتبر است.");
         if (user.OTPSeed is null)
         {

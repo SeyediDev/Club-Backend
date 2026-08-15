@@ -1,4 +1,4 @@
-﻿using Neo.Bpms.Domain.Modeling.Definitions.Entities.Processes;
+﻿using Neo.Bpms.Domain.Features.Definitions.Entities.Processes;
 
 namespace Club.AdminPanel.Domain.Domain.Club;
 

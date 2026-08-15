@@ -1,4 +1,4 @@
-﻿using Neo.Bpms.Domain.Modeling.UiDefinitions.ProcessData;
+﻿using Neo.Bpms.Domain.Features.UiDefinitions.ProcessData;
 
 namespace Club.AdminPanel.Domain.UiDefinitions.HomePage;
 

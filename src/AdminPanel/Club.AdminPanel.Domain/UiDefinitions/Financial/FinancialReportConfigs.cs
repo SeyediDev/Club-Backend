@@ -1,317 +1,228 @@
-﻿using Neo.Bpms.Domain.Entities.Cmmn.UI.Reports;
+namespace Club.AdminPanel.Domain.UiDefinitions.Promotions;
 
-namespace Club.AdminPanel.Domain.UiDefinitions.Financial;
-
-/// <summary>
-/// گزارش‌های مالی برای داشبورد مالی
-/// </summary>
-public class FinancialReportConfigs
+public partial class PromotionUiDefinitions
 {
-    // =====================================================
-    // Revenue Reports
-    // =====================================================
-
-    /// <summary>
-    /// گزارش کل درآمد
-    /// </summary>
-    public partial class TotalRevenueConfig : ReportConfigDefinition
+    public new partial class PublicReport : CRUDDefinition.PublicReport
     {
-        protected override List<string> Roles { get => [Neo.Domain.Constants.Roles.Admin, ClubRoles.FinanceManager]; }
-        
-        protected override void Identify()
+        // =====================================================
+        // Revenue Reports
+        // =====================================================
+
+        /// <summary>
+        /// گزارش روند درآمد ماهانه
+        /// </summary>
+        public class MonthlyRevenueTrendConfig() : ChartConfigDefinition(ChartType.Line)
         {
-            DefineConfig("کل درآمد", ReportViewType.Chart, Report.ChartType.MetricBox);
+            protected override List<string> Roles => [Neo.Domain.Constants.Roles.Admin, ClubRoles.FinanceManager];
+            protected override string Name => "روند درآمد ماهانه";
+
+            protected override void DefineGroupBy()
+            {
+                GroupBy("FromDateMonth", "ماه");
+                Sum("Metrics.CampaignRevenue", "درآمد");
+                Sum("Metrics.CampaignCost", "هزینه");
+            }
         }
 
-        protected override void DefineColumns()
+        /// <summary>
+        /// گزارش درآمد به تفکیک دسته کمپین
+        /// </summary>
+        public class RevenueByCampaignCategoryConfig() : ChartConfigDefinition(ChartType.Pie)
         {
-            Sum(nameof(Promotion.CampaignRevenue), "کل درآمد");
-        }
-    }
+            protected override List<string> Roles => [Neo.Domain.Constants.Roles.Admin, ClubRoles.FinanceManager, ClubRoles.MarketingManager];
+            protected override string Name => "درآمد به تفکیک دسته کمپین";
 
-    /// <summary>
-    /// گزارش روند درآمد ماهانه
-    /// </summary>
-    public partial class MonthlyRevenueTrendConfig : ReportConfigDefinition
-    {
-        protected override List<string> Roles { get => [Neo.Domain.Constants.Roles.Admin, ClubRoles.FinanceManager]; }
-        
-        protected override void Identify()
-        {
-            DefineConfig("روند درآمد ماهانه", ReportViewType.Chart, Report.ChartType.Line);
+            protected override void DefineGroupBy()
+            {
+                GroupBy(nameof(Promotion.Category), "دسته کمپین");
+                Sum("Metrics.CampaignRevenue", "کل درآمد");
+            }
         }
 
-        protected override void DefineColumns()
-        {
-            GroupBy("FromDateMonth", "ماه");
-            Sum(nameof(Promotion.CampaignRevenue), "درآمد");
-            Sum(nameof(Promotion.CampaignCost), "هزینه");
-        }
-    }
+        // =====================================================
+        // Cost Reports
+        // =====================================================
 
-    /// <summary>
-    /// گزارش درآمد به تفکیک دسته کمپین
-    /// </summary>
-    public partial class RevenueByCampaignCategoryConfig : ReportConfigDefinition
-    {
-        protected override List<string> Roles { get => [Neo.Domain.Constants.Roles.Admin, ClubRoles.FinanceManager, ClubRoles.MarketingManager]; }
-        
-        protected override void Identify()
+        /// <summary>
+        /// گزارش کل هزینه‌های بازاریابی
+        /// </summary>
+        public class TotalMarketingCostsConfig() : ChartConfigDefinition(ChartType.MetricBox)
         {
-            DefineConfig("درآمد به تفکیک دسته کمپین", ReportViewType.Chart, Report.ChartType.Pie);
+            protected override List<string> Roles => [Neo.Domain.Constants.Roles.Admin, ClubRoles.FinanceManager];
+            protected override string Name => "کل هزینه‌های بازاریابی";
+
+            protected override void DefineGroupBy()
+            {
+                Sum("Metrics.CampaignCost", string.Empty);
+            }
         }
 
-        protected override void DefineColumns()
+        /// <summary>
+        /// گزارش هزینه‌های بازاریابی ماهانه
+        /// </summary>
+        public class MonthlyMarketingCostsConfig() : ChartConfigDefinition(ChartType.Column)
         {
-            GroupBy(nameof(Promotion.Category), "دسته کمپین");
-            Sum(nameof(Promotion.CampaignRevenue), "کل درآمد");
-        }
-    }
+            protected override List<string> Roles => [Neo.Domain.Constants.Roles.Admin, ClubRoles.FinanceManager];
+            protected override string Name => "هزینه‌های بازاریابی ماهانه";
 
-    // =====================================================
-    // Cost Reports
-    // =====================================================
-
-    /// <summary>
-    /// گزارش کل هزینه‌های بازاریابی
-    /// </summary>
-    public partial class TotalMarketingCostsConfig : ReportConfigDefinition
-    {
-        protected override List<string> Roles { get => [Neo.Domain.Constants.Roles.Admin, ClubRoles.FinanceManager]; }
-        
-        protected override void Identify()
-        {
-            DefineConfig("کل هزینه‌های بازاریابی", ReportViewType.Chart, Report.ChartType.MetricBox);
+            protected override void DefineGroupBy()
+            {
+                GroupBy("FromDateMonth", "ماه");
+                Sum("Metrics.CampaignCost", "هزینه");
+                Count(null, "تعداد کمپین‌ها");
+            }
         }
 
-        protected override void DefineColumns()
+        /// <summary>
+        /// گزارش هزینه به تفکیک دسته کمپین
+        /// </summary>
+        public class CostByCampaignCategoryConfig() : ChartConfigDefinition(ChartType.Pie)
         {
-            Sum(nameof(Promotion.CampaignCost), "کل هزینه");
-        }
-    }
+            protected override List<string> Roles => [Neo.Domain.Constants.Roles.Admin, ClubRoles.FinanceManager];
+            protected override string Name => "هزینه به تفکیک دسته";
 
-    /// <summary>
-    /// گزارش هزینه‌های بازاریابی ماهانه
-    /// </summary>
-    public partial class MonthlyMarketingCostsConfig : ReportConfigDefinition
-    {
-        protected override List<string> Roles { get => [Neo.Domain.Constants.Roles.Admin, ClubRoles.FinanceManager]; }
-        
-        protected override void Identify()
-        {
-            DefineConfig("هزینه‌های بازاریابی ماهانه", ReportViewType.Chart, Report.ChartType.Column);
+            protected override void DefineGroupBy()
+            {
+                GroupBy(nameof(Promotion.Category), "دسته کمپین");
+                Sum("Metrics.CampaignCost", "کل هزینه");
+            }
         }
 
-        protected override void DefineColumns()
-        {
-            GroupBy("FromDateMonth", "ماه");
-            Sum(nameof(Promotion.CampaignCost), "هزینه");
-            Count(null, "تعداد کمپین‌ها");
-        }
-    }
+        // =====================================================
+        // Profitability Reports
+        // =====================================================
 
-    /// <summary>
-    /// گزارش هزینه به تفکیک دسته کمپین
-    /// </summary>
-    public partial class CostByCampaignCategoryConfig : ReportConfigDefinition
-    {
-        protected override List<string> Roles { get => [Neo.Domain.Constants.Roles.Admin, ClubRoles.FinanceManager]; }
-        
-        protected override void Identify()
+        /// <summary>
+        /// گزارش سودآوری کلی
+        /// </summary>
+        public class OverallProfitabilityConfig() : ChartConfigDefinition(ChartType.MetricBox)
         {
-            DefineConfig("هزینه به تفکیک دسته", ReportViewType.Chart, Report.ChartType.Pie);
-        }
+            protected override List<string> Roles => [Neo.Domain.Constants.Roles.Admin, ClubRoles.FinanceManager];
+            protected override string Name => "سودآوری کلی";
 
-        protected override void DefineColumns()
-        {
-            GroupBy(nameof(Promotion.Category), "دسته کمپین");
-            Sum(nameof(Promotion.CampaignCost), "کل هزینه");
-        }
-    }
-
-    // =====================================================
-    // Profitability Reports
-    // =====================================================
-
-    /// <summary>
-    /// گزارش سودآوری کلی
-    /// </summary>
-    public partial class OverallProfitabilityConfig : ReportConfigDefinition
-    {
-        protected override List<string> Roles { get => [Neo.Domain.Constants.Roles.Admin, ClubRoles.FinanceManager]; }
-        
-        protected override void Identify()
-        {
-            DefineConfig("سودآوری کلی", ReportViewType.Chart, Report.ChartType.MetricBox);
+            protected override void DefineGroupBy()
+            {
+                Sum("Metrics.CampaignRevenue", "کل درآمد");
+                Sum("Metrics.CampaignCost", "کل هزینه");
+            }
         }
 
-        protected override void DefineColumns()
+        /// <summary>
+        /// گزارش سودآوری ماهانه
+        /// </summary>
+        public class MonthlyProfitabilityConfig() : ChartConfigDefinition(ChartType.Line)
         {
-            Sum(nameof(Promotion.CampaignRevenue), "کل درآمد");
-            Sum(nameof(Promotion.CampaignCost), "کل هزینه");
-        }
-    }
+            protected override List<string> Roles => [Neo.Domain.Constants.Roles.Admin, ClubRoles.FinanceManager];
+            protected override string Name => "سودآوری ماهانه";
 
-    /// <summary>
-    /// گزارش سودآوری ماهانه
-    /// </summary>
-    public partial class MonthlyProfitabilityConfig : ReportConfigDefinition
-    {
-        protected override List<string> Roles { get => [Neo.Domain.Constants.Roles.Admin, ClubRoles.FinanceManager]; }
-        
-        protected override void Identify()
-        {
-            DefineConfig("سودآوری ماهانه", ReportViewType.Chart, Report.ChartType.Line);
+            protected override void DefineGroupBy()
+            {
+                GroupBy("FromDateMonth", "ماه");
+                Sum("Metrics.CampaignRevenue", "درآمد");
+                Sum("Metrics.CampaignCost", "هزینه");
+            }
         }
 
-        protected override void DefineColumns()
+        /// <summary>
+        /// گزارش سودآوری مشتریان (بر اساس CLV)
+        /// </summary>
+        public class CustomerProfitabilityConfig() : ChartConfigDefinition(ChartType.Bar)
         {
-            GroupBy("FromDateMonth", "ماه");
-            Sum(nameof(Promotion.CampaignRevenue), "درآمد");
-            Sum(nameof(Promotion.CampaignCost), "هزینه");
-        }
-    }
+            protected override List<string> Roles => [Neo.Domain.Constants.Roles.Admin, ClubRoles.FinanceManager];
+            protected override string Name => "سودآوری مشتریان";
 
-    /// <summary>
-    /// گزارش سودآوری مشتریان (بر اساس CLV)
-    /// </summary>
-    public partial class CustomerProfitabilityConfig : ReportConfigDefinition
-    {
-        protected override List<string> Roles { get => [Neo.Domain.Constants.Roles.Admin, ClubRoles.FinanceManager]; }
-        
-        protected override void Identify()
-        {
-            DefineConfig("سودآوری مشتریان", ReportViewType.Chart, Report.ChartType.Bar);
+            protected override void DefineGroupBy()
+            {
+                GroupBy(nameof(CustomerTenant.RfmSegment), "دسته RFM");
+                Average(nameof(CustomerTenant.CustomerLifetimeValue), "میانگین CLV");
+                Count(null, "تعداد مشتریان");
+            }
         }
 
-        protected override void DefineColumns()
+        /// <summary>
+        /// گزارش سودآوری جوامع مشتریان
+        /// </summary>
+        public class SegmentProfitabilityConfig() : ChartConfigDefinition(ChartType.Bar)
         {
-            GroupBy(nameof(Customer.RfmSegment), "دسته RFM");
-            Average(nameof(Customer.CustomerLifetimeValue), "میانگین CLV");
-            Count(null, "تعداد مشتریان");
-        }
-    }
+            protected override List<string> Roles => [Neo.Domain.Constants.Roles.Admin, ClubRoles.FinanceManager];
+            protected override string Name => "سودآوری جوامع";
 
-    /// <summary>
-    /// گزارش سودآوری جوامع مشتریان
-    /// </summary>
-    public partial class SegmentProfitabilityConfig : ReportConfigDefinition
-    {
-        protected override List<string> Roles { get => [Neo.Domain.Constants.Roles.Admin, ClubRoles.FinanceManager]; }
-        
-        protected override void Identify()
-        {
-            DefineConfig("سودآوری جوامع", ReportViewType.Chart, Report.ChartType.Bar);
+            protected override void DefineGroupBy()
+            {
+                GroupBy(nameof(CustomerSegment.Title), "جامعه مشتریان");
+                Sum(nameof(CustomerSegment.ActualSize), "تعداد اعضا");
+            }
         }
 
-        protected override void DefineColumns()
-        {
-            GroupBy(nameof(CustomerSegment.Title), "جامعه مشتریان");
-            Sum(nameof(CustomerSegment.ActualSize), "تعداد اعضا");
-        }
-    }
+        // =====================================================
+        // ROI Reports
+        // =====================================================
 
-    // =====================================================
-    // ROI Reports
-    // =====================================================
-
-    /// <summary>
-    /// گزارش ROI کلی
-    /// </summary>
-    public partial class OverallRoiConfig : ReportConfigDefinition
-    {
-        protected override List<string> Roles { get => [Neo.Domain.Constants.Roles.Admin, ClubRoles.FinanceManager]; }
-        
-        protected override void Identify()
+        /// <summary>
+        /// گزارش ROI به تفکیک ماه
+        /// </summary>
+        public class MonthlyRoiConfig() : ChartConfigDefinition(ChartType.Line)
         {
-            DefineConfig("ROI کلی", ReportViewType.Chart, Report.ChartType.MetricBox);
+            protected override List<string> Roles => [Neo.Domain.Constants.Roles.Admin, ClubRoles.FinanceManager];
+            protected override string Name => "ROI ماهانه";
+
+            protected override void DefineGroupBy()
+            {
+                GroupBy("FromDateMonth", "ماه");
+                Average("Metrics.ReturnOnInvestment", "میانگین ROI");
+            }
         }
 
-        protected override void DefineColumns()
+        /// <summary>
+        /// گزارش مقایسه ROI کمپین‌ها
+        /// </summary>
+        public class CampaignRoiComparisonConfig() : GroupByConfigDefinition
         {
-            Average(nameof(Promotion.ReturnOnInvestment), "میانگین ROI");
-        }
-    }
+            protected override List<string> Roles => [Neo.Domain.Constants.Roles.Admin, ClubRoles.FinanceManager, ClubRoles.MarketingManager];
+            protected override string Name => "مقایسه ROI کمپین‌ها";
 
-    /// <summary>
-    /// گزارش ROI به تفکیک ماه
-    /// </summary>
-    public partial class MonthlyRoiConfig : ReportConfigDefinition
-    {
-        protected override List<string> Roles { get => [Neo.Domain.Constants.Roles.Admin, ClubRoles.FinanceManager]; }
-        
-        protected override void Identify()
-        {
-            DefineConfig("ROI ماهانه", ReportViewType.Chart, Report.ChartType.Line);
-        }
-
-        protected override void DefineColumns()
-        {
-            GroupBy("FromDateMonth", "ماه");
-            Average(nameof(Promotion.ReturnOnInvestment), "میانگین ROI");
-        }
-    }
-
-    /// <summary>
-    /// گزارش مقایسه ROI کمپین‌ها
-    /// </summary>
-    public partial class CampaignRoiComparisonConfig : ReportConfigDefinition
-    {
-        protected override List<string> Roles { get => [Neo.Domain.Constants.Roles.Admin, ClubRoles.FinanceManager, ClubRoles.MarketingManager]; }
-        
-        protected override void Identify()
-        {
-            DefineConfig("مقایسه ROI کمپین‌ها", ReportViewType.GroupByList);
+            protected override void DefineGroupBy()
+            {
+                GroupBy(nameof(Promotion.Title), "کمپین");
+                Average("Metrics.ReturnOnInvestment", "ROI (%)");
+                Sum("Metrics.CampaignRevenue", "درآمد");
+                Sum("Metrics.CampaignCost", "هزینه");
+            }
         }
 
-        protected override void DefineColumns()
-        {
-            GroupBy(nameof(Promotion.Title), "کمپین");
-            Average(nameof(Promotion.ReturnOnInvestment), "ROI (%)");
-            Sum(nameof(Promotion.CampaignRevenue), "درآمد");
-            Sum(nameof(Promotion.CampaignCost), "هزینه");
-        }
-    }
+        // =====================================================
+        // Forecast Reports
+        // =====================================================
 
-    // =====================================================
-    // Forecast Reports
-    // =====================================================
-
-    /// <summary>
-    /// گزارش پیش‌بینی درآمد
-    /// </summary>
-    public partial class RevenueForecastConfig : ReportConfigDefinition
-    {
-        protected override List<string> Roles { get => [Neo.Domain.Constants.Roles.Admin, ClubRoles.FinanceManager, ClubRoles.Analyst]; }
-        
-        protected override void Identify()
+        /// <summary>
+        /// گزارش پیش‌بینی درآمد
+        /// </summary>
+        public class RevenueForecastConfig() : ChartConfigDefinition(ChartType.Line)
         {
-            DefineConfig("پیش‌بینی درآمد", ReportViewType.Chart, Report.ChartType.Line);
+            protected override List<string> Roles => [Neo.Domain.Constants.Roles.Admin, ClubRoles.FinanceManager, ClubRoles.Analyst];
+            protected override string Name => "پیش‌بینی درآمد";
+
+            protected override void DefineGroupBy()
+            {
+                GroupBy("FromDateMonth", "ماه");
+                Sum("Metrics.CampaignRevenue", "درآمد واقعی");
+            }
         }
 
-        protected override void DefineColumns()
+        /// <summary>
+        /// گزارش بودجه در مقابل واقعی
+        /// </summary>
+        public class BudgetVsActualConfig : GroupByConfigDefinition
         {
-            GroupBy("FromDateMonth", "ماه");
-            Sum(nameof(Promotion.CampaignRevenue), "درآمد واقعی");
-        }
-    }
+            protected override List<string> Roles => [Neo.Domain.Constants.Roles.Admin, ClubRoles.FinanceManager];
+            protected override string Name => "بودجه در مقابل واقعی";
 
-    /// <summary>
-    /// گزارش بودجه در مقابل واقعی
-    /// </summary>
-    public partial class BudgetVsActualConfig : ReportConfigDefinition
-    {
-        protected override List<string> Roles { get => [Neo.Domain.Constants.Roles.Admin, ClubRoles.FinanceManager]; }
-        
-        protected override void Identify()
-        {
-            DefineConfig("بودجه در مقابل واقعی", ReportViewType.GroupByList);
-        }
-
-        protected override void DefineColumns()
-        {
-            GroupBy(nameof(Promotion.Title), "کمپین");
-            Sum(nameof(Promotion.CampaignCost), "هزینه واقعی");
+            protected override void DefineGroupBy()
+            {
+                GroupBy(nameof(Promotion.Title), "کمپین");
+                Sum("Metrics.CampaignCost", "هزینه واقعی");
+            }
         }
     }
 }
+

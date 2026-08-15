@@ -1,6 +1,5 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using Club.Domain.Entities.Forum;
 
 namespace Club.Infrastructure.Data.Configurations;
 
@@ -33,11 +32,11 @@ internal class ForumPostConfiguration : IEntityTypeConfiguration<ForumPost>
             .OnDelete(DeleteBehavior.Cascade)
             .HasConstraintName("FK_ForumPost_ForumTopic");
 
-        entity.HasOne(d => d.Customer)
+        entity.HasOne(d => d.CustomerTenant)
             .WithMany()
-            .HasForeignKey(d => d.CustomerId)
+            .HasForeignKey(d => d.CustomerTenantId)
             .OnDelete(DeleteBehavior.NoAction)
-            .HasConstraintName("FK_ForumPost_Customer");
+            .HasConstraintName("FK_ForumPost_CustomerTenant");
 
         entity.HasOne(d => d.ParentPost)
             .WithMany(p => p.Replies)

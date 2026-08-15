@@ -1,16 +1,12 @@
-﻿using Neo.Bpms.Domain.Entities.Security.Authentication;
-using Neo.Bpms.Domain.Features.Security;
-using Neo.Bpms.Domain.Modeling.MetaDefinitions.ProjectDefinitions;
+using Neo.Bpms.Domain.Features.MetaDefinitions.ProjectDefinitions;
 using Neo.Bpms.UI.MVC.Controllers.Public;
 using Neo.Bpms.UI.MVC.Exceptions;
-using Neo.Bpms.UI.MVC.Helpers;
-//using Neo.Common.Security;
-//using Neo.Domain.Features.Idp;
 using Neo.Domain.Features.Sms;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Neo.Bpms.Domain.Models.Security.Authentication;
 
 namespace Club.AdminPanel.Web.Controllers.AccountController;
 
@@ -22,14 +18,22 @@ public partial class AccountController(
 {
     [HttpPost]
     [AllowAnonymous]
+    [IgnoreAntiforgeryToken]
     public JsonResult ChangeCulture(string culture)
     {
-        culture = CultureHelper.GetImplementedCulture(culture);
-        Response.Cookies.Append("_culture", culture, new CookieOptions()
+        try
         {
-            Expires = DateTime.Now.AddYears(1)
-        });
-        return null;
+            culture = CultureHelper.GetImplementedCulture(culture);
+            Response.Cookies.Append("_culture", culture, new CookieOptions()
+            {
+                Expires = DateTime.UtcNow.AddYears(1)
+            });
+            return Json(new { success = true, culture = culture });
+        }
+        catch (Exception ex)
+        {
+            return Json(new { success = false, message = ex.Message });
+        }
     }
 
     [HttpGet]
@@ -47,7 +51,7 @@ public partial class AccountController(
         {
             string receiver = $"{user.FirstName} {user.LastName}";
             string systemName = ProjectDefinition.Project.ProjectName;
-            DateTime date = DateTime.Now;
+            DateTime date = DateTime.UtcNow;
             string dateTime = date.ToString("g");
             string smsText = $"{receiver} عزیز\n\rورود به {systemName}\n\r در تاریخ \n\r{dateTime}";
             string emailText =
@@ -66,7 +70,7 @@ public partial class AccountController(
         {
             string receiver = $"{user.FirstName} {user.LastName}";
             string systemName = ProjectDefinition.Project.ProjectName;
-            DateTime date = DateTime.Now;
+            DateTime date = DateTime.UtcNow;
             string dateTime = date.ToString("g");
             string smsText = $"{receiver} عزیز\n\rورود ناموفق به {systemName}\n\r در تاریخ \n\r{dateTime}";
             string emailText =
@@ -101,7 +105,7 @@ public partial class AccountController(
             {
                 Dictionary<string, string> parameters = new()
                 {
-                    { "userId", user?.Id },
+                    { "userId", user?.Id! },
                 };
                 await ExternalLoginIntegrator.Signout(parameters);
             }

@@ -19,7 +19,9 @@ public class RegisterClubRecurringJobs(
         var jobTypes = new[]
         {
             "IProcessScheduledLotteriesJob",
-            "IProcessScheduledPromotionsJob"
+            "IProcessScheduledPromotionsJob",
+            "IScheduleLotteriesJob",
+            "IExpireCustomerPlansJob"
         };
 
         foreach (var jobTypeName in jobTypes)

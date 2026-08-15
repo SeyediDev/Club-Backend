@@ -1,92 +1,89 @@
-﻿using Neo.Domain.Features.Telementry;
-using Neo.Endpoint.Infrastructure;
-using Neo.Infrastructure.Features.Client;
-using Neo.Infrastructure.Features.Telementry;
-using Club.Application;
-using Club.Channel.Application;
-using Club.Infrastructure;
-using Club.Channel.Api;
-using Club.Channel.Api.Middlewares;
+﻿using Club.Channel.Api;
 using Microsoft.AspNetCore.HttpOverrides;
+using Neo.Domain.Features.Telementry;
+using Neo.Endpoint.Infrastructure;
+using Neo.Infrastructure.Features.Telementry;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// تنظیمات پایه
 builder.Services.Configure<TelemetryOptions>(builder.Configuration.GetSection(nameof(TelemetryOptions)));
-builder.Services.AddClubApplicationServices(builder.Configuration);
-builder.Services.AddChannelApplicationServices(builder.Configuration);
+builder.Host.AddNeoSerilog();
+builder.Services.AddNeoOpenTelementry(builder.Configuration);
+builder.Services.AddClubChannelApiServices(builder.Configuration, builder.Environment);
 
-builder.Services.AddClubInfrastructureServices(builder.Configuration, builder.Environment);
-builder.Host.AddCandoSerilog();
-builder.Services.AddCandoOpenTelementry(builder.Configuration);
-builder.Services.AddCandoAuthentication(builder.Configuration);
-builder.Services.AddCandoAuthorization(builder.Configuration);
-
-builder.Services.AddWebServices();
+// سوگر ساده
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(); 
 
 var app = builder.Build();
 
+// Forwarded Headers
 app.UseForwardedHeaders(new ForwardedHeadersOptions
 {
-    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+	ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
 });
 
-// Configure the HTTP request pipeline.
+// خطایابی
 if (app.Environment.IsDevelopment())
 {
+	app.UseDeveloperExceptionPage();
+	app.UseSwagger();
+	app.UseSwaggerUI(c =>
+	{
+		c.SwaggerEndpoint("/swagger/v1/swagger.json", "Club Channel API v1");
+		c.RoutePrefix = "api"; // دسترسی از /api
+		c.DisplayRequestDuration();
+		
+		// اضافه کردن لینک مانیتورینگ
+		c.HeadContent = @"
+			<script>
+				window.addEventListener('load', function() {
+					var monitoringLink = document.createElement('a');
+					monitoringLink.href = '/monitoring';
+					monitoringLink.target = '_blank';
+					monitoringLink.className = 'btn';
+					monitoringLink.style.cssText = 'position: fixed; top: 10px; right: 10px; z-index: 9999; background: #4CAF50; color: white; padding: 10px 20px; text-decoration: none; border-radius: 4px; font-weight: bold;';
+					monitoringLink.textContent = '📊 مانیتورینگ';
+					document.body.appendChild(monitoringLink);
+				});
+			</script>
+		";
+	});
 }
 else
 {
-    // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
-    _ = app.UseHsts();
+	app.UseExceptionHandler("/error");
+	app.UseHsts();
 }
 
+// میدلورهای استاندارد
 app.UseHealthChecks("/health");
 app.UseHttpsRedirection();
 app.UseCors("AllowFrontend");
+
+// غیرفعال کردن BrowserLink برای مسیر Monitoring
+app.Use(async (context, next) =>
+{
+    if (context.Request.Path.StartsWithSegments("/Monitoring"))
+    {
+        // غیرفعال کردن BrowserLink برای Monitoring
+        context.Response.Headers.Remove("X-BrowserLink");
+    }
+    await next();
+});
+
 app.UseStaticFiles();
 app.UseAuthentication();
 app.UseAuthorization();
 app.UseRecuringJobs();
 
-app.UseSwaggerUi(settings =>
-{
-    //settings.SwaggerRoutes.Add(new SwaggerUiRoute("admin", "/api/specification.json"));
-    settings.Path = "/api";
-    settings.DocumentPath = "/api/specification.json";
-
-});
-
-app.MapControllerRoute(
-    name: "default",
-    pattern: "{controller}/{action=Index}/{id?}");
-
-app.UseMiddleware<CorrelationIdMiddleware>();
-app.UseMiddleware<UserAgentLoggingMiddleware>();
-
-app.MapFallbackToFile("index.html");
-
-app.UseExceptionHandler(options => { });
-
-app.Map("/", () => Results.Redirect("/api"));
-
 app.MapControllers();
 
 app.Run();
 
-public partial class Program
+// Partial class برای دسترسی از Integration Tests
+namespace Club.Channel.Api
 {
-    public static IHostBuilder CreateHostBuilder(string[] args) =>
-        Host.CreateDefaultBuilder(args)
-            .ConfigureWebHostDefaults(webBuilder =>
-            {
-                webBuilder.ConfigureServices((context, services) =>
-                {
-                    // Configure services for NSwag
-                    services.Configure<TelemetryOptions>(context.Configuration.GetSection(nameof(TelemetryOptions)));
-                    services.AddClubApplicationServices(context.Configuration);
-                    services.AddClubInfrastructureServices(context.Configuration, context.HostingEnvironment);
-                    services.AddWebServices();
-                });
-            });
+    public partial class Program { }
 }
-

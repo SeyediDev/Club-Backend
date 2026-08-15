@@ -11,7 +11,7 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddMassTransitServices(IServiceCollection services, IConfiguration configuration)
     {
-        services.AddScoped<ICandoPublisher, MassTransitCandoPublisher>();
+        services.AddScoped<INeoPublisher, MassTransitNeoPublisher>();
         //TODO Quartz? 
         services.AddQuartz();
         services.AddQuartzHostedService();

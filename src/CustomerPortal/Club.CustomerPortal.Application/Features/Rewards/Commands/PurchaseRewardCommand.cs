@@ -1,4 +1,6 @@
-﻿namespace Club.CustomerPortal.Application.Features.Rewards.Commands;
+using Club.CustomerPortal.Application.Interfaces;
+
+namespace Club.CustomerPortal.Application.Features.Rewards.Commands;
 
 public record PurchaseRewardCommand : IRequest<PurchaseRewardCommandResponse>
 {
@@ -20,27 +22,17 @@ public class PurchaseRewardCommandValidator : AbstractValidator<PurchaseRewardCo
     }
 }
 
-public class PurchaseRewardCommandHandler : IRequestHandler<PurchaseRewardCommand, PurchaseRewardCommandResponse>
+public class PurchaseRewardCommandHandler(
+    IRewardService rewardService,
+    ICustomerRequesterUser requesterUser,
+    ILogger<PurchaseRewardCommandHandler> logger)
+    : IRequestHandler<PurchaseRewardCommand, PurchaseRewardCommandResponse>
 {
-    private readonly IRewardService _rewardService;
-    private readonly IRequesterUser _requesterUser;
-    private readonly ILogger<PurchaseRewardCommandHandler> _logger;
-
-    public PurchaseRewardCommandHandler(
-        IRewardService rewardService,
-        IRequesterUser requesterUser,
-        ILogger<PurchaseRewardCommandHandler> logger)
-    {
-        _rewardService = rewardService;
-        _requesterUser = requesterUser;
-        _logger = logger;
-    }
-
     public async Task<PurchaseRewardCommandResponse> Handle(PurchaseRewardCommand request, CancellationToken cancellationToken)
     {
-        var customerId = _requesterUser.Id ?? throw new UnauthorizedAccessException("User ID not found");
+        var customerId = requesterUser.CustomerId;
         
-        var result = await _rewardService.PurchaseRewardAsync(
+        var result = await rewardService.PurchaseRewardAsync(
             customerId,
             int.Parse(request.RewardId),
             request.Quantity,
@@ -51,7 +43,7 @@ public class PurchaseRewardCommandHandler : IRequestHandler<PurchaseRewardComman
             throw new InvalidOperationException(result.Message);
         }
         
-        _logger.LogInformation("Reward purchased successfully by customer {CustomerId}: Reward {RewardId} x {Quantity}",
+        logger.LogInformation("Reward purchased successfully by customer {CustomerId}: Reward {RewardId} x {Quantity}",
             customerId, request.RewardId, request.Quantity);
         
         return new PurchaseRewardCommandResponse

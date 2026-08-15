@@ -1,10 +1,10 @@
-using Club.Domain.Entities.Analytics;
+namespace Club.AdminPanel.Domain.UiDefinitions.Analytics;
 
-public class MarketAnalysisDefinitions : CRUDDefinition<MarketAnalysis>
+public class MarketAnalysisUiDefinitions : CRUDDefinition<MarketAnalysis>
 {
-    protected override void IndexFormViewModel(FormDefinition form)
+    protected override void IndexFormViewModel()
     {
-        form.AddColumns(nameof(MarketAnalysis.Title),
+        AddColumns(nameof(MarketAnalysis.Title),
                         nameof(MarketAnalysis.Tenant),
                         nameof(MarketAnalysis.AnalysisDate),
                         nameof(MarketAnalysis.Period),
@@ -17,9 +17,9 @@ public class MarketAnalysisDefinitions : CRUDDefinition<MarketAnalysis>
                         );
     }
 
-    protected override void CUDFormsViewModel(CUDForm form)
+    protected override void CUDFormsViewModel()
     {
-        form.AddFields(nameof(MarketAnalysis.Tenant),
+        AddFields(nameof(MarketAnalysis.Tenant),
                        nameof(MarketAnalysis.Title),
                        nameof(MarketAnalysis.AnalysisDate),
                        nameof(MarketAnalysis.Period),

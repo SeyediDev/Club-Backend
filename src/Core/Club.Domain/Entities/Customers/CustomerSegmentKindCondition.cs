@@ -1,24 +1,34 @@
-using Club.Domain.Entities.Customers.Enums;
-
 namespace Club.Domain.Entities.Customers;
 
 /// <summary>
-/// شرط نوع جامعه مشتریان - تعریف شرط‌های خاص برای انواع مختلف جامعه‌های مشتریان
+/// شرط نوع جامعه/بازار مشتریان - تعریف شرط‌های خاص برای انواع مختلف جامعه‌ها/بازارهای مشتریان
 /// این موجودیت امکان تعریف شرط‌های دقیق بر اساس پارامترهای مشتری را فراهم می‌کند
 /// </summary>
-[DisplayName("شرط‌های جامعه‌سازی")]
+[DisplayName("شرط‌های جامعه‌سازی/بازار")]
 public class CustomerSegmentKindCondition : ClubBaseCoreAuditableEntity<int>
 {
     public int CustomerSegmentId { get; set; }
 
-    [DisplayName("جامعه مشتریان")]
-    [SBVR(SBVRModality.Obligatory, "جامعه مشتریان", "هر شرط باید به یک جامعه مشخص تعلق داشته باشد")]
+    [DisplayName("جامعه/بازار مشتریان")]
+    [SBVR(SBVRModality.Obligatory, "جامعه/بازار مشتریان", "هر شرط باید به یک جامعه/بازار مشخص تعلق داشته باشد")]
     public CustomerSegment CustomerSegment { get; set; } = null!;
 
-    [DisplayName("نوع جامعه")]
-    [SBVR(SBVRModality.Obligatory, "نوع جامعه", "نوع جامعه تعیین می‌کند که جامعه چگونه تعریف شده است")]
-    [SBVR(SBVRModality.Recommended, "نوع جامعه", "انتخاب نوع صحیح باعث مدیریت بهتر جامعه می‌شود")]
+    [DisplayName("نوع جامعه/بازار")]
+    [SBVR(SBVRModality.Obligatory, "نوع جامعه/بازار", "نوع جامعه/بازار تعیین می‌کند که جامعه/بازار چگونه تعریف شده است")]
+    [SBVR(SBVRModality.Recommended, "نوع جامعه/بازار", "انتخاب نوع صحیح باعث مدیریت بهتر جامعه/بازار می‌شود")]
     public CustomerSegmentKind Kind { get; set; }
+
+    [DisplayName("پارامتر مشتری هدف")]
+    [SBVR(SBVRModality.Permitted, "شرط پارامتری", "در صورت بررسی یک پارامتر مشخص، شناسه آن باید ذخیره شود")]
+    public int? CustomerParameterId { get; set; }
+
+    [DisplayName("پارامتر مشتری")]
+    public CustomerParameter? CustomerParameter { get; set; }
+
+    [DisplayName("کلید پارامتر مشتری")]
+    [MaxLength(40)]
+    [SBVR(SBVRModality.Permitted, "شرط پارامتری", "برای پارامترهای رزرو شده یا محاسبه‌شده می‌توان از کلید استفاده کرد")]
+    public string? CustomerParameterKey { get; set; }
 
     [DisplayName("عنوان شرط")]
     [MaxLength(100)]
@@ -71,196 +81,4 @@ public class CustomerSegmentKindCondition : ClubBaseCoreAuditableEntity<int>
     [MaxLength(200)]
     [SBVR(SBVRModality.Permitted, "پیام خطا", "پیام خطا در صورت عدم برقراری شرط نمایش داده می‌شود")]
     public string? ErrorMessage { get; set; }
-}
-
-/// <summary>
-/// نوع شرط جامعه مشتریان - تعیین نحوه ارزیابی شرط
-/// </summary>
-public enum CustomerSegmentConditionKind
-{
-    /// <summary>
-    /// بدون شرط اضافی
-    /// </summary>
-
-    WithoutExtraCondition = 0,
-
-    /// <summary>
-    /// فرمول شرط
-    /// </summary>
-
-    Formula = 1,
-
-    /// <summary>
-    /// برابر
-    /// </summary>
-
-    EqualTo = 2,
-
-    /// <summary>
-    /// نابرابر
-    /// </summary>
-
-    NotEqualTo = 3,
-
-    /// <summary>
-    /// بزرگتر
-    /// </summary>
-
-    GreaterThan = 4,
-
-    /// <summary>
-    /// کوچکتر
-    /// </summary>
-
-    LessThan = 5,
-
-    /// <summary>
-    /// بزرگتر مساوی
-    /// </summary>
-
-    GreaterThanOrEqualTo = 6,
-
-    /// <summary>
-    /// کوچکتر مساوی
-    /// </summary>
-
-    LessThanOrEqualTo = 7,
-
-    /// <summary>
-    /// شامل
-    /// </summary>
-
-    Contains = 8,
-
-    /// <summary>
-    /// شروع با
-    /// </summary>
-
-    StartsWith = 9,
-
-    /// <summary>
-    /// پایان با
-    /// </summary>
-
-    EndsWith = 10,
-
-    /// <summary>
-    /// در بازه
-    /// </summary>
-
-    InRange = 11,
-
-    /// <summary>
-    /// خارج از بازه
-    /// </summary>
-
-    OutOfRange = 12,
-
-    /// <summary>
-    /// در لیست
-    /// </summary>
-
-    InList = 13,
-
-    /// <summary>
-    /// خارج از لیست
-    /// </summary>
-
-    NotInList = 14,
-
-    /// <summary>
-    /// خالی
-    /// </summary>
-
-    IsNull = 15,
-
-    /// <summary>
-    /// غیرخالی
-    /// </summary>
-
-    IsNotNull = 16
-}
-
-/// <summary>
-/// مقایسه شود با - تعیین نوع مقایسه
-/// </summary>
-public enum CustomerSegmentCompareWith
-{
-    /// <summary>
-    /// مقدار ثابت
-    /// </summary>
-
-    ConstantValue = 1,
-
-    /// <summary>
-    /// پارامتر مشتری
-    /// </summary>
-
-    CustomerParameter = 2,
-
-    /// <summary>
-    /// امتیاز مشتری
-    /// </summary>
-
-    CustomerPoint = 3,
-
-    /// <summary>
-    /// سطح امتیاز مشتری
-    /// </summary>
-
-    CustomerPointLevel = 4,
-
-    /// <summary>
-    /// تاریخ عضویت مشتری
-    /// </summary>
-
-    CustomerJoinDate = 5,
-
-    /// <summary>
-    /// آخرین فعالیت مشتری
-    /// </summary>
-
-    CustomerLastActivity = 6,
-
-    /// <summary>
-    /// تعداد خرید مشتری
-    /// </summary>
-
-    CustomerPurchaseCount = 7,
-
-    /// <summary>
-    /// مبلغ کل خرید مشتری
-    /// </summary>
-
-    CustomerTotalPurchase = 8,
-
-    /// <summary>
-    /// میانگین خرید مشتری
-    /// </summary>
-
-    CustomerAveragePurchase = 9,
-
-    /// <summary>
-    /// سن مشتری
-    /// </summary>
-
-    CustomerAge = 10,
-
-    /// <summary>
-    /// جنسیت مشتری
-    /// </summary>
-
-    CustomerGender = 11,
-
-    /// <summary>
-    /// شهر مشتری
-    /// </summary>
-
-    CustomerCity = 12,
-
-    /// <summary>
-    /// فرمول محاسباتی
-    /// </summary>
-
-    Formula = 13
 }

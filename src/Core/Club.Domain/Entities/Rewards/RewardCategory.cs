@@ -1,17 +1,22 @@
 namespace Club.Domain.Entities.Rewards;
 
 /// <summary>
-/// طبقه‌بندی محصولات را اینجا لیست می کنیم
+/// طبقه‌بندی پاداش را اینجا لیست می کنیم
 /// </summary>
 [DisplayName("طبقه‌بندی پاداش")]
-[OldDbMap("ProductCategories")]
-public class RewardCategory : ClubBaseCoreAuditableEntity<int>
+public class RewardCategory : ClubBaseCoreAuditableEntity<int>, ISubOfTenant
 {
+    public int TenantId { get; set; }
+    [DisplayName("اکوسیستم")]
+    [SBVR(SBVRModality.Obligatory, "چندین اکوسیستم", "هر طبقه‌بندی پاداش باید به یک اکوسیستم مشخص تعلق داشته باشد تا از تداخل داده‌ها جلوگیری شود")]
+    public Tenant Tenant { get; set; } = null!;
+
     [DisplayName("عنوان")] [InDisplayString]
     [MaxLength(41)]
     public string Title { get; set; } = null!;
 
-    public int? CategoryId { get; set; }
+    [OldDbMap("CategoryId")]
+    public int? ParentRewardCategoryId { get; set; }
     [DisplayName("طبقه‌بندی مافوق")]
-    public RewardCategory? Category { get; set; } = null!;
+    public RewardCategory? ParentRewardCategory { get; set; } = null!;
 }

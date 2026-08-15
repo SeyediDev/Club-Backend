@@ -9,20 +9,20 @@ namespace Club.Domain.Entities.Analytics;
 public class MarketAnalysis : ClubBaseCoreConfigAuditableEntity<int>
 {
     /// <summary>
-    /// شناسه سازمان بهره‌بردار - سازمانی که تحلیل در آن انجام شده است
+    /// شناسه اکوسیستم - اکوسیستمی که تحلیل در آن انجام شده است
     /// </summary>
     public int TenantId { get; set; }
 
     public Tenant Tenant { get; set; } = null!;
 
     /// <summary>
-    /// شناسه محصول - محصول یا خدمت سازمان که این تحلیل برای آن انجام شده است (اختیاری)
+    /// شناسه محصول - محصول یا خدمت که این تحلیل برای آن انجام شده است (اختیاری)
     /// </summary>
-    public int? TenantProductOrServiceId { get; set; }
+    public int? ProductId { get; set; }
 
     [DisplayName("محصول")]
     [SBVR(SBVRModality.Permitted, "تحلیل محصول-بازار", "محصول برای تحلیل‌های اختصاصی یک محصول در بازار استفاده می‌شود")]
-    public Product? TenantProductOrService { get; set; }
+    public Product? Product { get; set; }
 
     /// <summary>
     /// عنوان تحلیل - عنوان مشخص کننده تحلیل بازار

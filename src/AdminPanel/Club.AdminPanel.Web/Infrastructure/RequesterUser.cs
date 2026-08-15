@@ -1,16 +1,14 @@
-﻿using Neo.Domain.Entities.Common;
-using Neo.Domain.Features.Client;
-using Neo.Domain.Repository;
-using Microsoft.Extensions.Primitives;
 using System.Security.Claims;
+using Microsoft.Extensions.Primitives;
+using Neo.Domain.Entities.Common;
 
 namespace Club.AdminPanel.Web.Infrastructure;
 
 public class RequesterUser(IHttpContextAccessor httpContextAccessor,
-    IQueryRepository<Language, int> languageRepository) : IRequesterUser
+    IQueryRepository<Language, LanguageId> languageRepository) : IRequesterUser
 {
-    private int? _id = null;
-    public int? Id
+    private UserId? _id = null;
+    public UserId? Id
     {
         get
         {
@@ -19,7 +17,7 @@ public class RequesterUser(IHttpContextAccessor httpContextAccessor,
                 var userPrincipal = httpContextAccessor.HttpContext?.User?.Identities?.FirstOrDefault();
                 var value = userPrincipal?.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier)?.Value?.ToString();
                 _ = int.TryParse(value, out var id);
-                _id = id;
+                _id = (UserId)id;
             }
             return _id;
         }
@@ -28,21 +26,21 @@ public class RequesterUser(IHttpContextAccessor httpContextAccessor,
             _id = value;
         }
     }
-    private string _mobile = null;
+    private string _mobile = null!;
     public string Mobile
     {
         get
         {
             _mobile ??= httpContextAccessor.HttpContext?.User?.FindFirstValue("username")
-                ?? httpContextAccessor.HttpContext?.User?.Identity?.Name;
-            return _mobile;
+                ?? httpContextAccessor.HttpContext?.User?.Identity?.Name!;
+            return _mobile!;
         }
         set
         {
             _mobile = value;
         }
     }
-    private string _appName = null;
+    private string _appName = null!;
     public string AppName
     {
         get
@@ -54,7 +52,7 @@ public class RequesterUser(IHttpContextAccessor httpContextAccessor,
         }
     }
 
-    private string _lang = null;
+    private string _lang = null!;
     public string Lang
     {
         get
@@ -65,36 +63,37 @@ public class RequesterUser(IHttpContextAccessor httpContextAccessor,
             return _lang;
         }
     }
-    private int? _langId = null;
-    public async Task<int> GetLangIdAsync(CancellationToken cancellationToken = default)
+    private LanguageId? _langId = null;
+    public async Task<LanguageId> GetLangIdAsync(CancellationToken cancellationToken = default)
     {
         if (_langId == null)
         {
             var lang = await languageRepository.FirstOrDefaultAsync(l => l.Name == Lang, cancellationToken);
             _langId = lang?.Id;
         }
-        return _langId ?? 0;
+        return _langId ?? new(0);
     }
 
-    private string _correlationId = null;
+    private string _correlationId = null!;
     public string CorrelationId
     {
         get
         {
             _correlationId ??= httpContextAccessor.HttpContext?.Request.Headers.TryGetValue("X-Correlation-ID", out StringValues correlationId) is true
-                ? correlationId.ToString()
-                : null;
+                ? correlationId.ToString()!
+                : null!;
             return _correlationId;
         }
     }
 
-    private string? _tenantId = null;
-    public string? TenantId
+    private string _tenantId = null!;
+    public string TenantId
     {
         get
         {
-            _tenantId ??= httpContextAccessor.HttpContext?.User?.FindFirstValue("tenant_id");
-            return _tenantId;
+            if (_tenantId == null)
+                _tenantId = httpContextAccessor.HttpContext?.User?.FindFirstValue("tenant_id")!;
+            return _tenantId!;
         }
         set
         {
@@ -102,12 +101,12 @@ public class RequesterUser(IHttpContextAccessor httpContextAccessor,
         }
     }
 
-    private string? _userAgent = null;
+    private string _userAgent = null!;
     public string Platform
     {
         get
         {
-            _userAgent = httpContextAccessor.HttpContext?.Request.Headers?.UserAgent.ToString();
+            _userAgent = httpContextAccessor.HttpContext?.Request.Headers?.UserAgent.ToString()!;
             string platform = "UNKNOWN";
             if (_userAgent is not null)
             {
@@ -128,7 +127,7 @@ public class RequesterUser(IHttpContextAccessor httpContextAccessor,
 
     public List<Claim> Claims()
     {
-        return httpContextAccessor.HttpContext?.User?.Claims?.ToList();
+        return httpContextAccessor.HttpContext?.User?.Claims?.ToList()!;
     }
     public Dictionary<string, object> Properties { get; set; } = [];
 
