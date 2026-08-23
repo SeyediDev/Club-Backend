@@ -1,4 +1,3 @@
-using Club.CustomerPortal.Application.Common;
 using Club.CustomerPortal.Application.Interfaces;
 
 namespace Club.CustomerPortal.Application.Features.Products.Commands;

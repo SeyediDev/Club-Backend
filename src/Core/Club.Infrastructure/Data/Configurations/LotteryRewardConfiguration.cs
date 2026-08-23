@@ -1,4 +1,4 @@
-using Club.Domain.Entities.Promotions.Lotteries;
+using Club.Domain.Entities.Lotteries;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

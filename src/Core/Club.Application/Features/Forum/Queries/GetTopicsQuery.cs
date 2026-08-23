@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace Club.Application.Features.Forum.Queries;
 
 /// <summary>

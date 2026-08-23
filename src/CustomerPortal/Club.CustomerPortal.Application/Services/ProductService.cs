@@ -1,6 +1,5 @@
 using Club.CustomerPortal.Application.Interfaces;
 using Club.Domain.Entities.Products;
-using Club.Domain.Entities.Tenants;
 using Microsoft.EntityFrameworkCore;
 
 namespace Club.CustomerPortal.Application.Services;
@@ -165,5 +164,60 @@ public class ProductService(
         }
 
         return result;
+    }
+
+    public async Task<RegisterProductPurchaseResponse> RegisterProductPurchaseAsync(
+        RegisterProductPurchaseRequest request,
+        CancellationToken cancellationToken = default)
+    {
+        var customerId = requesterUser.CustomerId;
+        if (customerId <= 0)
+        {
+            return new RegisterProductPurchaseResponse
+            {
+                Success = false,
+                Message = "مشتری شناسایی نشده است"
+            };
+        }
+
+        if (requesterUser.TenantId <= 0)
+        {
+            return new RegisterProductPurchaseResponse
+            {
+                Success = false,
+                Message = "اکوسیستم شناسایی نشده است"
+            };
+        }
+
+        var product = await productRepo.FirstOrDefaultAsync(
+            p => p.Id == request.ProductId && 
+            p.TenantId == requesterUser.TenantId && 
+            p.IsActive && 
+            !p.IsDeleted, 
+            cancellationToken);
+
+        if (product == null)
+        {
+            return new RegisterProductPurchaseResponse
+            {
+                Success = false,
+                Message = "محصول یافت نشد"
+            };
+        }
+
+        // TODO: Implement actual product purchase registration logic
+        // This would typically involve:
+        // - Validating serial number if required
+        // - Checking inventory
+        // - Recording the purchase
+        // - Awarding points based on promotion rules
+        // - Creating order records
+
+        return new RegisterProductPurchaseResponse
+        {
+            Success = true,
+            Message = "خرید محصول با موفقیت ثبت شد",
+            PointsAwarded = 0 // TODO: Calculate actual points awarded
+        };
     }
 }

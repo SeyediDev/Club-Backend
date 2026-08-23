@@ -26,9 +26,9 @@ public partial class LotteryUiDefinitions : CRUDDefinition<Lottery>
         form.AddSubjectColumn<LotteryRelations>();
     }
     
-    protected override void CUDFormsViewModel(CUDForm form)
+    protected override void CUDFormsViewModel()
     {
-        form.AddFields(nameof(Lottery.Title),
+        AddFields(nameof(Lottery.Title),
                        nameof(Lottery.Tenant),
                        nameof(Lottery.CustomerSegment),
                        nameof(Lottery.LotteryType),

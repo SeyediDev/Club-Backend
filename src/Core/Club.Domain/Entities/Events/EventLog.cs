@@ -1,6 +1,3 @@
-using Club.Domain.Entities.Events.Enums;
-using Club.Domain.Entities.Rewards;
-
 namespace Club.Domain.Entities.Events;
 
 /// <summary>

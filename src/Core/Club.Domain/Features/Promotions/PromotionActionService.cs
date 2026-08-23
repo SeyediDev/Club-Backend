@@ -1,5 +1,6 @@
 using System.Text.Json;
 using System.Text.RegularExpressions;
+using Club.Domain.Entities.Lotteries;
 using Neo.Domain.Features.Integrations;
 using Neo.Domain.Features.Sms;
 

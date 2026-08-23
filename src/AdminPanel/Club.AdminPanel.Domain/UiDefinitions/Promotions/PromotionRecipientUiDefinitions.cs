@@ -16,9 +16,9 @@ public class PromotionRecipientDefinitions : SubCRUDDefinition<PromotionRecipien
                         );
     }
 
-    protected override void CUDFormsViewModel(CUDForm form)
+    protected override void CUDFormsViewModel()
     {
-        form.AddFields(nameof(PromotionRecipient.Promotion),
+        AddFields(nameof(PromotionRecipient.Promotion),
                        nameof(PromotionRecipient.CustomerTenant),
                        nameof(PromotionRecipient.Status),
                        nameof(PromotionRecipient.SentDate),
@@ -35,9 +35,9 @@ public class PromotionRecipientDefinitions : SubCRUDDefinition<PromotionRecipien
     }
 
     public override string SubjectId => "Sub";
-    public override void SubIndexViewModel(FormDefinition form)
+    public override void SubIndexViewModel()
     {
-        form.AddColumns(nameof(PromotionRecipient.CustomerTenant),
+        AddColumns(nameof(PromotionRecipient.CustomerTenant),
                         nameof(PromotionRecipient.Status),
                         nameof(PromotionRecipient.SentDate),
                         nameof(PromotionRecipient.DeliveredDate),
@@ -46,9 +46,9 @@ public class PromotionRecipientDefinitions : SubCRUDDefinition<PromotionRecipien
                         );
     }
 
-    public override void SubViewModel(FormDefinition form)
+    public override void SubViewModel()
     {
-        form.AddFields(nameof(PromotionRecipient.CustomerTenant),
+        AddFields(nameof(PromotionRecipient.CustomerTenant),
                        nameof(PromotionRecipient.Status),
                        nameof(PromotionRecipient.SentDate),
                        nameof(PromotionRecipient.DeliveredDate),

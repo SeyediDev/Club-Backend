@@ -216,11 +216,11 @@ public class PlanService(
     {
         var now = DateTime.UtcNow;
 
-        return await customerPlanCommandRepository.ExecuteUpdateAsync(
-            cp => cp.IsActive &&
+        return await customerPlanCommandRepository.Query()
+            .Where(cp => cp.IsActive &&
                   cp.Status == CustomerPlanStatus.Active &&
-                  cp.ExpiryDate < now,
-            setters => setters
+                  cp.ExpiryDate < now)
+            .ExecuteUpdateAsync(setters => setters
                 .SetProperty(cp => cp.Status, _ => CustomerPlanStatus.Expired)
                 .SetProperty(cp => cp.IsActive, _ => false),
             cancellationToken);

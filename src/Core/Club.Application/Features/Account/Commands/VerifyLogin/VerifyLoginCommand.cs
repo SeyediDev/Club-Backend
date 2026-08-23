@@ -1,5 +1,4 @@
 using Neo.Application.Exceptions;
-using Neo.Domain.Entities.Common;
 using Neo.Domain.Features.Client.Dto;
 using Neo.Domain.Features.Sms;
 

@@ -523,7 +523,7 @@ public class ChannelApiEndpointTests : IClassFixture<ClubChannelWebApplicationFa
 /// <summary>
 /// Factory برای ایجاد WebApplication در Integration Tests برای Channel API
 /// </summary>
-public class ClubChannelWebApplicationFactory : WebApplicationFactory<Program>
+public class ClubChannelWebApplicationFactory : WebApplicationFactory<Club.Channel.Api.Program>
 {
     protected override void ConfigureWebHost(IWebHostBuilder builder)
     {

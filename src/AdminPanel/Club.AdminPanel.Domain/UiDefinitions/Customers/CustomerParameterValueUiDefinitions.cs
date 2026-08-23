@@ -3,18 +3,16 @@
 public class CustomerParameterValueUiDefinitions : SubCRUDDefinition<CustomerParameterValue>
 {
     public override string SubjectId => "Sub";
-    public override void SubIndexViewModel(FormDefinition form)
+    public override void SubIndexViewModel()
     {
-        form.AddColumn(nameof(CustomerParameterValue.CustomerTenant));
-        form.AddColumn(nameof(CustomerParameterValue.Parameter));
-        form.AddColumn(nameof(CustomerParameterValue.Value));
+        AddColumns(nameof(CustomerParameterValue.CustomerTenant), nameof(CustomerParameterValue.Parameter), nameof(CustomerParameterValue.Value));
     }
 
-    public override void SubViewModel(FormDefinition form)
+    public override void SubViewModel()
     {
-        form.AddField(nameof(CustomerParameterValue.CustomerTenant));
-        form.AddField(nameof(CustomerParameterValue.Parameter));
-        form.AddField(nameof(CustomerParameterValue.Value));
-        form.AddField(nameof(CustomerParameterValue.EventLog));
+        AddField(nameof(CustomerParameterValue.CustomerTenant));
+        AddField(nameof(CustomerParameterValue.Parameter));
+        AddField(nameof(CustomerParameterValue.Value));
+        AddField(nameof(CustomerParameterValue.EventLog));
     }
 }

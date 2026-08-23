@@ -1,5 +1,4 @@
 using Neo.Domain.Features.Multilingual;
-using Club.Domain.Features;
 
 namespace Club.Channel.Application.Features.Client.Commands;
 

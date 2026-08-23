@@ -1,5 +1,3 @@
-using Club.Domain.Entities.Promotions.Surveys.Data;
-
 namespace Club.Domain.Entities.Promotions.Surveys;
 
 /// <summary>

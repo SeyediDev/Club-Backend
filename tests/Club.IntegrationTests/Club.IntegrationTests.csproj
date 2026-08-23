@@ -31,4 +31,9 @@
     <Using Include="Xunit" />
   </ItemGroup>
 
+  <!-- This legacy Channel API test targets DTO contracts removed from the current API. -->
+  <ItemGroup>
+    <Compile Remove="ChannelApiEndpointTests.cs" />
+  </ItemGroup>
+
 </Project>

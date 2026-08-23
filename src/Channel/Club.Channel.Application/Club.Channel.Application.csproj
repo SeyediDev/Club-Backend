@@ -16,8 +16,17 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\..\Neo\src\Neo.Application\Neo.Application.csproj" />
+
     <ProjectReference Include="..\..\Core\Club.Application\Club.Application.csproj" />
     <ProjectReference Include="..\..\Core\Club.Domain\Club.Domain.csproj" />
   </ItemGroup>
+
+	<ItemGroup>
+		<!-- Legacy channel-key commands depend on the retired contracts project. -->
+		<Compile Remove="Features\Channel\Commands\EnqueueBulkChannelEventsCommand.cs" />
+		<Compile Remove="Features\Channel\Commands\EnqueueChannelConsumeAssetCommand.cs" />
+		<Compile Remove="Features\Channel\Commands\EnqueueChannelEventCommand.cs" />
+		<Compile Remove="Features\Client\Commands\EventCommand.cs" />
+	</ItemGroup>
 
 </Project>

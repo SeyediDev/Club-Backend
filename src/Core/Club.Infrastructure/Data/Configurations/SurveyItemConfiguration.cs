@@ -1,4 +1,3 @@
-using Club.Domain.Entities.Promotions.Surveys;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

@@ -1,8 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-using Club.Domain.Entities.Promotions.Surveys;
-using Club.Domain.Entities.Promotions.Surveys.Data;
-using Club.Domain.Entities.Promotions.Surveys.Enums;
-
 namespace Club.Application.Features.Surveys.Queries;
 
 /// <summary>

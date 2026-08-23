@@ -5,8 +5,6 @@ global using Club.Domain.Entities.Customers;
 global using FluentValidation;
 global using MediatR;
 global using Microsoft.Extensions.Logging;
-global using Neo.Application.Models;
-global using Neo.Common.Extensions;
 global using Neo.Domain.Entities.Common;
 global using Neo.Domain.Features.Client;
 global using Neo.Domain.Repository;

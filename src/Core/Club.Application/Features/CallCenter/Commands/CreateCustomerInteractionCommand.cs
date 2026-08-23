@@ -1,6 +1,3 @@
-using Club.Domain.Entities.CallCenter.Enums;
-using Neo.Domain.Entities.Common;
-
 namespace Club.Application.Features.CallCenter.Commands;
 
 /// <summary>

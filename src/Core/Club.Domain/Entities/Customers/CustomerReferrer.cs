@@ -1,5 +1,3 @@
-﻿using Club.Domain.Entities.Promotions;
-
 namespace Club.Domain.Entities.Customers;
 
 /// <summary>

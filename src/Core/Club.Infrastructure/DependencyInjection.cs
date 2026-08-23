@@ -1,6 +1,5 @@
 using Ardalis.GuardClauses;
 using Club.Domain.Repository;
-using Club.Infrastructure.Configuration;
 using Club.Infrastructure.Data.Repository;
 using Club.Infrastructure.Data.Repository.Club;
 using Microsoft.AspNetCore.Builder;

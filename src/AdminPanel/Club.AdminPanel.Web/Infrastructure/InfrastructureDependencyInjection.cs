@@ -1,4 +1,5 @@
 namespace Club.AdminPanel.Web.Infrastructure;
+using Club.AdminPanel.Web.Infrastructure.Jobs;
 
 /// <summary>
 /// Infrastructure services for AdminPanel.Web

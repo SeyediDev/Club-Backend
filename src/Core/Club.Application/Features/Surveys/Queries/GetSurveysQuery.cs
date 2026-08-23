@@ -1,6 +1,4 @@
 using System.Linq.Expressions;
-using Club.Domain.Entities.Promotions.Surveys;
-using Club.Domain.Entities.Promotions.Surveys.Enums;
 
 namespace Club.Application.Features.Surveys.Queries;
 

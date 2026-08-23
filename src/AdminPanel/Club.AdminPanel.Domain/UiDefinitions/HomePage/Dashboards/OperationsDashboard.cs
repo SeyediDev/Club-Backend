@@ -1,7 +1,5 @@
 using Club.AdminPanel.Domain.UiDefinitions.CustomerTenants.CustomerTransactions.Base;
 using Club.AdminPanel.Domain.UiDefinitions.Events.Base;
-using Club.AdminPanel.Domain.UiDefinitions.Attributes.Base;
-using AttributeAggregationUiDefinitions = Club.AdminPanel.Domain.UiDefinitions.Attributes.TenantAttributeDailyAggregationUiDefinitions;
 using CustomerTransactionUiDefinitions = Club.AdminPanel.Domain.UiDefinitions.Customers.CustomerTransactionUiDefinitions;
 using EventLogUiDefinitions = Club.AdminPanel.Domain.UiDefinitions.Events.EventLogUiDefinitions;
 using TenantAttributeValueUiDefinitions = Club.AdminPanel.Domain.UiDefinitions.Tenants.TenantAttributeValueUiDefinitions;

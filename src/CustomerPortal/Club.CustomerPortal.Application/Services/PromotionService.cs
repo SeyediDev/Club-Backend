@@ -1,6 +1,5 @@
 using Club.CustomerPortal.Application.Interfaces;
 using Club.Domain.Entities.Promotions;
-using Club.Domain.Entities.Promotions.Data;
 using Club.Domain.Entities.Promotions.Enums;
 using Club.Domain.Enums;
 using Microsoft.EntityFrameworkCore;

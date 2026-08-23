@@ -2,8 +2,8 @@ using Club.AdminPanel.Domain.UiDefinitions.HomePage;
 using Club.Domain.Entities.Channels;
 using Club.Domain.Entities.CustomerSegments.Data;
 using Club.Domain.Entities.Events.Data;
+using Club.Domain.Entities.Lotteries;
 using Club.Domain.Entities.Metrics.Data;
-using Club.Domain.Entities.Promotions.Lotteries;
 using Club.Domain.Entities.Promotions.Plans.Data;
 using Club.Domain.Entities.Promotions.Surveys.Data;
 

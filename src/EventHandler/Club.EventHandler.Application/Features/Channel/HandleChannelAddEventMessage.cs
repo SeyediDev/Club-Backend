@@ -1,6 +1,4 @@
-using Club.Channel.Contracts.Messages;
 using Club.Domain.Enums;
-using Club.Domain.Features;
 using MediatR;
 using Microsoft.Extensions.Logging;
 

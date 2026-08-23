@@ -1,3 +1,6 @@
+using Club.Domain.Entities.Lotteries;
+using Club.Domain.Entities.Lotteries.Enums;
+
 namespace Club.Domain.Features.Promotions;
 
 /// <summary>

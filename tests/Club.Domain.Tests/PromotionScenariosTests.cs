@@ -1,8 +1,6 @@
 using Club.Domain.Entities.Customers;
-using Club.Domain.Entities.CustomerSegments.Data;
 using Club.Domain.Entities.Events.Data;
 using Club.Domain.Entities.Promotions;
-using Club.Domain.Entities.Promotions.Data;
 using Club.Domain.Entities.Promotions.Enums;
 using Club.Domain.Enums;
 using Club.Domain.Features.Promotions;

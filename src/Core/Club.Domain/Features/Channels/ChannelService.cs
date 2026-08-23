@@ -1,4 +1,3 @@
-using Club.Domain.Entities.Channels;
 using Microsoft.AspNetCore.Http;
 using Neo.Domain.Features.Client;
 

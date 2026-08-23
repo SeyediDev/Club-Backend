@@ -1,4 +1,4 @@
-﻿namespace Club.Domain.Entities.Customers;
+namespace Club.Domain.Entities.Customers;
 
 [DisplayName("جامعه/بازار مشتریان")]
 [SBVR(SBVRModality.Obligatory, "بخش‌بندی مشتریان", "هر جامعه/بازار مشتریان باید برای هدف‌گذاری کمپین‌ها، شخصی‌سازی خدمات و تحلیل رفتار قابل شناسایی باشد")]

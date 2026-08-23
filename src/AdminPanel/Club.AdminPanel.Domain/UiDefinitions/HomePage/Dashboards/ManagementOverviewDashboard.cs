@@ -1,12 +1,8 @@
 using CustomerTenantUiDefinitions = Club.AdminPanel.Domain.UiDefinitions.Customers.CustomerTenants.CustomerTenantUiDefinitions;
 using CustomerSegmentMembershipUiDefinitions = Club.AdminPanel.Domain.UiDefinitions.CustomerSegments.CustomerSegmentMembershipUiDefinitions;
-using EventLogUiDefinitions = Club.AdminPanel.Domain.UiDefinitions.Events.EventLogUiDefinitions;
-using TenantAttributeDailyAggregationUiDefinitions = Club.AdminPanel.Domain.UiDefinitions.Attributes.TenantAttributeDailyAggregationUiDefinitions;
-using Club.AdminPanel.Domain.UiDefinitions.Attributes.Base;
 using Club.Domain.Entities.CustomerSegments.Data;
 using Club.AdminPanel.Domain.UiDefinitions.CustomerTenants.Base;
 using Club.AdminPanel.Domain.UiDefinitions.CustomerTenants.CustomerTransactions.Base;
-using Club.AdminPanel.Domain.UiDefinitions.Events.Base;
 
 namespace Club.AdminPanel.Domain.UiDefinitions.HomePage;
 

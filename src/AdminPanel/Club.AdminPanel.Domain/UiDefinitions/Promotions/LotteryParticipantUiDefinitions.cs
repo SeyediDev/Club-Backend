@@ -1,4 +1,4 @@
-﻿using Club.Domain.Entities.Lotteries;
+using Club.Domain.Entities.Lotteries;
 
 namespace Club.AdminPanel.Domain.UiDefinitions.Promotions;
 
@@ -27,9 +27,9 @@ public partial class LotteryParticipantUiDefinitions : CRUDDefinition<LotteryPar
                         );
     }
     
-    protected override void CUDFormsViewModel(CUDForm form)
+    protected override void CUDFormsViewModel()
     {
-        form.AddFields(nameof(LotteryParticipant.Lottery),
+        AddFields(nameof(LotteryParticipant.Lottery),
                        nameof(LotteryParticipant.CustomerTenant),
                        nameof(LotteryParticipant.IsWinner),
                        nameof(LotteryParticipant.Award),

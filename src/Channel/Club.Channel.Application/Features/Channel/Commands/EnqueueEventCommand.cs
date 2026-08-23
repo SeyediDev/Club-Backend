@@ -6,6 +6,8 @@ using Club.Domain.Entities.Events;
 using Club.Domain.Entities.Products;
 using Club.Domain.Features.Attributes;
 using Club.Domain.Features.Channels;
+using EventChannelValidEvent = Club.Domain.Entities.Channels.EventChannelValidEvent;
+using EventChannelValidIp = Club.Domain.Entities.Channels.EventChannelValidIp;
 using Club.Domain.Features.Products;
 using Neo.Application.Features.Outbox;
 using Neo.Domain.Features.Telementry;

@@ -10,13 +10,13 @@ internal sealed class InMemorySmsService(
 {
     private readonly ConcurrentDictionary<string, (byte[] Seed, DateTimeOffset ExpireAt)> _otpStore = new();
 
-    public Task SendAsync(Neo.Domain.Features.Sms.Dto.SmsDto model)
+    public Task SendAsync(Neo.Domain.Features.Sms.Dto.SmsDto model, CancellationToken cancellationToken = default)
     {
         logger.LogInformation("SMS => {Mobile}: {Message}", model.mobile, model.message);
         return Task.CompletedTask;
     }
 
-    public Task SendOtpAsync(Neo.Domain.Features.Sms.Dto.OtpSmsDto model)
+    public Task SendOtpAsync(Neo.Domain.Features.Sms.Dto.OtpSmsDto model, CancellationToken cancellationToken = default)
     {
         logger.LogInformation("OTP SMS => {Mobile}: {Template}", model.mobile, model.message);
         return Task.CompletedTask;

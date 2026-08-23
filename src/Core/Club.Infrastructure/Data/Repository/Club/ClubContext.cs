@@ -9,17 +9,15 @@ using Microsoft.EntityFrameworkCore;
 using User = Club.Domain.Entities.Common.User;
 using Club.Domain.Entities.Events.Data;
 using Club.Domain.Entities.Metrics.Data;
-using Club.Domain.Entities.Promotions.Lotteries;
-using Club.Domain.Entities.Promotions.Surveys;
 using Club.Domain.Entities.Promotions.Surveys.Data;
 using Club.Domain.Entities.Promotions.Plans;
 using Club.Domain.Entities.Promotions.Plans.Data;
-using Club.Domain.Entities.Channels;
 using Club.Domain.Entities.Tenants.Data;
 using ChannelEventChannel = Club.Domain.Entities.Channels.EventChannel;
 using ChannelEventChannelValidEvent = Club.Domain.Entities.Channels.EventChannelValidEvent;
 using ChannelEventChannelValidIp = Club.Domain.Entities.Channels.EventChannelValidIp;
 using EventLogData = Club.Domain.Entities.Events.Data.EventLog;
+using Club.Domain.Entities.Lotteries;
 
 namespace Club.Infrastructure.Data.Repository.Club;
 

@@ -8,6 +8,7 @@ global using Club.Domain.Entities.Promotions.Surveys;
 global using Club.Domain.Entities.Promotions.Surveys.Data;
 global using Club.Domain.Entities.Promotions.Surveys.Enums;
 global using Club.Domain.Enums;
+global using Club.Domain.Features;
 global using Club.Domain.Features.Attributes;
 global using Club.Domain.Features.Channels;
 global using Club.Domain.Features.Customers;

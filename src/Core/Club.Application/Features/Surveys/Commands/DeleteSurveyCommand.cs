@@ -1,6 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-using Club.Domain.Entities.Promotions.Surveys;
-
 namespace Club.Application.Features.Surveys.Commands;
 
 /// <summary>

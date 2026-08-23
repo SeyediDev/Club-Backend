@@ -11,4 +11,9 @@
     <ProjectReference Include="..\..\Core\Club.Domain\Club.Domain.csproj" />
   </ItemGroup>
 
+	<ItemGroup>
+		<!-- This legacy handler targets the retired Channel.Contracts message. -->
+		<Compile Remove="Features\Channel\HandleChannelAddEventMessage.cs" />
+	</ItemGroup>
+
 </Project>

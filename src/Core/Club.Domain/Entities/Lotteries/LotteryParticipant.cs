@@ -1,5 +1,3 @@
-using Club.Domain.Entities.Rewards;
-
 namespace Club.Domain.Entities.Lotteries;
 
 /// <summary>
@@ -57,18 +55,18 @@ public class LotteryParticipant : ClubBaseCoreAuditableEntity<int>
     /// <summary>
     /// شناسه پاداش برنده شده - پاداشی که این شرکت‌کننده برنده شده است
     /// </summary>
-    public int? AwardId { get; set; }
+    public int? RewardId { get; set; }
 
     [DisplayName("پاداش برنده شده")]
     [SBVR(SBVRModality.Permitted, "پاداش برنده", "پاداش برنده برای ردیابی نوع پاداشی که به برنده اهدا شده است استفاده می‌شود")]
-    public Reward? Award { get; set; }
+    public Reward? Reward { get; set; }
 
     /// <summary>
     /// تعداد پاداش برنده شده - تعداد پاداش‌هایی که این شرکت‌کننده برنده شده است
     /// </summary>
     [DisplayName("تعداد پاداش برنده شده")]
     [SBVR(SBVRModality.Calculated, "مقدار پاداش", "تعداد پاداش برای تعیین تعداد پاداش‌هایی که به برنده اهدا می‌شود استفاده می‌شود")]
-    public int? AwardAmount { get; set; }
+    public int? RewardAmount { get; set; }
 
     /// <summary>
     /// تاریخ شرکت - تاریخ و زمانی که مشتری در قرعه‌کشی شرکت کرده است
@@ -90,22 +88,21 @@ public class LotteryParticipant : ClubBaseCoreAuditableEntity<int>
     /// </summary>
     [DisplayName("پاداش اهدا شده")]
     [SBVR(SBVRModality.Calculated, "ردیابی اهدای پاداش", "پاداش اهدا شده برای اطمینان از اهدای پاداش به برندگان استفاده می‌شود")]
-    public bool IsAwardDistributed { get; set; }
+    public bool IsRewardDistributed { get; set; }
 
     /// <summary>
     /// تاریخ توزیع پاداش - تاریخ و زمانی که پاداش به مشتری اهدا شده است
     /// </summary>
     [DisplayName("تاریخ توزیع پاداش")]
     [SBVR(SBVRModality.Permitted, "ردیابی اهدای پاداش", "تاریخ توزیع پاداش برای مستندسازی اهدای پاداش استفاده می‌شود")]
-    public DateTime? AwardDistributedAt { get; set; }
+    public DateTime? RewardDistributedAt { get; set; }
 
     /// <summary>
     /// شناسه دارایی اهدا شده - در صورت اهدای پاداش فیزیکی، دارایی اهدا شده
     /// </summary>
-    public int? AwardAssetId { get; set; }
+    public int? RewardAssetId { get; set; }
 
     [DisplayName("دارایی اهدا شده")]
     [SBVR(SBVRModality.Permitted, "ردیابی دارایی", "دارایی اهدا شده برای ردیابی دارایی‌های فیزیکی اهدا شده به برندگان استفاده می‌شود")]
-    public RewardAsset? AwardAsset { get; set; }
+    public RewardAsset? RewardAsset { get; set; }
 }
-

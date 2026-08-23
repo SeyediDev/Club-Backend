@@ -1,7 +1,7 @@
 using System.Security.Cryptography;
 using Club.CustomerPortal.Application.Interfaces;
-using Club.Domain.Entities.Promotions.Lotteries;
-using Club.Domain.Entities.Promotions.Lotteries.Enums;
+using Club.Domain.Entities.Lotteries;
+using Club.Domain.Entities.Lotteries.Enums;
 using Club.Domain.Repository;
 using Club.Infrastructure.Data.Repository.Club;
 using Microsoft.EntityFrameworkCore;
@@ -176,7 +176,7 @@ public class WheelService(
             .Include(l => l.Promotion)
             .Include(l => l.LotteryRewards.Where(r => r.IsActive))
                 .ThenInclude(r => r.Reward)
-            .Where(l => l.LotteryType == LotteryType.Wheel &&
+            .Where(l => (int)l.LotteryType == (int)LotteryType.Wheel &&
                         l.IsActive &&
                         (!l.FromDate.HasValue || l.FromDate <= now) &&
                         (!l.ToDate.HasValue || l.ToDate >= now))

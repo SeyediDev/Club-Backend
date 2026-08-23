@@ -1,4 +1,4 @@
-﻿namespace Club.Application.Features.Common.Commands;
+namespace Club.Application.Features.Common.Commands;
 
 public record PutNotificationCommand : IRequest<Unit>
 {
@@ -12,15 +12,15 @@ public class PutNotificationCommandHandler(IRequesterUser user,
     {
         if (request.Id.HasValue)
         {
-            await commandRepository.ExecuteUpdateAsync(x => x.UserId == user.Id!.Value
+            await commandRepository.Query().Where(x => x.UserId == user.Id!.Value
                                     && x.Id == request.Id!.Value
-                                    && !x.IsDeleted,
+                                    && !x.IsDeleted).ExecuteUpdateAsync(
                                     update => update.SetProperty(u => u.IsRead, true), cancellationToken);
         }
         else
         {
-            await commandRepository.ExecuteUpdateAsync(x => x.UserId == user.Id!.Value
-                                   && !x.IsDeleted,
+            await commandRepository.Query().Where(x => x.UserId == user.Id!.Value
+                                   && !x.IsDeleted).ExecuteUpdateAsync(
                                    update => update.SetProperty(u => u.IsRead, true), cancellationToken);
         }
 

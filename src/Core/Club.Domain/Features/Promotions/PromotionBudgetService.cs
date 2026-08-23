@@ -1,3 +1,5 @@
+using Club.Domain.Entities.Lotteries;
+
 namespace Club.Domain.Features.Promotions;
 
 public interface IPromotionBudgetService

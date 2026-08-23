@@ -1,4 +1,4 @@
-﻿using Club.Domain.Entities.Lotteries.Enums;
+using Club.Domain.Entities.Lotteries.Enums;
 
 namespace Club.Domain.Entities.Lotteries;
 
@@ -6,25 +6,15 @@ namespace Club.Domain.Entities.Lotteries;
 /// قرعه‌کشی - سیستم قرعه‌کشی برای اهدای پاداش‌ها به مشتریان
 /// قرعه‌کشی می‌تواند به صورت چرخونه (کاربر درخواست می‌دهد) یا زمان‌بندی شده (خودکار در زمان مشخص) باشد
 /// </summary>
-[DisplayName("قرعه‌کشی")]
+[DisplayName("قرعه‌کشی/چرخونه")]
 [SBVR(SBVRModality.Obligatory, "مدیریت قرعه‌کشی", "هر قرعه‌کشی باید برای تعیین پاداش‌ها، نرخ برنده شدن و مدیریت شرکت‌کنندگان قابل شناسایی باشد")]
 [SBVR(SBVRModality.Recommended, "مدیریت قرعه‌کشی", "قرعه‌کشی‌ها باید برای افزایش تعامل مشتریان، تشویق خرید و رقابت مثبت استفاده شوند")]
 [SBVR(SBVRModality.Permitted, "انواع قرعه‌کشی", "قرعه‌کشی‌ها می‌توانند چرخونه (فوری) یا زمان‌بندی شده (خودکار) باشند")]
-public class Lottery : ClubBaseCoreConfigAuditableEntity<int>
+public class Lottery : ClubBaseCoreConfigAuditableEntity<int>, ISubOfPromotion
 {
-    /// <summary>
-    /// شناسه اکوسیستم
-    /// </summary>
-    [DisplayName("اکوسیستم")]
-    [SBVR(SBVRModality.Obligatory, "چندین اکوسیستم", "هر قرعه‌کشی باید به یک اکوسیستم مشخص تعلق داشته باشد تا از تداخل داده‌ها جلوگیری شود")]
-    public int TenantId { get; set; }
-
-    /// <summary>
-    /// اکوسیستم
-    /// </summary>
-    [DisplayName("اکوسیستم")]
-    [SBVR(SBVRModality.Obligatory, "چندین اکوسیستم", "هر قرعه‌کشی باید به یک اکوسیستم مشخص تعلق داشته باشد")]
-    public Tenant Tenant { get; set; } = null!;
+    public int PromotionId { get; set; }
+    [DisplayName("پویش")]
+    public Promotion Promotion { get; set; } = null!;
 
     /// <summary>
     /// عنوان قرعه‌کشی
@@ -41,16 +31,6 @@ public class Lottery : ClubBaseCoreConfigAuditableEntity<int>
     /// </summary>
     [DisplayName("فعال")]
     public bool IsActive { get; set; } = true;
-
-    /// <summary>
-    /// برای سازگاری - در نسخه جدید از LotteryCustomerSegments استفاده می‌شود
-    /// </summary>
-    [DisplayName("جامعه مشتریان (قدیمی)")]
-    [SBVR(SBVRModality.Permitted, "جامعه مشتریان", "برای سازگاری - در نسخه جدید از LotteryCustomerSegments استفاده می‌شود")]
-    public int? CustomerSegmentId { get; set; }
-    
-    [DisplayName("جامعه مشتریان (قدیمی)")]
-    public CustomerSegment? CustomerSegment { get; set; } = null!;
 
     /// <summary>
     /// نوع قرعه‌کشی: چرخونه یا زمان‌بندی شده
@@ -250,11 +230,4 @@ public class Lottery : ClubBaseCoreConfigAuditableEntity<int>
 
     [DisplayName("شرکت‌کنندگان")]
     public ICollection<LotteryParticipant> Participants { get; set; } = [];
-    
-    /// <summary>
-    /// جوامع مشتریان قرعه‌کشی با شانس/وزن
-    /// </summary>
-    [DisplayName("جوامع مشتریان")]
-    [SBVR(SBVRModality.Permitted, "جوامع مشتریان", "لیست جوامع مشتریان با شانس شرکت در قرعه‌کشی")]
-    public ICollection<LotteryCustomerSegment> CustomerSegments { get; set; } = [];
 }

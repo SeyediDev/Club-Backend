@@ -1,5 +1,3 @@
-using Club.Domain.Entities.Channels;
-
 namespace Club.Domain.Entities.Events.Data;
 
 /// <summary>

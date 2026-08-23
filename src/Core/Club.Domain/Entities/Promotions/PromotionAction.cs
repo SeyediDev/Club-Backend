@@ -1,3 +1,4 @@
+using Club.Domain.Entities.Lotteries;
 using Neo.Bpms.Domain.Models.Attributes.RelationshipAttributes;
 using Neo.Domain.Entities.Integrations;
 

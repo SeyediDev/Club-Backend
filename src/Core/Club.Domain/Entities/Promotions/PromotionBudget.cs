@@ -1,3 +1,4 @@
+using Club.Domain.Entities.Lotteries;
 using Neo.Domain.Entities.Integrations;
 
 namespace Club.Domain.Entities.Promotions;

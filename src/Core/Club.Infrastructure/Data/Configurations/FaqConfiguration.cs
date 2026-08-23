@@ -1,5 +1,4 @@
-﻿using Club.Domain.Entities.Common;
-using Neo.Domain.Entities.Common;
+using Club.Domain.Entities.Common;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

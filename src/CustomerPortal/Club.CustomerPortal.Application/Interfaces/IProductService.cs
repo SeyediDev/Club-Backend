@@ -16,6 +16,13 @@ public interface IProductService
     /// دریافت جزئیات محصول
     /// </summary>
     Task<ProductDto?> GetProductByIdAsync(int productId, CancellationToken cancellationToken = default);
+
+    /// <summary>
+    /// ثبت خرید محصول
+    /// </summary>
+    Task<RegisterProductPurchaseResponse> RegisterProductPurchaseAsync(
+        RegisterProductPurchaseRequest request,
+        CancellationToken cancellationToken = default);
 }
 
 /// <summary>
@@ -68,4 +75,24 @@ public enum ProductTypeDto
     DigitalProduct = 3,
     CourseOrEvent = 4,
     ConsultingService = 5
+}
+
+/// <summary>
+/// درخواست ثبت خرید محصول
+/// </summary>
+public record RegisterProductPurchaseRequest
+{
+    public int ProductId { get; set; }
+    public string? SerialNumber { get; set; }
+    public int Quantity { get; set; } = 1;
+}
+
+/// <summary>
+/// پاسخ ثبت خرید محصول
+/// </summary>
+public record RegisterProductPurchaseResponse
+{
+    public bool Success { get; set; }
+    public string Message { get; set; } = null!;
+    public long? PointsAwarded { get; set; }
 }

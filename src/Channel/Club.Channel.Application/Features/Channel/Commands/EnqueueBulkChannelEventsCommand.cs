@@ -1,9 +1,5 @@
-using Club.Channel.Contracts.Messages;
 using Club.Domain.Entities.Events;
-using Microsoft.Extensions.Logging;
 using Neo.Application.Features.Outbox;
-using Neo.Application.Features.Outbox.Dto;
-using Neo.Domain.Entities.Common;
 using Neo.Domain.Repository;
 using ValidationException = FluentValidation.ValidationException;
 

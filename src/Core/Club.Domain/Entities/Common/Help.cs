@@ -1,5 +1,3 @@
-﻿using Neo.Domain.Entities.Common;
-
 namespace Club.Domain.Entities.Common;
 
 public class Help : ClubBaseCoreConfigAuditableEntity<int>

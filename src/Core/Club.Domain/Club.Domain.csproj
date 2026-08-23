@@ -7,7 +7,6 @@
   <ItemGroup>
     <Compile Remove="Features\AssetInternalService.cs" />
     <Compile Remove="Features\AssetService.cs" />
-    <Compile Remove="Features\AwardService.cs" />
     <Compile Remove="Features\CustomerSegmentService.cs" />
     <Compile Remove="Features\CustomerService.cs" />
     <Compile Remove="Features\EvaluateFormulaService.cs" />

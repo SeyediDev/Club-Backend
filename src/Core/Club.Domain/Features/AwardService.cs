@@ -1,5 +1,3 @@
-using Club.Domain.Entities.Rewards;
-
 namespace Club.Domain.Features;
 
 public interface IAwardService
@@ -68,7 +66,7 @@ public class AwardService(
             .Map(dest => dest.PointLevel, src => src.PointLevel != null ? src.PointLevel.Level : 0)
             .Map(dest => dest.PointPointId, src => src.PointLevel != null ? src.PointLevel.PointId : 0)
             .Map(dest => dest.PointLevelTitle, src => src.PointLevel != null ? src.PointLevel.Title : "")
-            .Map(dest => dest.CategoryTitle, src => src.Category != null ? src.Category.Title : "")
+            .Map(dest => dest.CategoryTitle, src => src.RewardCategory != null ? src.RewardCategory.Title : "")
             .Map(dest => dest.MerchantTitle, src => src.Merchant.Title)
             .Map(dest => dest.PictureId, src => src.PictureId)
             .Map(dest => dest.Costs, src => src.Costs != null ? src.Costs.Select(c => c.Adapt<AwardCostDto>()) : new List<AwardCostDto>())

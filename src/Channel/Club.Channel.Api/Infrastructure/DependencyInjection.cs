@@ -9,7 +9,7 @@ public static class DependencyInjection
         this IServiceCollection services,
         IConfiguration configuration)
     {
-        var applicationAssembly = typeof(EnqueueChannelEventCommand).Assembly;
+        var applicationAssembly = typeof(EnqueueEventCommand).Assembly;
         
         services.AddValidatorsFromAssembly(applicationAssembly);
         services.AddMediatR(cfg =>

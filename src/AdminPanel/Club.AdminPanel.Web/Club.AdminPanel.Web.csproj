@@ -13,8 +13,8 @@
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
 		<PackageReference Include="Microsoft.AspNetCore.OpenApi" />
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" />
-		<PackageReference Include="Serilog.AspNetCore.Plus" />
-		<PackageReference Include="Serilog.Sinks.Splunk" />
+		<!-- Serilog.AspNetCore.Plus package does not ship a net10 asset. -->
+		<!-- Serilog.Sinks.Splunk package does not ship a net10 asset. -->
 
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
 		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" />

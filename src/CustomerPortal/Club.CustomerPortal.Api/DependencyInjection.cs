@@ -1,9 +1,7 @@
 using Neo.Domain.Features.Client;
 using Neo.Endpoint;
 using Club.CustomerPortal.Application.Interfaces;
-using Club.Infrastructure.Data.Repository.Club;
 using Microsoft.Extensions.FileProviders;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace Club.CustomerPortal.Api;
 

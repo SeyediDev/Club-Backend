@@ -1,7 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-using Club.Domain.Entities.Promotions.Surveys;
-using Club.Domain.Entities.Promotions.Surveys.Data;
-using Club.Domain.Entities.Promotions.Surveys.Enums;
 using Club.Domain.Entities.Tenants;
 
 namespace Club.Application.Features.Surveys.Queries;
@@ -85,7 +81,7 @@ public class GetSurveyByIdQueryHandler(
         }
 
         // Load Tenant separately if needed (assuming navigation property exists)
-        var tenantRepo = unitOfWork.Repository<Tenant, int>();
+        var tenantRepo = unitOfWork.Repository<global::Club.Domain.Entities.Tenants.Tenant, int>();
         var tenant = survey.Promotion.TenantId > 0 
             ? await tenantRepo.GetByIdAsync(survey.Promotion.TenantId, cancellationToken)
             : null;

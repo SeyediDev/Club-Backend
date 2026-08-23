@@ -1,5 +1,3 @@
-using Club.Domain.Entities.CallCenter.Enums;
-
 namespace Club.Application.Features.CallCenter.Queries;
 
 /// <summary>

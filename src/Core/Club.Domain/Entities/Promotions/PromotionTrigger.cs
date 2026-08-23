@@ -1,4 +1,4 @@
-using Club.Domain.Entities.Channels;
+using Club.Domain.Entities.Lotteries;
 
 namespace Club.Domain.Entities.Promotions;
 

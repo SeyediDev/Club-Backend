@@ -1,4 +1,4 @@
-﻿namespace Club.Domain.Entities.Lotteries.Enums;
+namespace Club.Domain.Entities.Lotteries.Enums;
 
 /// <summary>
 /// نوع قرعه‌کشی

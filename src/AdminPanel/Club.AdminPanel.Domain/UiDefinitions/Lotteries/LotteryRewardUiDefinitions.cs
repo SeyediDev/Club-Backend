@@ -1,3 +1,5 @@
+using Club.Domain.Entities.Lotteries;
+
 namespace Club.AdminPanel.Domain.UiDefinitions.Lotteries;
 
 public class LotteryRewardDefinitions : CRUDDefinition<LotteryReward>

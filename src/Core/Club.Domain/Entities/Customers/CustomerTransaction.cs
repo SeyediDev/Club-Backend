@@ -1,6 +1,3 @@
-using Club.Domain.Entities.Channels;
-using Club.Domain.Entities.Promotions.Plans;
-
 namespace Club.Domain.Entities.Customers;
 
 /// <summary>

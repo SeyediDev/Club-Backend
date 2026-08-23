@@ -1,6 +1,6 @@
 using Neo.Application.Features.Queue;
-using Club.Domain.Entities.Promotions.Lotteries;
-using Club.Domain.Entities.Promotions.Lotteries.Enums;
+using Club.Domain.Entities.Lotteries.Enums;
+using Club.Domain.Entities.Lotteries;
 
 namespace Club.Application.Features.Club.Jobs;
 

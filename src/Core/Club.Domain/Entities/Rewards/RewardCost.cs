@@ -1,5 +1,3 @@
-using Club.Domain.Entities.Promotions.Plans;
-
 namespace Club.Domain.Entities.Rewards;
 
 /// <summary>

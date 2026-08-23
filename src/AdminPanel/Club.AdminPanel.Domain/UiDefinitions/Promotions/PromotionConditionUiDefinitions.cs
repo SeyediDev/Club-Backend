@@ -1,7 +1,3 @@
-using Club.Domain.Entities.Promotions;
-using Club.Domain.Entities.Promotions.Enums;
-using Club.Domain.Enums;
-
 namespace Club.AdminPanel.Domain.UiDefinitions.Promotions;
 
 public class PromotionConditionUiDefinitions : SubCRUDDefinition<PromotionCondition>
@@ -22,16 +18,16 @@ public class PromotionConditionUiDefinitions : SubCRUDDefinition<PromotionCondit
         );
     }
     
-    protected override void CUDFormsViewModel(CUDForm form)
+    protected override void CUDFormsViewModel()
     {
-        SubViewModel(form);
+        SubViewModel();
     }
 
     public override string SubjectId => "Sub";
     
-    public override void SubIndexViewModel(FormDefinition form)
+    public override void SubIndexViewModel()
     {
-        form.AddColumns(
+        AddColumns(
             nameof(PromotionCondition.Title),
             nameof(PromotionCondition.Type),
             nameof(PromotionCondition.EventChannel),
@@ -44,14 +40,14 @@ public class PromotionConditionUiDefinitions : SubCRUDDefinition<PromotionCondit
         );
     }
 
-    public override void SubViewModel(FormDefinition form)
+    public override void SubViewModel()
     {
         eControlTypeId control = eControlTypeId.Card;
         
         form.AddControl(control, "TypeGroup", "تنظیمات نوع شرط");
         {
             form.StartSubControls();
-            form.AddFields(
+            AddFields(
                 nameof(PromotionCondition.Promotion),
                 nameof(PromotionCondition.Title),
                 nameof(PromotionCondition.Type),
@@ -67,7 +63,7 @@ public class PromotionConditionUiDefinitions : SubCRUDDefinition<PromotionCondit
         form.AddControl(control, "CampaignSettings", "تنظیمات کمپین (برای Campaign ها)");
         {
             form.StartSubControls();
-            form.AddFields(
+            AddFields(
                 nameof(PromotionCondition.MinimumCount),
                 nameof(PromotionCondition.SequenceOrder),
                 nameof(PromotionCondition.DependencyCondition),
@@ -79,7 +75,7 @@ public class PromotionConditionUiDefinitions : SubCRUDDefinition<PromotionCondit
         form.AddControl(control, "ConditionSettings", "تنظیمات شرط");
         {
             form.StartSubControls();
-            form.AddFields(
+            AddFields(
                 nameof(PromotionCondition.ConditionGroup),
                 nameof(PromotionCondition.Kind),
                 nameof(PromotionCondition.Constraint),

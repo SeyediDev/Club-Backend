@@ -1,4 +1,3 @@
-using Club.Domain.Entities.Metrics.Data;
 using Club.Domain.Entities.Metrics.Enums;
 
 namespace Club.Domain.Entities.Metrics;

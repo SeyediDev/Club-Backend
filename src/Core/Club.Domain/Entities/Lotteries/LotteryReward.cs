@@ -1,5 +1,3 @@
-using Club.Domain.Entities.Rewards;
-
 namespace Club.Domain.Entities.Lotteries;
 
 /// <summary>
@@ -11,24 +9,16 @@ namespace Club.Domain.Entities.Lotteries;
 [SBVR(SBVRModality.Recommended, "مدیریت پاداش‌های قرعه‌کشی", "پاداش‌های قرعه‌کشی باید برای مدیریت نرخ برنده شدن، کنترل تعداد پاداش‌ها و تحلیل اثربخشی قرعه‌کشی تنظیم شوند")]
 public class LotteryReward : ClubBaseCoreConfigAuditableEntity<int>
 {
-    /// <summary>
-    /// شناسه قرعه‌کشی
-    /// </summary>
     public int LotteryId { get; set; }
-
     [DisplayName("قرعه‌کشی")]
     [SBVR(SBVRModality.Obligatory, "رابطه پاداش-قرعه‌کشی", "هر پاداش باید به یک قرعه‌کشی مشخص تعلق داشته باشد")]
     public Lottery Lottery { get; set; } = null!;
 
-    /// <summary>
-    /// شناسه پاداش - پاداشی که در این قرعه‌کشی داده می‌شود
-    /// </summary>
-    public int AwardId { get; set; }
-
+    public int RewardId { get; set; }
     [DisplayName("پاداش")]
     [SBVR(SBVRModality.Obligatory, "رابطه پاداش-قرعه‌کشی", "هر پاداش باید برای تعیین نوع پاداشی که به برنده اهدا می‌شود تعیین شود")]
     [SBVR(SBVRModality.Recommended, "رابطه پاداش-قرعه‌کشی", "رابطه پاداش-قرعه‌کشی برای مدیریت موجودی، تحلیل ترجیحات مشتریان و بهینه‌سازی ارزش پاداش‌ها استفاده می‌شود")]
-    public Reward Award { get; set; } = null!;
+    public Reward Reward { get; set; } = null!;
 
     /// <summary>
     /// عنوان بخش چرخونه که در UI نمایش داده می‌شود
@@ -134,4 +124,3 @@ public class LotteryReward : ClubBaseCoreConfigAuditableEntity<int>
     [SBVR(SBVRModality.Calculated, "مدیریت موجودی پاداش", "قابل توزیع برای بررسی اینکه آیا هنوز می‌توان این پاداش را اهدا کرد استفاده می‌شود")]
     public bool CanDistribute => IsActive && (!MaxDistributionCount.HasValue || DistributedCount < MaxDistributionCount.Value);
 }
-

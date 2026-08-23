@@ -1,5 +1,4 @@
 using Club.CustomerPortal.Application.Interfaces;
-using Club.Domain.Entities.CustomerSegments;
 using Club.Domain.Entities.CustomerSegments.Enums;
 using Club.Domain.Features.Customers;
 

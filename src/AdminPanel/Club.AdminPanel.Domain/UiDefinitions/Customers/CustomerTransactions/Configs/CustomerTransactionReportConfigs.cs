@@ -1,5 +1,4 @@
-﻿using Club.Domain.Entities.Customers.Enums;
-using Club.Domain.Entities.Promotions.Enums;
+using Club.Domain.Entities.Customers.Enums;
 
 namespace Club.AdminPanel.Domain.UiDefinitions.Customers;
 

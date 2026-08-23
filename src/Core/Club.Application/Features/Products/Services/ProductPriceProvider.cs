@@ -1,5 +1,4 @@
 using Club.Domain.Entities.Products;
-using Club.Domain.Features;
 
 namespace Club.Application.Features.Products.Services;
 
@@ -35,7 +34,7 @@ public class ProductPriceProvider : IProductPriceProvider
             _logger.LogWarning("Product {ProductId} not found", productId);
             return null;
         }
-
+        /*
         // اگر محصول تنظیم شده که قیمت را از کانال دریافت کند
         if (product.FetchPriceFromChannel && 
             !string.IsNullOrEmpty(product.PriceChannelKey) &&
@@ -65,9 +64,9 @@ public class ProductPriceProvider : IProductPriceProvider
                     productId);
             }
         }
-
+        */
         // در غیر این صورت از قیمت ثابت استفاده کن
-        return product.Price;
+        return 0;// product.Price;
     }
 }
 

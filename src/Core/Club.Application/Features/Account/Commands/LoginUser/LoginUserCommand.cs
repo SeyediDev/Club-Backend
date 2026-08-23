@@ -1,5 +1,4 @@
 using Neo.Application.Exceptions;
-using Neo.Domain.Entities.Common;
 using Neo.Domain.Features.Sms;
 
 namespace Club.Application.Features.Account.Commands.LoginUser;

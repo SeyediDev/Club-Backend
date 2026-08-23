@@ -1,3 +1,5 @@
+using Club.Domain.Entities.Lotteries;
+
 namespace Club.AdminPanel.Domain.UiDefinitions.Promotions;
 
 public partial class PromotionUiDefinitions : CRUDDefinition<Promotion>

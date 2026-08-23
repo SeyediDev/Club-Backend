@@ -3,18 +3,18 @@
 public class EventTypeParameterUiDefinitions : SubCRUDDefinition<EventTypeParameter>
 {
     public override string SubjectId => "Sub";
-    public override void SubIndexViewModel(FormDefinition form)
+    public override void SubIndexViewModel()
     {
-        form.AddColumns(nameof(EventTypeParameter.Title),
+        AddColumns(nameof(EventTypeParameter.Title),
                         nameof(EventTypeParameter.Key),
                         nameof(EventTypeParameter.IsOptional),
                         nameof(EventTypeParameter.CustomerParameter)
                         );
     }
 
-    public override void SubViewModel(FormDefinition form)
+    public override void SubViewModel()
     {
-        form.AddFields(nameof(EventTypeParameter.Title),
+        AddFields(nameof(EventTypeParameter.Title),
                         nameof(EventTypeParameter.Key),
                         nameof(EventTypeParameter.IsOptional),
                         nameof(EventTypeParameter.CreatedBySystem),

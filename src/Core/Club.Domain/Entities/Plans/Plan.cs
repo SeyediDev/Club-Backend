@@ -1,5 +1,3 @@
-using Club.Domain.Entities.Plans.Enums;
-using Club.Domain.Entities.Rewards;
 using PlanDiscountType = Club.Domain.Entities.Plans.Enums.PlanDiscountType;
 
 namespace Club.Domain.Entities.Plans;
