@@ -5,6 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Entities\Events\EventChannel.cs" />
+    <Compile Remove="Entities\Events\EventChannelValidEvent.cs" />
+    <Compile Remove="Entities\Events\EventChannelValidIp.cs" />
+    <Compile Remove="Entities\Customers\Tenant.cs" />
     <Compile Remove="Features\AssetInternalService.cs" />
     <Compile Remove="Features\AssetService.cs" />
     <Compile Remove="Features\CustomerSegmentService.cs" />

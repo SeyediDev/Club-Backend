@@ -13,7 +13,7 @@ public interface ITenantKeyService
 /// پیاده‌سازی سرویس مدیریت کلیدهای مستاجر
 /// </summary>
 public class TenantKeyService(
-    IQueryRepository<Club.Domain.Entities.Customers.Tenant, int> tenantQueryRepo,
+    IQueryRepository<Club.Domain.Entities.Tenants.Tenant, int> tenantQueryRepo,
     ILogger<TenantKeyService> logger) : ITenantKeyService
 {
 
@@ -24,7 +24,7 @@ public class TenantKeyService(
     {
         try
         {
-            var tenant = await tenantQueryRepo.FirstOrDefaultAsync(t => t.ApiKey == tenantKey, CancellationToken.None);
+            var tenant = await tenantQueryRepo.FirstOrDefaultAsync(t => t.Key == tenantKey, CancellationToken.None);
             if (tenant == null)
             {
                 logger.LogWarning("مستاجر با کلید {TenantKey} یافت نشد", tenantKey);
@@ -54,7 +54,7 @@ public class TenantKeyService(
                 throw new ArgumentException($"مستاجر با شناسه {tenantId} یافت نشد");
             }
 
-            return tenant.ApiKey;
+            return tenant.Key;
         }
         catch (Exception ex)
         {

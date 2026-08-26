@@ -6,7 +6,7 @@ namespace Club.Domain.Entities.Rewards.Views;
 /// </summary>
 [DontAudit]
 [View(@"SELECT
-	ct.TenantId,
+	ct.CustomerTenantId,
 	CAST(ct.CreateDate AS date)                AS TxDate,
 	ct.RewardId,
 	r.Title                                     AS RewardTitle,
@@ -26,7 +26,7 @@ WHERE
 	AND ct.RewardId IS NOT NULL
 	AND ct.Debit IS NOT NULL
 GROUP BY
-	ct.TenantId,
+	ct.CustomerTenantId,
 	CAST(ct.CreateDate AS date),
 	ct.RewardId,
 	r.Title,
@@ -41,10 +41,10 @@ GROUP BY
 public class RewardChannelPlanPivotSourceView: IView
 {
 	/// <summary>
-	/// شناسه اکوسیستم
+	/// شناسه مشتری
 	/// </summary>
-	[DisplayName("شناسه اکوسیستم")]
-	public int TenantId { get; set; }
+	[DisplayName("شناسه مشتری")]
+	public int CustomerTenantId { get; set; }
 
 	/// <summary>
 	/// تاریخ تراکنش

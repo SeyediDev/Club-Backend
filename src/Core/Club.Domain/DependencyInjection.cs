@@ -27,6 +27,7 @@ public static class DependencyInjection
         services.AddScoped<IPromotionMetricsService, PromotionMetricsService>();
         services.AddScoped<ISerialGenerator, SerialGenerator>();
         services.AddScoped<IRewardService, RewardService>();
+        services.AddScoped<Features.IAwardService, Features.AwardService>();
         services.AddScoped<IPromotionBudgetService, PromotionBudgetService>();
         services.AddScoped<IPointLevelService, PointLevelService>();
         services.AddScoped<IPointTransferService, PointTransferService>();
